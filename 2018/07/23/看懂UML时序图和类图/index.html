@@ -15,25 +15,25 @@
 
 
 
-<meta name="description" content="看懂UML时序图和类图 UML1. 定义以下定义引自维基百科：  统一建模语言（Unified Modeling Language，缩写UML）是非专利的第三代建模和规约语言。UML是一种开放的方法，用于说明、可视化、构建和编写一个正在开发的、面向对象的、软件密集系统的制品的开放方法。  2. 模型UML中的三个主要模型：  功能模型：从用户的角度展示系统的功能，包括用例图 对象模型：采用对象、属">
+<meta name="description" content="看懂UML时序图和类图前言最近在工作中第一次接触UML相关内容，本篇为学习笔记，写得不好，还请大神们多多指教。以下是本篇文章的大体结构。  UML1. 定义以下定义引自维基百科：  统一建模语言（Unified Modeling Language，缩写UML）是非专利的第三代建模和规约语言。UML是一种开放的方法，用于说明、可视化、构建和编写一个正在开发的、面向对象的、软件密集系统的制品的开放方法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/2018/07/23/看懂UML时序图和类图/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="看懂UML时序图和类图 UML1. 定义以下定义引自维基百科：  统一建模语言（Unified Modeling Language，缩写UML）是非专利的第三代建模和规约语言。UML是一种开放的方法，用于说明、可视化、构建和编写一个正在开发的、面向对象的、软件密集系统的制品的开放方法。  2. 模型UML中的三个主要模型：  功能模型：从用户的角度展示系统的功能，包括用例图 对象模型：采用对象、属">
+<meta property="og:description" content="看懂UML时序图和类图前言最近在工作中第一次接触UML相关内容，本篇为学习笔记，写得不好，还请大神们多多指教。以下是本篇文章的大体结构。  UML1. 定义以下定义引自维基百科：  统一建模语言（Unified Modeling Language，缩写UML）是非专利的第三代建模和规约语言。UML是一种开放的方法，用于说明、可视化、构建和编写一个正在开发的、面向对象的、软件密集系统的制品的开放方法">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/看懂UML时序图和类图.png">
-<meta property="og:image" content="http://yoursite.com/看懂UML时序图和类图/时序图示例.jpg">
-<meta property="og:image" content="http://yoursite.com/看懂UML时序图和类图/类图示例.jpg">
-<meta property="og:image" content="http://yoursite.com/看懂UML时序图和类图/Generalization.jpg">
-<meta property="og:image" content="http://yoursite.com/看懂UML时序图和类图/Realization.jpg">
-<meta property="og:image" content="http://yoursite.com/看懂UML时序图和类图/Dependency.jpg">
-<meta property="og:image" content="http://yoursite.com/看懂UML时序图和类图/Aggregation.jpg">
-<meta property="og:image" content="http://yoursite.com/看懂UML时序图和类图/Composition.jpg">
-<meta property="og:updated_time" content="2018-07-30T15:29:23.895Z">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/时序图示例.jpg">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/类图示例.jpg">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/Generalization.jpg">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/Realization.jpg">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/Dependency.jpg">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/Aggregation.jpg">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/Composition.jpg">
+<meta property="og:updated_time" content="2018-07-30T15:48:57.997Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="看懂UML时序图和类图 UML1. 定义以下定义引自维基百科：  统一建模语言（Unified Modeling Language，缩写UML）是非专利的第三代建模和规约语言。UML是一种开放的方法，用于说明、可视化、构建和编写一个正在开发的、面向对象的、软件密集系统的制品的开放方法。  2. 模型UML中的三个主要模型：  功能模型：从用户的角度展示系统的功能，包括用例图 对象模型：采用对象、属">
+<meta name="twitter:description" content="看懂UML时序图和类图前言最近在工作中第一次接触UML相关内容，本篇为学习笔记，写得不好，还请大神们多多指教。以下是本篇文章的大体结构。  UML1. 定义以下定义引自维基百科：  统一建模语言（Unified Modeling Language，缩写UML）是非专利的第三代建模和规约语言。UML是一种开放的方法，用于说明、可视化、构建和编写一个正在开发的、面向对象的、软件密集系统的制品的开放方法">
 <meta name="twitter:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/看懂UML时序图和类图.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -284,7 +284,8 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h1 id="看懂UML时序图和类图"><a href="#看懂UML时序图和类图" class="headerlink" title="看懂UML时序图和类图"></a>看懂UML时序图和类图</h1><img src="http://pcmve13p6.bkt.clouddn.com/static/images/看懂UML时序图和类图.png">
+        <h1 id="看懂UML时序图和类图"><a href="#看懂UML时序图和类图" class="headerlink" title="看懂UML时序图和类图"></a>看懂UML时序图和类图</h1><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近在工作中第一次接触UML相关内容，本篇为学习笔记，写得不好，还请大神们多多指教。以下是本篇文章的大体结构。</p>
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/看懂UML时序图和类图.png">
 <h2 id="UML"><a href="#UML" class="headerlink" title="UML"></a>UML</h2><h3 id="1-定义"><a href="#1-定义" class="headerlink" title="1. 定义"></a>1. 定义</h3><p>以下定义引自维基百科：</p>
 <blockquote>
 <p>统一建模语言（Unified Modeling Language，缩写UML）是非专利的第三代建模和规约语言。UML是一种开放的方法，用于说明、可视化、构建和编写一个正在开发的、面向对象的、软件密集系统的制品的开放方法。</p>
@@ -307,9 +308,9 @@
 <li>消息（Message）</li>
 <li>激活（Activation）</li>
 </ol>
-<h3 id="3-示例图"><a href="#3-示例图" class="headerlink" title="3. 示例图"></a>3. 示例图</h3><p><img src="/看懂UML时序图和类图/时序图示例.jpg" alt="时序图示例"></p>
+<h3 id="3-示例图"><a href="#3-示例图" class="headerlink" title="3. 示例图"></a>3. 示例图</h3><img src="http://pcmve13p6.bkt.clouddn.com/static/images/时序图示例.jpg">
 <h2 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h2><h3 id="1-定义-2"><a href="#1-定义-2" class="headerlink" title="1.定义"></a>1.定义</h3><p>类图是统一建模语言中一种对象模型，这种图描述的是系统的类集合，类的属性和类之间的关系。</p>
-<h3 id="2-元素-1"><a href="#2-元素-1" class="headerlink" title="2. 元素"></a>2. 元素</h3><p><img src="/看懂UML时序图和类图/类图示例.jpg" alt="类图示例"></p>
+<h3 id="2-元素-1"><a href="#2-元素-1" class="headerlink" title="2. 元素"></a>2. 元素</h3><img src="http://pcmve13p6.bkt.clouddn.com/static/images/类图示例.jpg">
 <p>上图是类图的示例，一个类有三个区域，最上面的是类名称，中间部分是类的属性，底部是类的方法。</p>
 <p>UML提供机制，以代表类的成员，如属性和方法。指定一个类成员（即任何属性和方法）的可见性有下列符号：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ <span class="keyword">public</span> 公有</span><br><span class="line">- <span class="keyword">private</span> 私有</span><br><span class="line"># protected 保护</span><br><span class="line">~ 包（即对包内其他成员可见）</span><br><span class="line">/ 推导（即由其他属性推导得出，不需要直接给定其值）</span><br></pre></td></tr></table></figure>
@@ -317,12 +318,12 @@
 <li>泛化（Generalization）</li>
 </ol>
 <p>即继承(extend)的反方向。在UML类图中用带空心三角形的直线表示。如下图所示：</p>
-<p><img src="/看懂UML时序图和类图/Generalization.jpg" alt="Generalization"></p>
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/Generalization.jpg">
 <ol start="2">
 <li>实现（Realization）</li>
 </ol>
 <p>即对应implements关键字。用带空心三角形的虚线表示</p>
-<p><img src="/看懂UML时序图和类图/Realization.jpg" alt="Realization"></p>
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/Realization.jpg">
 <ol start="3">
 <li>依赖（Dependency）</li>
 </ol>
@@ -331,17 +332,17 @@
 <p>这种使用关系是具有偶然性、临时性的、非常弱的 </p>
 </blockquote>
 <p>但是B类的变化会影响到类A，表现在代码层面：类B作为参数被类A在某个方法中使用。用带燕尾箭头的虚线表示。</p>
-<p><img src="/看懂UML时序图和类图/Dependency.jpg" alt="Dependency"></p>
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/Dependency.jpg">
 <ol start="4">
 <li>聚合（Aggregate）</li>
 </ol>
 <p>聚合是表示整体与部分的一类特殊的关联关系，是弱的包含关系，成分类可以不依靠聚合类而单独存在，可以具有各自的生命周期，部分可以属于多个整体，也可以为多个整体对象共享。用以带空心的菱形剪尾的实线表示。</p>
-<p><img src="/看懂UML时序图和类图/Aggregation.jpg" alt="Aggregation"></p>
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/Aggregation.jpg">
 <ol start="5">
 <li>组合（Composition）</li>
 </ol>
 <p>组合是一类强的整体与部分的包含关系。成分类必须依靠合成类而存在，整体与部分是不可分的（这是与聚合关系最大的区别），整体的生命周期结束也就意味着部分的生命周期结束。图形中用带实心的菱形剪尾的实线表示。</p>
-<p><img src="/看懂UML时序图和类图/Composition.jpg" alt="Composition"></p>
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/Composition.jpg">
 <ol start="6">
 <li>关联（Association）</li>
 </ol>
@@ -357,7 +358,7 @@
         <p><span>本文标题:</span><a href="/2018/07/23/看懂UML时序图和类图/"></a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">John Doe</a></p>
         <p><span>发布时间:</span>2018-07-23, 20:58:05</p>
-        <p><span>最后更新:</span>2018-07-30, 23:29:23</p>
+        <p><span>最后更新:</span>2018-07-30, 23:48:57</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/07/23/看懂UML时序图和类图/" title="">http://yoursite.com/2018/07/23/看懂UML时序图和类图/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2018/07/23/看懂UML时序图和类图/　　作者: John Doe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -376,7 +377,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#看懂UML时序图和类图"><span class="toc-number">1.</span> <span class="toc-text">看懂UML时序图和类图</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UML"><span class="toc-number">1.1.</span> <span class="toc-text">UML</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-定义"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-模型"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-图形"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. 图形</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#序列图"><span class="toc-number">1.2.</span> <span class="toc-text">序列图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-定义-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-元素"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-示例图"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. 示例图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类图"><span class="toc-number">1.3.</span> <span class="toc-text">类图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-定义-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-元素-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-类图中的关系"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 类图中的关系</span></a></li></ol></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#看懂UML时序图和类图"><span class="toc-number">1.</span> <span class="toc-text">看懂UML时序图和类图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">2.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UML"><span class="toc-number">2.1.</span> <span class="toc-text">UML</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-定义"><span class="toc-number">2.1.1.</span> <span class="toc-text">1. 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-模型"><span class="toc-number">2.1.2.</span> <span class="toc-text">2. 模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-图形"><span class="toc-number">2.1.3.</span> <span class="toc-text">3. 图形</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#序列图"><span class="toc-number">2.2.</span> <span class="toc-text">序列图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-定义-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">1. 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-元素"><span class="toc-number">2.2.2.</span> <span class="toc-text">2. 元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-示例图"><span class="toc-number">2.2.3.</span> <span class="toc-text">3. 示例图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类图"><span class="toc-number">2.3.</span> <span class="toc-text">类图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-定义-2"><span class="toc-number">2.3.1.</span> <span class="toc-text">1.定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-元素-1"><span class="toc-number">2.3.2.</span> <span class="toc-text">2. 元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-类图中的关系"><span class="toc-number">2.3.3.</span> <span class="toc-text">3. 类图中的关系</span></a></li></ol></li></ol></li></ol>
         
     </div>
     <style>
