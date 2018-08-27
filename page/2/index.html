@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -96,7 +96,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -218,6 +218,146 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/21/《Java并发编程实践》读书笔记（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/21/《Java并发编程实践》读书笔记（一）/" itemprop="url">Java并发编程实践——读书笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-21T20:24:50+08:00">
+                2017-05-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="《Java并发编程实践》读书笔记（一）"><a href="#《Java并发编程实践》读书笔记（一）" class="headerlink" title="《Java并发编程实践》读书笔记（一）"></a>《Java并发编程实践》读书笔记（一）</h1><h2 id="第一章-简介"><a href="#第一章-简介" class="headerlink" title="第一章 简介"></a>第一章 简介</h2><ul>
+<li>线程的优点：使用多处理器、模型的简化、对异步事件的简单处理、用户界面的更佳响应性（避免ANR）</li>
+<li><p>线程的风险：</p>
+<ol>
+<li>安全危险：多线程中的各个操作顺序是不可预测的（<strong>竞争条件</strong>），为了使多线程程序的行为可预见，访问<strong>共享的变量</strong>必须经过合理的协调==&gt;Java提供了<strong>同步机制</strong></li>
+<li>活跃度的危险：死锁（deadlock）、饥饿（starvation）、活锁（livelock）。线程的使用引入了活跃度失败（liveness failure），例如：如果线程A等待一个线程B独立占有的资源，B永远不释放这个资源，A将永远等待下去。</li>
+<li>性能危险：①线程切换（上下文切换）带来的巨大的系统开销，②同步机制会限值编译器的优化（个人理解：多个线程访问同一块内存导致内存总线负载增加）</li>
+<li>线程无处不在：即使你的程序没有显示的创建线程，并不代表不需要考虑线程安全。当JVM启动后，它会创建一些线程来进行自身的常规管理（垃圾回收、终结处理），以及一个运行main函数的主线程。原文中有一句：“线程安全的需要并不仅仅在于框架调用的组件——只要它处于组件访问过的程序状态段，它就会扩展到所有代码路径。因此，线程安全的需要是具有传递性的。”</li>
+</ol>
+<h2 id="第二章-线程安全"><a href="#第二章-线程安全" class="headerlink" title="第二章 线程安全"></a>第二章 线程安全</h2></li>
+<li><p>编写线程安全的代码，本质上是管理对<strong>状态</strong>的访问，而且通常是<strong>共享的，可变的</strong>状态==&gt;真正要做的是：在不可控制的并发访问中保护数据。</p>
+</li>
+<li>什么时候使用同步机制：只要有多于一个的线程访问给定的状态变量，而且其中的某个线程会写入该变量。Java中的同步机制：①synchronized代码块，②volatile关键字、③显示锁和原子变量的使用。<br>   一个线程安全程序是完全由线程安全类构成的吗？    ==&gt;完全由线程安全类构成的程序未必是线程安全的，线程安全程序也可以包含非线程安全的类。</li>
+<li><p>线程安全性：一个类是线程安全的，是指在被多个线程访问时，类可以持续进行正确的行为。</p>
+<blockquote>
+<p>当多个线程访问一个类时，若不用考虑这些线程在运行时环境下的调整和交替执行，并且不需要额外的同步及在调用方代码不必做其他的协调，这个类的行为仍然是正确的，那么称这个类是线程安全的。</p>
+</blockquote>
+</li>
+<li><p>对于线程安全类的实例进行顺序或并发的一系列操作，都不会导致实例处于无效状态。</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
     
       
 
@@ -836,7 +976,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -895,7 +1035,7 @@
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 
 
 
