@@ -79,19 +79,20 @@
 
 
 
-<meta name="description" content="本文结构： 前言：介绍Activity的启动模式之前先介绍一下任务栈。任务栈是一个“后进先出”的栈结构，每按一下back键就有一个Activity出栈，直到栈空为止，当栈中无任何Activity的时候，系统就会回收这个任务栈。 1.1 Activity的LaunchModeActivity的LaunchMode目前有四种启动模式：standard、singleTop、singleTask以及sin">
+<meta name="description" content="title：Appium入坑指南——Appium原理分析架构图  主要原理 Appium Client 主要是指实现了Appium功能的WebDriver协议的客户端Library，它负责与Appium服务器建立连接（JSON Wire Protocol），并将测试脚本的指令发送到Appium服务器。正如官网中文版介绍一样，它支持多种语言的客户端。  Bootstrap.jar Bootstra">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Activity的启动模式">
-<meta property="og:url" content="http://yoursite.com/2018/04/01/1.1 Activity的LaunchMode/index.html">
+<meta property="og:title" content="Forwards">
+<meta property="og:url" content="http://yoursite.com/2018/11/05/Appium入坑指南——Appium原理分析/index.html">
 <meta property="og:site_name" content="Forwards">
-<meta property="og:description" content="本文结构： 前言：介绍Activity的启动模式之前先介绍一下任务栈。任务栈是一个“后进先出”的栈结构，每按一下back键就有一个Activity出栈，直到栈空为止，当栈中无任何Activity的时候，系统就会回收这个任务栈。 1.1 Activity的LaunchModeActivity的LaunchMode目前有四种启动模式：standard、singleTop、singleTask以及sin">
+<meta property="og:description" content="title：Appium入坑指南——Appium原理分析架构图  主要原理 Appium Client 主要是指实现了Appium功能的WebDriver协议的客户端Library，它负责与Appium服务器建立连接（JSON Wire Protocol），并将测试脚本的指令发送到Appium服务器。正如官网中文版介绍一样，它支持多种语言的客户端。  Bootstrap.jar Bootstra">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/ActivityLaunchMode.png">
-<meta property="og:updated_time" content="2018-08-01T14:20:18.017Z">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/Appium架构图.jpeg">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/Appium架构图-2.jpg">
+<meta property="og:updated_time" content="2018-11-05T14:29:10.476Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Activity的启动模式">
-<meta name="twitter:description" content="本文结构： 前言：介绍Activity的启动模式之前先介绍一下任务栈。任务栈是一个“后进先出”的栈结构，每按一下back键就有一个Activity出栈，直到栈空为止，当栈中无任何Activity的时候，系统就会回收这个任务栈。 1.1 Activity的LaunchModeActivity的LaunchMode目前有四种启动模式：standard、singleTop、singleTask以及sin">
-<meta name="twitter:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/ActivityLaunchMode.png">
+<meta name="twitter:title" content="Forwards">
+<meta name="twitter:description" content="title：Appium入坑指南——Appium原理分析架构图  主要原理 Appium Client 主要是指实现了Appium功能的WebDriver协议的客户端Library，它负责与Appium服务器建立连接（JSON Wire Protocol），并将测试脚本的指令发送到Appium服务器。正如官网中文版介绍一样，它支持多种语言的客户端。  Bootstrap.jar Bootstra">
+<meta name="twitter:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/Appium架构图.jpeg">
 
 
 
@@ -121,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/01/1.1 Activity的LaunchMode/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/11/05/Appium入坑指南——Appium原理分析/"/>
 
 
 
 
 
-  <title>Activity的启动模式 | Forwards</title>
+  <title> | Forwards</title>
   
 
 
@@ -234,7 +235,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/01/1.1 Activity的LaunchMode/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——Appium原理分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Forwards">
@@ -251,7 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Activity的启动模式</h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -263,8 +264,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-01T15:25:54+08:00">
-                2018-04-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:29:10+08:00">
+                2018-11-05
               </time>
             
 
@@ -301,35 +302,24 @@
       
 
       
-        <p>本文结构：<br><img src="http://pcmve13p6.bkt.clouddn.com/static/images/ActivityLaunchMode.png"></p>
-<p>前言：介绍Activity的启动模式之前先介绍一下任务栈。任务栈是一个“后进先出”的栈结构，每按一下back键就有一个Activity出栈，直到栈空为止，当栈中无任何Activity的时候，系统就会回收这个任务栈。</p>
-<h2 id="1-1-Activity的LaunchMode"><a href="#1-1-Activity的LaunchMode" class="headerlink" title="1.1 Activity的LaunchMode"></a>1.1 Activity的LaunchMode</h2><p>Activity的LaunchMode目前有四种启动模式：standard、singleTop、singleTask以及singleInstance。</p>
-<ol>
-<li>standard：标准模式，也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在。这种模式是典型的多实例实现，一个任务栈中可以有多个实例，每个实例也可以属于不同的任务栈。在这种模式下，谁启动了这个Activity，那么这个Activity就运行在启动它的那个Activity的所在的栈中。</li>
-</ol>
-<p>注意：当我们用ApplicationContext去启动standard模式的Activity的时候就会报错，log如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">...Calling startActivity from outside of an Activity context <span class="keyword">requires</span> the FLAG_ACTIVITY_NEW_TASK flag....</span><br></pre></td></tr></table></figure>
-<p>这是因为standard模式下的Activity默认会进入启动它的Activity所属的任务栈中，但是由于非Activity类型的context并没有任务栈，所以解决这个问题的办法是为待启动Activity指定FLAG_ACTIVITY_NEW_TASK标记位。这个时候待启动Activity实际上是以singleTask模式启动的。</p>
-<ol start="2">
-<li>singleTop：栈顶复用模式。在这种模式下，如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的onNewIntent方法会被回调，通过此方法的参数我们就可以取出当前请求的信息；如果新Activity的实例已经存在但不是位于栈顶，那么新Activity会被重新创建。</li>
-<li>singleTask：栈内复用模式。这是一种单实例模式，在这种模式下，只要Activity在一个栈中存在，那么多次启动这个Activity都不会重新创建实例，同时系统会回调其onNewIntent。具体一点，当一个具有singleTask模式的Activity请求启动后，系统会首先寻找是否存在<strong>这个Activity想要的任务栈</strong>，如果不存在，就重新创建一个任务栈，然后创建这个Activity的实例后把这个Activity放入栈中，如果存在，这是要看这个Activity是否在栈中有实例存在，如果有实例存在，那么系统会把这个Activity调到栈顶并调用它的onNewIntent，如果实例不存在，就创建这个Activity的实例并将其压入栈中。<br>例子：如果D所需的任务栈为S1，并且当前S1的情况为ADBC，根据栈内复用原则，此时D不会被重新创建，系统会把D切换到栈顶并调用其onNewIntent，同时由于singleTask默认默认具有clearTop的效果，会导致栈内所有在D上面的Activity全部出栈，最终S1中的情况为AD。</li>
-<li>singleInstance：单实例模式，加强版的singleTask模式，它除了具有singleTask的所有特性外，还加强了一点，那就是此模式下的Activity只能单独的位于一个任务栈中。</li>
-</ol>
-<p>什么是Activity所需要的任务栈？这要从一个参数说起：TaskAffinity，任务相关性。这个参数标识了一个Activity所需要的任务栈的名字，默认情况下所有Activity所需的任务栈的名字为应用的包名，但是我们可以为每个Activity都单独指定TaskAffinity属性，这个属性值不能和包名一样，否则就相当于没有指定。TaskAffinity属性主要和singleTask启动模式和allowTaskReparenting属性配对使用，在其他情况下没有意义。</p>
-<h2 id="1-2-如何给Activity指定启动模式"><a href="#1-2-如何给Activity指定启动模式" class="headerlink" title="1.2 如何给Activity指定启动模式"></a>1.2 如何给Activity指定启动模式</h2><ol>
-<li><p>通过AndroidMenifest为Activity指定启动模式。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">	android:name=<span class="string">"com.my.test.TestActivity"</span></span><br><span class="line">	android:launchMode=<span class="string">"singleTask"</span></span><br><span class="line">	android:label=<span class="string">"@string/app_name"</span>&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+        <hr>
+<h2 id="title：Appium入坑指南——Appium原理分析"><a href="#title：Appium入坑指南——Appium原理分析" class="headerlink" title="title：Appium入坑指南——Appium原理分析"></a>title：Appium入坑指南——Appium原理分析</h2><h1 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h1><img src="http://pcmve13p6.bkt.clouddn.com/static/images/Appium架构图.jpeg">
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/Appium架构图-2.jpg">
+<h1 id="主要原理"><a href="#主要原理" class="headerlink" title="主要原理"></a>主要原理</h1><ol>
+<li><p>Appium Client</p>
+<p>主要是指实现了Appium功能的WebDriver协议的客户端Library，它负责与Appium服务器建立连接（<code>JSON Wire Protocol</code>），并将测试脚本的指令发送到Appium服务器。正如官网中文版介绍一样，它支持多种语言的客户端。</p>
 </li>
-<li><p>通过在Intent设置标志位来为Activity指定启动模式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, TestActivity.class);</span><br><span class="line">intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+<li><p>Bootstrap.jar</p>
+<p>Bootstrap是Appium运行在目标测试机器上的一个UiAutomator测试脚本，该脚本的唯一一个测试方法所做的事情是在目标机器开启一个socket服务器来把一个session中Appium从PC端过来的命令发送给UiAutomator来执行处理。这个定义说明了Bootstrap在appium和uiautomator中究竟处于一个什么样的角色：<br>首先，它是一个uiautomator的测试脚本，它的入口类Bootstrap继承于UiAutomatorTestCase，所以UiAututomator可以正常运行它，它也可以正常的使用uiautomator的方法，这个就是Appium的命令可以转换成uiautomator的命令的关键<br>其次，它是一个socket服务器，它专门监听4724端口过来的appium的连接和命令数据，并把appium的命令转换成uiautomator的命令来让uiautomator进行处理<br>最后，它处理的是appium从pc端过来的命令，而非一个文件。这在初次接触appium的朋友是很容易困惑的，以为appium是整个脚本文件发送到目标机器再由bootstrap进行分析处理的，事实并非如此</p>
+</li>
+<li><p>Appium Server</p>
+<p>Appium服务器是Appium框架的核心。它是一个基于Node.js实现的HTTP服务器。Appium服务器的主要功能是起了一个Server（4723端口），跟selenium WebDriver测试框架类似，Appium支持标准的WebDriver JSONWireProtocol。Appium Server接收web driver标准请求，解析请求内容，调用对应的框架响应操作。将命令发送给bootstrap.jar（iOS手机为bootstrap.js）执行，并将命令的执行结果通过HTTP应答反馈给Appium客户端。</p>
 </li>
 </ol>
-<p>二者区别：首先，优先级上第二种高于第一种，当两种同时存在时，以第二种为准；其次，二者在限定范围上有所不同。</p>
-<h2 id="1-3-Activity的Flags"><a href="#1-3-Activity的Flags" class="headerlink" title="1.3 Activity的Flags"></a>1.3 Activity的Flags</h2><ol>
-<li>FLAG_ACTIVITY_NEW_TASK：这个标记位的作用是为Activity指定“singleTask”启动模式。</li>
-<li>FLAG_ACTIVITY_SINGLE_TOP：这个标记位的作用是为Activity指定“singleTop”启动模式。</li>
-<li>FLAG_ACTIVITY_CLEAR_TOP：具有此标记位的Activity，当它启动时，在同一个任务栈中所有位于它上面的Activity都要出栈，这个标记位一般和singleTask启动模式一起出现。在这种情况下，如果被启动的实例已经存在，那么系统会调用它的onNewIntent。</li>
-</ol>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>Appium在Android上基于UIAutomator实现了测试的代理程序（Bootstrap.jar），在iOS上基于UIAutomation实现了测试的代理程序（Bootstrap.js）。当测试脚本运行时，每行WebDriver的脚本都将转换成Appium的指令发送给Appium服务器，而Appium服务器将测试指令交给代理程序，将由代理程序负责执行测试。比如脚本上的一个点击操作，在Appium服务器上都是touch指令，当指令发送到Android系统上时，Android系统上的Bootstrap.jar将调用UIAutomator的方法实现点击操作；而当指令发送到iOS系统上时，iOS的Bootstrap.js将调用UIAutomation的方法实现点击操作。由于Appium有了这样的能力，同样的测试脚本可以实现跨平台运行。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://www.jianshu.com/p/06aa73eb9b90" target="_blank" rel="noopener">https://www.jianshu.com/p/06aa73eb9b90</a></p>
+<p><a href="https://testerhome.com/topics/1972" target="_blank" rel="noopener">https://testerhome.com/topics/1972</a></p>
+<p><a href="https://discuss.appium.io/t/what-is-working-on-android-side/10222/2" target="_blank" rel="noopener">https://discuss.appium.io/t/what-is-working-on-android-side/10222/2</a></p>
 
       
     </div>
@@ -354,8 +344,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/25/Annotation注解类/" rel="next" title="Annotation注解类">
-                <i class="fa fa-chevron-left"></i> Annotation注解类
+              <a href="/2018/11/05/Appium入坑指南——环境搭建/" rel="next" title="Appium入坑指南——环境搭建">
+                <i class="fa fa-chevron-left"></i> Appium入坑指南——环境搭建
               </a>
             
           </div>
@@ -364,8 +354,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/18/关于AlertDialog的小知识/" rel="prev" title="关于AlertDialog点击按钮弹窗自动dismiss的源码分析及解决方案">
-                关于AlertDialog点击按钮弹窗自动dismiss的源码分析及解决方案 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/11/05/Appium入坑指南——Appium中文版介绍/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -480,7 +470,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Activity的LaunchMode"><span class="nav-number">1.</span> <span class="nav-text">1.1 Activity的LaunchMode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-如何给Activity指定启动模式"><span class="nav-number">2.</span> <span class="nav-text">1.2 如何给Activity指定启动模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-Activity的Flags"><span class="nav-number">3.</span> <span class="nav-text">1.3 Activity的Flags</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title：Appium入坑指南——Appium原理分析"><span class="nav-number">1.</span> <span class="nav-text">title：Appium入坑指南——Appium原理分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#架构图"><span class="nav-number"></span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主要原理"><span class="nav-number"></span> <span class="nav-text">主要原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结论"><span class="nav-number"></span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number"></span> <span class="nav-text">参考资料</span></a></div>
             
 
           </div>

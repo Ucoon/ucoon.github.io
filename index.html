@@ -232,6 +232,700 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——第一个测试用例（Python篇）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/05/Appium入坑指南——第一个测试用例（Python篇）/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:34:43+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h2 id="title：Appium入坑指南——第一个测试用例（Python篇）"><a href="#title：Appium入坑指南——第一个测试用例（Python篇）" class="headerlink" title="title：Appium入坑指南——第一个测试用例（Python篇）"></a>title：Appium入坑指南——第一个测试用例（Python篇）</h2><h1 id="安装Appium-Python-Client"><a href="#安装Appium-Python-Client" class="headerlink" title="安装Appium Python Client"></a>安装Appium Python Client</h1><p>三种安装方式：</p>
+<ol>
+<li><p>pip在线安装（推荐方式）：<figure class="highlight plain"><figcaption><span>```install Appium-Python-Client</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. 在Pypi上[下载源码安装](https://pypi.org/project/Appium-Python-Client/#files)</span><br><span class="line"></span><br><span class="line">   ```java</span><br><span class="line">   tar -xvf Appium-Python-Client-X.X.tar.gz</span><br><span class="line">   cd Appium-Python-Client-X.X</span><br><span class="line">   sudo python3.6 setup.py install</span><br></pre></td></tr></table></figure></p>
+</li>
+<li><p>通过git安装</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone git<span class="meta">@github</span>.com:appium/python-client.git</span><br><span class="line">cd python-client</span><br><span class="line">sudo python3.6 setup.py install</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="编写测试用例："><a href="#编写测试用例：" class="headerlink" title="编写测试用例："></a>编写测试用例：</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> appium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">desired_caps = &#123;&#125;</span><br><span class="line">desired_caps[<span class="string">'platformName'</span>] = <span class="string">'Android'</span></span><br><span class="line">desired_caps[<span class="string">'platformVersion'</span>] = <span class="string">'5.0'</span></span><br><span class="line">desired_caps[<span class="string">'deviceName'</span>] = <span class="string">'SA17607795'</span></span><br><span class="line">desired_caps[<span class="string">'appPackage'</span>] = <span class="string">'com.android.calculator2'</span></span><br><span class="line">desired_caps[<span class="string">'appActivity'</span>] = <span class="string">'.Calculator'</span></span><br><span class="line">driver = webdriver.Remote(<span class="string">'http://localhost:4723/wd/hub'</span>, desired_caps)</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("1")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("2")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("3")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("+")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("3")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("2")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("1")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("=")'</span>).click()</span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+<h1 id="执行命令："><a href="#执行命令：" class="headerlink" title="执行命令："></a>执行命令：</h1><figure class="highlight plain"><figcaption><span>android_calculator.py```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 遇到的问题</span><br><span class="line"></span><br><span class="line">1. 问题：```driver.find_element_by_name(&quot;=&quot;).click()</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selenium.common.exceptions.InvalidSelectorException: Message: Locator Strategy <span class="string">'name'</span> is not supported <span class="keyword">for</span> <span class="keyword">this</span> session</span><br></pre></td></tr></table></figure>
+<p>谷歌后得知：通过name获取控件的方式在Appium 1.5就被移除了。</p>
+<ol start="2">
+<li>问题：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">报错：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">selenium.common.exceptions.NoSuchElementException: Message: An element could not be located on the page using the given search parameters.</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>经请教后得知在最新版本Appium中不再支持通过id的方式来定位元素。</p>
+<p>改用：<figure class="highlight plain"><figcaption><span>UiSelector().text("1")').click()```，可运行</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">3. 问题： 执行appium程序时遇到如下报错，ImportError: cannot import name &apos;InvalidArgumentException&apos;，</span><br><span class="line"></span><br><span class="line">报错原因 selenium.common.exceptions.py中未定义InvalidArgumentException类，导致出现该报错，我的解决办法是 </span><br><span class="line"></span><br><span class="line">在selenium.common.exceptions.py中直接定义了InvalidArgumentException，代码如下（C:\Users\Python35\Lib\site-packages\selenium\common）找到exceptions.py，添加下面的代码，再次执行脚本，ok.</span><br><span class="line"></span><br><span class="line">```python</span><br><span class="line">class InvalidArgumentException(WebDriverException):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    pass</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——Appium中文版介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/05/Appium入坑指南——Appium中文版介绍/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:31:04+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h2 id="title：Appium入坑指南——Appium中文版介绍"><a href="#title：Appium入坑指南——Appium中文版介绍" class="headerlink" title="title：Appium入坑指南——Appium中文版介绍"></a>title：Appium入坑指南——Appium中文版介绍</h2><h1 id="Appium-介绍"><a href="#Appium-介绍" class="headerlink" title="Appium 介绍"></a>Appium 介绍</h1><p>Appium 是一个开源工具，用于自动化 iOS 手机 、 Android 手机和 Windows 桌面平台上的原生、移动 Web 和混合应用。“原生应用”指那些用 iOS 、 Android 或者 Windows SDK 编写的应用。“移动 web 应用”是用移动端浏览器访问的应用（Appium 支持 iOS 上的 Safari 、Chrome 和 Android 上的内置浏览器）。“混合应用”带有一个 “webview” 的包装器——用来和 Web 内容交互的原生控件。类似 <a href="http://phonegap.com/" target="_blank" rel="noopener">Phonegap</a> 的项目，让用 Web 技术开发然后打包进原生包装器创建一个混合应用变得容易了。</p>
+<p>重要的是，Appium 是跨平台的：它允许你用同样的 API 对多平台写测试，做到在 iOS 、Android 和 Windows 测试套件之间复用代码。</p>
+<p>了解 Appium “支持”这些平台意味着什么、有哪些自动化方式的详细信息，请参见<a href="http://appium.io/docs/cn/appium-setup/platform-support/index.html" target="_blank" rel="noopener"> Appium 支持的平台</a>。</p>
+<h1 id="Appium-的理念"><a href="#Appium-的理念" class="headerlink" title="Appium 的理念"></a>Appium 的理念</h1><p>Appium 旨在满足移动端自动化需求的理念，概述为以下四个原则：</p>
+<ol>
+<li>你没有必要为了自动化而重新编译你的应用或者以任何方式修改它。</li>
+<li>你不应该被限制在特定的语言或框架上来编写运行测试。</li>
+<li>移动端自动化框架在自动化接口方面不应该重造轮子。</li>
+<li>移动端自动化框架应该开源，不但在名义上而且在精神和实践上都要实至名归。</li>
+</ol>
+<h2 id="Appium-的设计"><a href="#Appium-的设计" class="headerlink" title="Appium 的设计"></a>Appium 的设计</h2><p>那么 Appium 项目的架构如何实现这一理念呢？为了实现第一点要求，我们其实使用了系统自带的自动化框架。这样，我们不需要把 Appium 特定的或者第三方的代码编译进你的应用。这意味着你测试使用的应用与最终发布的应用并无二致。我们使用以下系统自带的自动化框架：</p>
+<ul>
+<li>iOS 9.3 及以上：苹果的 <a href="https://developer.apple.com/reference/xctest" target="_blank" rel="noopener">XCUITest</a></li>
+<li>iOS 9.3 及以下：苹果的 <a href="https://web.archive.org/web/20160904214108/https://developer.apple.com/library/ios/documentation/DeveloperTools/Reference/UIAutomationRef/" target="_blank" rel="noopener">UIAutomation</a></li>
+<li>Android 4.2+: 谷歌的 <a href="https://developer.android.com/training/testing/ui-automator" target="_blank" rel="noopener">UiAutomator</a></li>
+<li>Android 2.3+: 谷歌的 <a href="http://developer.android.com/reference/android/app/Instrumentation.html" target="_blank" rel="noopener">Instrumentation</a>（通过绑定另外的项目——<a href="http://selendroid.io/" target="_blank" rel="noopener"> Selendroid </a>提供 Instrumentation 的支持）</li>
+<li>Windows: 微软的 <a href="http://github.com/microsoft/winappdriver" target="_blank" rel="noopener">WinAppDriver</a></li>
+</ul>
+<p>为了实现第二点要求，我们把这些（系统本身的）供应商提供的框架包装进一套 API —— <a href="http://docs.seleniumhq.org/projects/webdriver/" target="_blank" rel="noopener">WebDriver</a> API 中。WebDriver（也叫 “Selenium WebDriver”）规定了一个客户端-服务器协议（称为 <a href="https://w3c.github.io/webdriver/webdriver-spec.html" target="_blank" rel="noopener">JSON Wire Protocol</a>），按照这种客户端-服务器架构，可以使用任何语言编写的客户端向服务器发送适当的 HTTP 请求。已经有<a href="http://appium.io/downloads" target="_blank" rel="noopener">各个流行编程语言编写的客户端</a>了。这也意味着你可以自由使用任何你想要的测试运行器和测试框架；客户端程序库不过是 HTTP 客户端，可以以任何你喜欢的方式混入你的代码。换句话说，Appium 和 WebDriver 客户端不是严格意义上的“测试框架”，而是“自动化程序库”。你可以以任何你喜欢的方式管理你的测试环境！</p>
+<p>我们以同样的方式实现第三点要求：WebDriver 已经成为 Web 浏览器自动化事实上的标准，并且是一个<a href="https://dvcs.w3.org/hg/webdriver/raw-file/tip/webdriver-spec.html" target="_blank" rel="noopener"> W3C 工作草案</a>。何必在移动端做完全不同的尝试？我们通过附加可用于移动端自动化的 API 方法<a href="https://github.com/SeleniumHQ/mobile-spec/blob/master/spec-draft.md" target="_blank" rel="noopener">扩展了协议</a>。</p>
+<p>显然第 4 点是你在阅读的前提——<a href="https://github.com/appium/appium" target="_blank" rel="noopener"> Appium 是开源的</a></p>
+<h1 id="Appium-概念"><a href="#Appium-概念" class="headerlink" title="Appium 概念"></a>Appium 概念</h1><h2 id="客户端-服务器架构"><a href="#客户端-服务器架构" class="headerlink" title="客户端/服务器架构"></a>客户端/服务器架构</h2><p>Appium 的核心是暴露 REST API 的网络服务器。它接受来自客户端的连接，监听命令并在移动设备上执行，答复表示执行结果的 HTTP 响应。客户端/服务器架构实际给予了许多可能性：我们可以使用任何有 http 客户端 API 的语言编写我们的测试代码，不过选一个<a href="http://appium.io/downloads" target="_blank" rel="noopener"> Appium 客户端程序库 </a>用更容易。我们可以把服务器放在另一台机器上，而不是执行测试的机器。我们可以编写测试代码，并依靠类似 <a href="https://saucelabs.com/mobile" target="_blank" rel="noopener">Sauce Labs</a> 的云服务接收和解释命令。</p>
+<h2 id="会话-session"><a href="#会话-session" class="headerlink" title="会话(session)"></a>会话(session)</h2><p>自动化始终在一个会话的上下文中执行，这些客户端程序库以各自的方式发起与服务器的会话，但都以发给服务器一个 <code>POST /session</code> 请求结束，请求中包含一个被称作 ‘desired capabilities’ 的 JSON 对象。这时服务器就会开启这个自动化会话，并返回一个用于发送后续命令的会话 ID。</p>
+<h2 id="Desired-Capabilities"><a href="#Desired-Capabilities" class="headerlink" title="Desired Capabilities"></a>Desired Capabilities</h2><p>Desired capabilities 是一些发送给 Appium 服务器的键值对集合 (比如 map 或 hash），告诉服务器我们想要启动什么类型的自动化会话。也有各种可以在自动化运行时修改服务器行为的 capabilities。例如，我们可以把 <code>platformName</code> capability 设置为 <code>iOS</code>，告诉 Appium 我们想要 iOS 会话，而不是 Android 或者 Windows 会话。我们也可以设置 <code>safariAllowPopups</code> capability 为 <code>true</code> ，确保我们在 Safari 自动化会话中可以使用 javascript 打开新窗口。有关 Appium capabilities 的完整列表，请参阅 <a href="http://appium.io/docs/cn/writing-running-appium/caps/index.html" target="_blank" rel="noopener">capabilities doc</a> 。</p>
+<h2 id="Appium-服务器"><a href="#Appium-服务器" class="headerlink" title="Appium 服务器"></a>Appium 服务器</h2><p>Appium 是用 Node.js 写的服务器。它可以从<a href="https://github.com/appium/appium/blob/master/docs/en/contributing-to-appium/appium-from-source.md" target="_blank" rel="noopener">源码</a>构建安装或者从 NPM 直接安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g appium</span><br><span class="line">$ appium</span><br></pre></td></tr></table></figure>
+<p><strong>Appium 客户端</strong><br>有多个客户端程序库（Java、Ruby、Python、PHP,、JavaScript 和 C# 的）支持 Appium 对 WebDriver 协议的扩展，你需要用这些客户端程序库代替通常的 WebDriver 客户端。在<a href="http://appium.io/docs/cn/about-appium/appium-clients/" target="_blank" rel="noopener">这里</a>浏览所有程序库的列表。</p>
+<p><strong>Appium.app, Appium.exe</strong><br>有 Appium 服务器的图形界面包装器可以下载。它们打包了 Appium 服务器运行需要的所有东西，所以你不需要为 Node 而烦恼。它们还提供一个 Inspector 使你可以查看你应用的层级结构，这在写测试时很方便。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——Appium原理分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/05/Appium入坑指南——Appium原理分析/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:29:10+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h2 id="title：Appium入坑指南——Appium原理分析"><a href="#title：Appium入坑指南——Appium原理分析" class="headerlink" title="title：Appium入坑指南——Appium原理分析"></a>title：Appium入坑指南——Appium原理分析</h2><h1 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h1><img src="http://pcmve13p6.bkt.clouddn.com/static/images/Appium架构图.jpeg">
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/Appium架构图-2.jpg">
+<h1 id="主要原理"><a href="#主要原理" class="headerlink" title="主要原理"></a>主要原理</h1><ol>
+<li><p>Appium Client</p>
+<p>主要是指实现了Appium功能的WebDriver协议的客户端Library，它负责与Appium服务器建立连接（<code>JSON Wire Protocol</code>），并将测试脚本的指令发送到Appium服务器。正如官网中文版介绍一样，它支持多种语言的客户端。</p>
+</li>
+<li><p>Bootstrap.jar</p>
+<p>Bootstrap是Appium运行在目标测试机器上的一个UiAutomator测试脚本，该脚本的唯一一个测试方法所做的事情是在目标机器开启一个socket服务器来把一个session中Appium从PC端过来的命令发送给UiAutomator来执行处理。这个定义说明了Bootstrap在appium和uiautomator中究竟处于一个什么样的角色：<br>首先，它是一个uiautomator的测试脚本，它的入口类Bootstrap继承于UiAutomatorTestCase，所以UiAututomator可以正常运行它，它也可以正常的使用uiautomator的方法，这个就是Appium的命令可以转换成uiautomator的命令的关键<br>其次，它是一个socket服务器，它专门监听4724端口过来的appium的连接和命令数据，并把appium的命令转换成uiautomator的命令来让uiautomator进行处理<br>最后，它处理的是appium从pc端过来的命令，而非一个文件。这在初次接触appium的朋友是很容易困惑的，以为appium是整个脚本文件发送到目标机器再由bootstrap进行分析处理的，事实并非如此</p>
+</li>
+<li><p>Appium Server</p>
+<p>Appium服务器是Appium框架的核心。它是一个基于Node.js实现的HTTP服务器。Appium服务器的主要功能是起了一个Server（4723端口），跟selenium WebDriver测试框架类似，Appium支持标准的WebDriver JSONWireProtocol。Appium Server接收web driver标准请求，解析请求内容，调用对应的框架响应操作。将命令发送给bootstrap.jar（iOS手机为bootstrap.js）执行，并将命令的执行结果通过HTTP应答反馈给Appium客户端。</p>
+</li>
+</ol>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>Appium在Android上基于UIAutomator实现了测试的代理程序（Bootstrap.jar），在iOS上基于UIAutomation实现了测试的代理程序（Bootstrap.js）。当测试脚本运行时，每行WebDriver的脚本都将转换成Appium的指令发送给Appium服务器，而Appium服务器将测试指令交给代理程序，将由代理程序负责执行测试。比如脚本上的一个点击操作，在Appium服务器上都是touch指令，当指令发送到Android系统上时，Android系统上的Bootstrap.jar将调用UIAutomator的方法实现点击操作；而当指令发送到iOS系统上时，iOS的Bootstrap.js将调用UIAutomation的方法实现点击操作。由于Appium有了这样的能力，同样的测试脚本可以实现跨平台运行。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://www.jianshu.com/p/06aa73eb9b90" target="_blank" rel="noopener">https://www.jianshu.com/p/06aa73eb9b90</a></p>
+<p><a href="https://testerhome.com/topics/1972" target="_blank" rel="noopener">https://testerhome.com/topics/1972</a></p>
+<p><a href="https://discuss.appium.io/t/what-is-working-on-android-side/10222/2" target="_blank" rel="noopener">https://discuss.appium.io/t/what-is-working-on-android-side/10222/2</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/05/Appium入坑指南——环境搭建/" itemprop="url">Appium入坑指南——环境搭建</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:21:11+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前言：本文操作系统基于ubuntu 16.04（Windows搭建步骤大同小异），Appium有两种方式搭建：1、通过npm安装；2、通过Appium Desktop安装。</p>
+<p><em>注：本系列文章仅为笔者学习笔记，大量文字均是摘录自热心网友的文章，如未注明转载皆为无心之失。</em></p>
+<h1 id="通过npm安装"><a href="#通过npm安装" class="headerlink" title="通过npm安装"></a>通过npm安装</h1><h2 id="安装node-js和npm"><a href="#安装node-js和npm" class="headerlink" title="安装node.js和npm"></a>安装node.js和npm</h2><ol>
+<li><p>安装node.js和npmd</p>
+<p>从<a href="https://nodejs.org/en/" target="_blank" rel="noopener">官网</a>下载node.js最新稳定版本</p>
+</li>
+<li><p>本地解压：<figure class="highlight plain"><figcaption><span>-Jxvf node-v8.12.0-linux-x64.tar.xz```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">3. 在/etc/profile文件中添加环境变量：</span><br><span class="line"></span><br><span class="line">   ```export PATH=/home/hezj/Software/node/node-v8.12.0-linux-x64/bin:$PATH</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><figcaption><span>PATH</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   重启电脑使之生效。</span><br><span class="line"></span><br><span class="line">4. 验证node和npm是否安装成功</span><br><span class="line"></span><br><span class="line">   ```node -v```,```npm -v</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="通过npm安装Appium"><a href="#通过npm安装Appium" class="headerlink" title="通过npm安装Appium"></a>通过npm安装Appium</h2><ol>
+<li><p>npm安装需要翻墙，我们使用淘宝镜像</p>
+<p>配置npm的下载镜像：<figure class="highlight plain"><figcaption><span>config set registry</span><a href="https://registry.npm.taobao.org```" target="_blank" rel="noopener">link</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. 使用淘宝定制的cnpm工具代替默认的npm</span><br><span class="line"></span><br><span class="line">   ```npm install -g cnpm --registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure></p>
+</li>
+<li><p>使用：<figure class="highlight plain"><figcaption><span>install express```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4. 安装Appium：```cnpm install -g appium</span><br></pre></td></tr></table></figure></p>
+</li>
+<li><p>检查Appium是否安装成功：<figure class="highlight plain"><figcaption><span>-v```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 安装appium-doctor</span><br><span class="line"></span><br><span class="line">安装appium-doctor，检查appium的所有依赖环境是否已经安装好</span><br><span class="line"></span><br><span class="line">1. ```npm install -g appium-doctor</span><br></pre></td></tr></table></figure></p>
+</li>
+<li><p>运行appium-doctor：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   附上一张安装成功的截图：</span><br><span class="line"></span><br><span class="line">   &#123;% qnimg  appium-doctor.png %&#125;</span><br><span class="line"></span><br><span class="line">## 遇到的问题：</span><br><span class="line"></span><br><span class="line">1. 未设置ANDROID_HOME环境变量：</span><br><span class="line"></span><br><span class="line">   ```export ANDROID_HOME=/home/hezj/Software/AndroidStudio/SDK/</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><figcaption><span>PATH</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```export PATH=$&#123;ANDROID_HOME&#125;/platform-tools:$PATH</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="通过Appium-Desktop安装"><a href="#通过Appium-Desktop安装" class="headerlink" title="通过Appium Desktop安装"></a>通过Appium Desktop安装</h1><ol>
+<li><p>在官网上下载<a href="https://github.com/appium/appium-desktop/releases/tag/1.7.0" target="_blank" rel="noopener">appium-desktop</a>，注意：ubuntu环境下要下载.AppImage结尾的文件</p>
+</li>
+<li><p>执行<code>chmod a+x appium-desktop-1.7.0-x86_64.AppImage</code>，然后<code>sudo ./appium-desktop-1.7.0-x86_64.AppImage</code></p>
+<p>遇到的问题：</p>
+<p>在直接启动appium-desktop-1.7.0-x86_64.AppImage之后，点击Start Server V1.9.0，会报错，错误截图如下：</p>
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/权限拒绝.png">
+</li>
+</ol>
+<p>暂无解决办法，只好每次都执行<code>sudo ./appium-desktop-1.7.0-x86_64.AppImage</code>。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/17/软件设计原则和设计模式小记(二)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/17/软件设计原则和设计模式小记(二)/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-17T22:38:36+08:00">
+                2018-09-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h2 id="title-软件设计原则和设计模式小记（二）"><a href="#title-软件设计原则和设计模式小记（二）" class="headerlink" title="title:软件设计原则和设计模式小记（二）"></a>title:软件设计原则和设计模式小记（二）</h2><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在上篇<a href="http://ucoon.tech/2018/08/07/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%E5%92%8C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%B0%8F%E8%AE%B0/" target="_blank" rel="noopener">软件设计原则和设计模式小记（一）</a>中，主要介绍了面向对象的S.O.L.I.D原则和高内聚、低耦合的概念。本文将继续介绍常用的几种设计模式：单例模式、简单工厂模式、策略模式、适配器模式、模板方法模式、装饰者模式以及享元模式。</p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/07/软件设计原则和设计模式小记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1077,699 +1771,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/25/Annotation注解类/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/25/Annotation注解类/" itemprop="url">Annotation注解类</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-25T00:13:22+08:00">
-                2018-01-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Annotation注解类"><a href="#Annotation注解类" class="headerlink" title="Annotation注解类"></a>Annotation注解类</h1><p>本文结构：<br><img src="http://pcmve13p6.bkt.clouddn.com/static/images/Annotation.png"></p>
-<h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><p> Java Annotation是JDK5.0引入的一种注释机制。</p>
-<p> 关于Annotation注解的概念，我们可以先看下官方的解释：</p>
-<blockquote>
-<p>Annotations, a form of metadata;<br>provide data about a program that is not part of the program itself.<br>Annotations have no direct effect on the operation of the code they annotate</p>
-</blockquote>
-<p>Annotation注解是Java中的一种元数据，它可以往程序中添加额外的数据，并且对注解的代码无直接的影响。注解是一种接口，可以作用于包名、类、方法、属性、参数等。它可以通过反射机制来访问annotation信息，获得所加的注解信息。</p>
-<h2 id="2-Java-lang中的注解"><a href="#2-Java-lang中的注解" class="headerlink" title="2. Java.lang中的注解"></a>2. Java.lang中的注解</h2><p> Java.lang中的注解又称为标准Annotation，即常用到的Deprecated、Override和SuppressWarnings。<br> （1）@Deprecated 过时：表示该方法已过时，建议使用新的一些方法代替。<br> （2）@Override 复写：表示复写父类的方法，如果方法上有这条注解但没有重写父类方法，则会生成一条错误信息。这个注解保证了方法一定会被复写。比如在开发过程中，手动在子类中复写父类的方法，只正确写出了方法名称，未写出正确的方法参数，则相当于方法的重载，并不是复写。所以使用@Override注解，有效地表明，此方法是复写父类的方法，不会产生手动的错误问题。<br> （3）@SuppressWarnings 阻止警告，阻止弹出的警告，比如加上此注解可屏蔽上述过时的警告。</p>
-<h2 id="3-元注解"><a href="#3-元注解" class="headerlink" title="3. 元注解"></a>3. 元注解</h2><p>元注解是指注解Annotation的注解。以Override的源代码为例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.METHOD)  </span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.SOURCE)  </span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Override &#123;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>注解类的定义方法以及注解类上所加的注解。元注解有四个，位于java.lang.annotation包中：Target，Retention，Documented、Inherited。</p>
-<p>3.1  @Target 表示注解作用的目标。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target&#123;</span><br><span class="line">	ElementType[] value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p> 注解作用的目标由枚举类ElementType决定。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ElementType&#123;</span><br><span class="line">	TYPE,<span class="comment">//类、接口、注解类型或枚举</span></span><br><span class="line">	FIELD,<span class="comment">//属性</span></span><br><span class="line">	METHOD,<span class="comment">//方法</span></span><br><span class="line">	PARAMETER,<span class="comment">//用于描述参数</span></span><br><span class="line">	CONSTRUCTOR,<span class="comment">//构造方法</span></span><br><span class="line">	LOCAL_VARIABLE,<span class="comment">//局部变量</span></span><br><span class="line">	ANNOTATION_TYPE,<span class="comment">//注解类</span></span><br><span class="line">	PACKAGE,<span class="comment">//包</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>注</strong>：Class，interface等都实现了java中的Type接口，因此ElementType.TYPE表示注解作用于这些“类”（并不是单纯的Class类）</p>
-<p>3.2 @Retention 表示注解的作用时段</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target&#123;</span><br><span class="line">	<span class="function">RetentionPolicy <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>由源码可见，Retention定义的是RetentionPolicy类型的数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> RetentionPolicy&#123;</span><br><span class="line">	SOURCE,<span class="comment">//表示注解只在源文件中保留</span></span><br><span class="line">	CLASS,<span class="comment">//表示注解保留到.class文件中</span></span><br><span class="line">	RUNTIME,<span class="comment">//表示注解一直保留到内存中，类加载器把.class文件加载到内存中产生的字节码中要保留注解信息</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>3.3 @Documented 表示javadoc所生成的文档会带上注解信息。<br>3.4 @Inherited 表示子类可以集成加载父类上的注解，但要注意：（1）注解定义在类上面，子类可以继承该注解；（2）注解定义在方法上，子类也可继承该注解；但是如果子类复写了父类中定义了注解的方法，子类将无法继承该方法上的注解；（3）Interface的实现类无法继承接口中所定义的被@Inherited标注的注解</p>
-<h2 id="4-注解的参数"><a href="#4-注解的参数" class="headerlink" title="4. 注解的参数"></a>4. 注解的参数</h2><p>参数类型支持基本数据类型、Class类型、enum类型、Annotation类型以及上述所有类型的数组。</p>
-<h2 id="5-自定义注解"><a href="#5-自定义注解" class="headerlink" title="5. 自定义注解"></a>5. 自定义注解</h2><p>步骤：</p>
-<ol>
-<li>使用@interface定义一个注解类（其内部自行继承了Annotation类）</li>
-<li>在该类中定义注解的参数（类似定义方法）</li>
-<li>注解元素必须由确定的值，可在定义注解的默认值中指定，也可在使用注解时指定（非基本类型的注解元素的值不可为null）<br>example：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Car&#123;</span><br><span class="line">	<span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">number</span><span class="params">()</span> <span class="keyword">default</span> -1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Car</span>(name = <span class="string">"宝马"</span>, number = <span class="number">666</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CarBWM</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		<span class="comment">//判断CarBMW是否有注解类Car</span></span><br><span class="line">		<span class="keyword">if</span>(CarBMW.class.isAnnotationPresent(Car.class))&#123;</span><br><span class="line">			Car carAnnotation = (Car)CarBMW.class.getAnnotation(Car.class);</span><br><span class="line">			System.out.println(<span class="string">"car name "</span> + carAnnotation.name());</span><br><span class="line">			System.out.println(<span class="string">"car number "</span> + carAnnotation.number());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/31/Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/31/Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期/" itemprop="url">Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-31T22:08:36+08:00">
-                2017-07-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Fragment学习之-懒加载-Fragment在ViewPager中的生命周期"><a href="#Fragment学习之-懒加载-Fragment在ViewPager中的生命周期" class="headerlink" title="Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期"></a>Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期</h1><p>前言：最近做了个新项目，第一次用到了Fragment的懒加载，顺便学习了下ViewPager的预加载。</p>
-<h2 id="ViewPager的预加载"><a href="#ViewPager的预加载" class="headerlink" title="ViewPager的预加载"></a>ViewPager的预加载</h2><p>首先说明一下什么是ViewPager的预加载：默认情况下ViewPager会把当前Fragment的左右相邻页面预先初始化（俗称预加载），比如你当前在第二个Fragment的页面，其实左右第一和第三的Fragment已经初始化好了，这样做的好处是ViewPager左右滑动更流畅。我们可以写个简单例子（部分代码）：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        NoScrollViewPager viewPager = (NoScrollViewPager) findViewById(R.id.viewPager);</span><br><span class="line">        viewPager.setAdapter(<span class="keyword">new</span> MainAdapter(getSupportFragmentManager()));</span><br><span class="line">        AlphaIndicator alphaIndicator = (AlphaIndicator) findViewById(R.id.alphaIndicator);</span><br><span class="line">        alphaIndicator.setViewPager(viewPager);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">MainAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> List&lt;Fragment&gt; fragments = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">MainAdapter</span><span class="params">(FragmentManager fm)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(fm);</span><br><span class="line">            fragments.add(<span class="keyword">new</span> Fragment01());</span><br><span class="line">            fragments.add(<span class="keyword">new</span> Fragment02());</span><br><span class="line">            fragments.add(<span class="keyword">new</span> Fragment03());</span><br><span class="line">            fragments.add(<span class="keyword">new</span> Fragment04());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> fragments.get(position);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> fragments.size();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Fragment01.java:</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Fragment01</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"Fragment"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAttach</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttach(context);</span><br><span class="line">        Log.d(TAG, <span class="string">"Fragment01 ==&gt; onAttach()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"Fragment01 ==&gt; onCreateView()"</span>);</span><br><span class="line">        <span class="comment">//引用创建好的xml布局</span></span><br><span class="line">        View view = inflater.inflate(R.layout.item01,container,<span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">return</span> view;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroyView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroyView();</span><br><span class="line">        Log.d(TAG, <span class="string">"Fragment01 ==&gt; onDestroyView()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        Log.d(TAG, <span class="string">"Fragment01 ==&gt; onDestroy()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后我们运行并打印日志：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">29.809</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment01 ==&gt; onAttach()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">29.809</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment02 ==&gt; onAttach()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">29.809</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment01 ==&gt; onCreateView()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">29.856</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment02 ==&gt; onCreateView()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">42.110</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment03 ==&gt; onAttach()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">42.110</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment03 ==&gt; onCreateView()</span><br><span class="line">                                           </span><br><span class="line">                                           [ <span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">42.319</span>    <span class="number">81</span>:   <span class="number">81</span> D/         ]</span><br><span class="line">                                           Socket deconnection</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">55</span>:<span class="number">21.653</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment04 ==&gt; onAttach()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">55</span>:<span class="number">21.653</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment04 ==&gt; onCreateView</span><br></pre></td></tr></table></figure></p>
-<p>从日志中我们可以看出，当位于Fragment02时，Fragment01和Fragment03是已经初始化完成了的，viewpager预加载是3页。这种特性会导致资源浪费：</p>
-<ul>
-<li>预加载不可见的Fragment时，初始化数据和其页面会占用大量资源（用户很可能只看第一个，后面两个不想看了）</li>
-<li>如果当前页面内有动画或其他持续性操作，Fragment的状态切换时操作的相关问题。<br>所以，为了保持良好的用户体验，我们应该在页面处于可见状态时再去初始化和加载数据。<br><strong>解决方法</strong>：封装Fragment懒加载</li>
-</ul>
-<h2 id="Fragment-懒加载"><a href="#Fragment-懒加载" class="headerlink" title="Fragment 懒加载"></a>Fragment 懒加载</h2><p>懒加载指的是当有需要的时候才去加载。我们可以重写Fragment的setUserVisibleHint()。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseLazyFragment</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String TAG = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//第一次可见状态，第一次不可见状态</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isFirstVisible = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isFirstInVisible = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isPrepared;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        TAG = <span class="keyword">this</span>.getClass().getSimpleName();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (getContentViewLayoutID() != <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> inflater.inflate(getContentViewLayoutID(), <span class="keyword">null</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.onCreateView(inflater, container, savedInstanceState);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewCreated</span><span class="params">(View view, @Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState);</span><br><span class="line">        initView(view);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityCreated</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onActivityCreated(savedInstanceState);</span><br><span class="line">        initPrepared();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">initPrepared</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(isPrepared)&#123;</span><br><span class="line">            onFirstUserVisible();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            isPrepared = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//可见状态，不可见状态</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserVisibleHint</span><span class="params">(<span class="keyword">boolean</span> isVisibleToUser)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.setUserVisibleHint(isVisibleToUser);</span><br><span class="line">        <span class="keyword">if</span>(isVisibleToUser)&#123;</span><br><span class="line">            <span class="keyword">if</span>(isFirstVisible)&#123;</span><br><span class="line">                isFirstVisible = <span class="keyword">false</span>;</span><br><span class="line">                initPrepared();</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                onUserVisible();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (isFirstInVisible)&#123;</span><br><span class="line">                isFirstInVisible = <span class="keyword">false</span>;</span><br><span class="line">                onFirstUserInVisible();</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                onUserInVisible();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        destroyViewAndThing();</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">getContentViewLayoutID</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">(View view)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//建议在此函数内初始化view或请求数据（only once的那种）</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onFirstUserVisible</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onFirstUserInVisible</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//相当于onResume()</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onUserVisible</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onUserInVisible</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">destroyViewAndThing</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>当然在这个基类中我们还可以封装一些通用的方法，比如页面跳转，吐司…</p>
-<p>ps：不排除存在我们需要在界面不可见的时候去请求数据的需求，所以还是具体业务具体分析，然后再选择最合适的解决方案。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/18/从源码解析Android异步消息处理机制（三）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/18/从源码解析Android异步消息处理机制（三）/" itemprop="url">从源码解析Android异步消息处理机制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-18T21:06:46+08:00">
-                2017-07-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="从源码解析Android异步消息处理机制（三）"><a href="#从源码解析Android异步消息处理机制（三）" class="headerlink" title="从源码解析Android异步消息处理机制（三）"></a>从源码解析Android异步消息处理机制（三）</h1><hr>
-<p><strong>前言：本篇纯属个人学习笔记，故摘录《Android开发艺术探索》大量语句，特此声明</strong></p>
-<hr>
-<ul>
-<li>目的：本篇主要学习主线程中的消息循环以及Handler、HandlerThread和Thread的相区别。<br><em><a href="https://ucoon.github.io/2017/07/13/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89/" target="_blank" rel="noopener">MessageQueue以及Looper的相关知识请见此系列的第一篇</a></em><br><em><a href="https://ucoon.github.io/2017/07/17/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89/" target="_blank" rel="noopener">Handler的相关知识请见此系列的第二篇</a></em><br>主线程中的消息循环</li>
-</ul>
-<hr>
-<p>问题：主线程默认可以使用Handler的原因？<br>Android的主线程是ActivityThread（Android.app.ActivityThread类），我们可以看它的main方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SamplingProfilerIntegration.start();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// CloseGuard defaults to true and can be quite spammy.  We</span></span><br><span class="line">        <span class="comment">// disable it here, but selectively enable it later (via</span></span><br><span class="line">        <span class="comment">// StrictMode) on debug builds, but using DropBox, not logs.</span></span><br><span class="line">        CloseGuard.setEnabled(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        Environment.initForCurrentUser();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Set the reporter for event logging in libcore</span></span><br><span class="line">        EventLogger.setReporter(<span class="keyword">new</span> EventLoggingReporter());</span><br><span class="line"></span><br><span class="line">        Security.addProvider(<span class="keyword">new</span> AndroidKeyStoreProvider());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure TrustedCertificateStore looks in the right place for CA certificates</span></span><br><span class="line">        <span class="keyword">final</span> File configDir = Environment.getUserConfigDirectory(UserHandle.myUserId());</span><br><span class="line">        TrustedCertificateStore.setDefaultUserDirectory(configDir);</span><br><span class="line"></span><br><span class="line">        Process.setArgV0(<span class="string">"&lt;pre-initialized&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        Looper.prepareMainLooper();</span><br><span class="line"></span><br><span class="line">        ActivityThread thread = <span class="keyword">new</span> ActivityThread();</span><br><span class="line">        thread.attach(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (sMainThreadHandler == <span class="keyword">null</span>) &#123;</span><br><span class="line">            sMainThreadHandler = thread.getHandler();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">false</span>) &#123;</span><br><span class="line">            Looper.myLooper().setMessageLogging(<span class="keyword">new</span></span><br><span class="line">                    LogPrinter(Log.DEBUG, <span class="string">"ActivityThread"</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Looper.loop();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Main thread loop unexpectedly exited"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Initialize the current thread as a looper, marking it as an</span></span><br><span class="line"><span class="comment">     * application's main looper. The main looper for your application</span></span><br><span class="line"><span class="comment">     * is created by the Android environment, so you should never need</span></span><br><span class="line"><span class="comment">     * to call this function yourself.  See also: &#123;<span class="doctag">@link</span> #prepare()&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prepareMainLooper</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        prepare(<span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">synchronized</span> (Looper.class) &#123;</span><br><span class="line">            <span class="keyword">if</span> (sMainLooper != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"The main Looper has already been prepared."</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            sMainLooper = myLooper();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">(<span class="keyword">boolean</span> quitAllowed)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sThreadLocal.get() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Only one Looper may be created per thread"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    sThreadLocal.set(<span class="keyword">new</span> Looper(quitAllowed));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在main方法中通过Looper.prepareMainLooper()来创建主线程的Looper以及MessageQueue，并通过Looper.loop()来开启主线程的消息循环。当然ActivityThread还需要一个Handler来和消息队列进行交换，从源码我们看出sMainThreadHandler就是ActivityThread.H，它内部定义了一组消息类型，主要包含了四大组件的启动和停止等过程。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> LAUNCH_ACTIVITY         = <span class="number">100</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PAUSE_ACTIVITY          = <span class="number">101</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PAUSE_ACTIVITY_FINISHING= <span class="number">102</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STOP_ACTIVITY_SHOW      = <span class="number">103</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STOP_ACTIVITY_HIDE      = <span class="number">104</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SHOW_WINDOW             = <span class="number">105</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> HIDE_WINDOW             = <span class="number">106</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RESUME_ACTIVITY         = <span class="number">107</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SEND_RESULT             = <span class="number">108</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DESTROY_ACTIVITY        = <span class="number">109</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> BIND_APPLICATION        = <span class="number">110</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> EXIT_APPLICATION        = <span class="number">111</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> NEW_INTENT              = <span class="number">112</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RECEIVER                = <span class="number">113</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CREATE_SERVICE          = <span class="number">114</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SERVICE_ARGS            = <span class="number">115</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STOP_SERVICE            = <span class="number">116</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">          <span class="keyword">if</span> (DEBUG_MESSAGES) Slog.v(TAG, <span class="string">"&gt;&gt;&gt; handling: "</span> + msg.what);</span><br><span class="line">          <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">           ...</span><br><span class="line">		<span class="keyword">case</span> EXIT_APPLICATION:</span><br><span class="line">                   <span class="keyword">if</span> (mInitialApplication != <span class="keyword">null</span>) &#123;</span><br><span class="line">                       mInitialApplication.onTerminate();</span><br><span class="line">                   &#125;</span><br><span class="line">                   Looper.myLooper().quit();</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">				...</span><br><span class="line">			&#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">scheduleExit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">          queueOrSendMessage(H.EXIT_APPLICATION, <span class="keyword">null</span>);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure></p>
-<p>而在学习Looper.loop()时，我们提过，只有调用了Looper.quit()，loop()才会跳出循环，对于主程序的消息循环，我一直没有找到源码是在哪里调用了scheduleExit()（如果读者知道，恳请赐教…）<br>对于主线程的消息循环还涉及了ApplicationThread和AMS的相关知识，由于笔者学的尚浅，所以此处留空以待学完再来补充……</p>
-<p><strong>HandlerThread</strong></p>
-<p>我们知道在子线程之间通信可以使用Handler+Thread来完成（需操作Looper：调用Looper.prepare()和Looper.loop()），对于这个需求Google官方已经封装了一个类——HandlerThread<br>HandlerThread的源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HandlerThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> mPriority;</span><br><span class="line">    <span class="keyword">int</span> mTid = -<span class="number">1</span>;</span><br><span class="line">    Looper mLooper;</span><br><span class="line">    </span><br><span class="line">	...</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mTid = Process.myTid();</span><br><span class="line">        Looper.prepare();</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            mLooper = Looper.myLooper();</span><br><span class="line">            notifyAll();</span><br><span class="line">        &#125;</span><br><span class="line">        Process.setThreadPriority(mPriority);</span><br><span class="line">        onLooperPrepared();</span><br><span class="line">        Looper.loop();</span><br><span class="line">        mTid = -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以看到HandlerThread继承了Thread，它是一种可以使用Handler的Thread，它在run方法中通过Looper.prepare()来创建消息队列，并通过Looper.loop来开启消息循环。它和普通线程的区别就是多了一个Looper，这是子线程特有的Looper，用来做消息的取出和处理。由于HandlerThread的run方法是个死循环，因此当不需要使用HandlerThread时，可以通过它的quit()或quitSafely()来终止线程的执行。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">quit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       Looper looper = getLooper();</span><br><span class="line">       <span class="keyword">if</span> (looper != <span class="keyword">null</span>) &#123;</span><br><span class="line">           looper.quit();</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">quitSafely</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       Looper looper = getLooper();</span><br><span class="line">       <span class="keyword">if</span> (looper != <span class="keyword">null</span>) &#123;</span><br><span class="line">           looper.quitSafely();</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
-<p>最后撸一个示例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> HandlerThread mHandlerThread;</span><br><span class="line">......</span><br><span class="line">mHandlerThread = <span class="keyword">new</span> HandlerThread(<span class="string">"HandlerThread"</span>);</span><br><span class="line">handlerThread.start();</span><br><span class="line"><span class="comment">//创建Handler，使用mHandlerThread.getLooper()生成Looper</span></span><br><span class="line"><span class="keyword">final</span> Handler handler = <span class="keyword">new</span> Handler(mHandlerThread.getLooper())&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">                System.out.println(<span class="string">"收到消息"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"><span class="comment">//然后再新建一个子线程来发送消息</span></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">1000</span>);<span class="comment">//模拟耗时操作</span></span><br><span class="line">                    handler.sendEmptyMessage(<span class="number">0</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"><span class="comment">//最后一定不要忘了在onDestroy释放,避免内存泄漏</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        mHandlerThread.quit();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/17/从源码解析Android异步消息处理机制（二）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/17/从源码解析Android异步消息处理机制（二）/" itemprop="url">从源码解析Android异步消息处理机制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-17T23:29:33+08:00">
-                2017-07-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="从源码解析Android异步消息处理机制（二）"><a href="#从源码解析Android异步消息处理机制（二）" class="headerlink" title="从源码解析Android异步消息处理机制（二）"></a>从源码解析Android异步消息处理机制（二）</h1><hr>
-<p><strong>前言：本篇纯属个人学习笔记，故摘录《Android开发艺术探索》大量语句，特此声明</strong></p>
-<hr>
-<ul>
-<li>目的：深入理解Looper、Handler、MessageQueue三者之间的关系。<br><em><a href="https://ucoon.github.io/2017/07/13/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89/" target="_blank" rel="noopener">MessageQueue以及Looper的相关知识请见此系列的第一篇</a></em><br>Handler</li>
-</ul>
-<hr>
-<p>Handler是Android消息机制的上层接口，对于Handler的使用我们是熟悉的，我们往往认为Handler的作用仅仅是更新UI，但其实这只是Handler的一个特殊的使用场景。Handler的主要作用是将一个任务切换到某个指定的线程中去执行。<br>当然我们常用Handler来更新UI是有原因的：这是因为Android规定访问UI只能在主线程（UI线程）中进行，如果在子线程中访问UI，那么程序会抛出异常。ViewRootImpl（Android.View.ViewRootImpl）.checkThread()方法对UI操作做了验证<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">checkThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(mThread != Thread.currentThread()) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> CalledFromWrongThreadException(</span><br><span class="line">					<span class="string">"Only the original thread that created a view hierarchy can touch its views."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>因此必须在主线程中访问UI，但又不能在主线程中进行耗时操作，否则会导致ANR（程序无响应）。这时候就是Handler起作用的时候了。</p>
-<p>延伸：系统为什么不允许在子线程中访问UI？这是因为Android的UI控件不是<a href="https://ucoon.github.io/2017/05/21/%E3%80%8AJava%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%AE%9E%E8%B7%B5%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" target="_blank" rel="noopener">线程安全的</a>。</p>
-<blockquote>
-<p>当多个线程访问一个类时，若不用考虑这些线程在运行时环境下的调整和交替执行，并且不需要额外的同步及在调用方代码不必做其他的协调，这个类的行为仍然是正确的，那么称这个类是线程安全的。</p>
-</blockquote>
-<p>所以在多线程中并发访问可能会导致UI控件处于不可预期的状态。对于多线程操作我们可以使用锁机制，但是系统不对UI控件的访问加上锁机制是有原因的：①会增加逻辑的复杂性；②会降低UI访问的效率，因为锁机制会阻塞某些线程的执行。<br>首先我们看看Handler的默认构造方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Handler</span><span class="params">(Callback callback, <span class="keyword">boolean</span> async)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (FIND_POTENTIAL_LEAKS) &#123;</span><br><span class="line">        <span class="keyword">final</span> Class&lt;? extends Handler&gt; klass = getClass();</span><br><span class="line">        <span class="keyword">if</span> ((klass.isAnonymousClass() || klass.isMemberClass() || klass.isLocalClass()) &amp;&amp;</span><br><span class="line">                (klass.getModifiers() &amp; Modifier.STATIC) == <span class="number">0</span>) &#123;</span><br><span class="line">            Log.w(TAG, <span class="string">"The following Handler class should be static or leaks might occur: "</span> +</span><br><span class="line">                klass.getCanonicalName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mLooper = Looper.myLooper();</span><br><span class="line">    <span class="keyword">if</span> (mLooper == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(</span><br><span class="line">            <span class="string">"Can't create handler inside thread that has not called Looper.prepare()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    mQueue = mLooper.mQueue;</span><br><span class="line">    mCallback = callback;</span><br><span class="line">    mAsynchronous = async;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>从上面我们可以看出如果当前线程没有Looper的话，就会抛出异常，这也就解释了在没有Looper的子线程中创建Handler会引发程序异常的原因了。紧接着又获取mLooper实例中保存的mQueue，这样Handler就与MessageQueue关联上了。<br>接下来我们啃一下我们最常用的方法——sengMessage(msg)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">sendMessage</span><span class="params">(Message msg)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sendMessageDelayed(msg, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">sendMessageDelayed</span><span class="params">(Message msg, <span class="keyword">long</span> delayMillis)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (delayMillis &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            delayMillis = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">sendMessageAtTime</span><span class="params">(Message msg, <span class="keyword">long</span> uptimeMillis)</span> </span>&#123;</span><br><span class="line">        MessageQueue queue = mQueue;</span><br><span class="line">        <span class="keyword">if</span> (queue == <span class="keyword">null</span>) &#123;</span><br><span class="line">            RuntimeException e = <span class="keyword">new</span> RuntimeException(</span><br><span class="line">                    <span class="keyword">this</span> + <span class="string">" sendMessageAtTime() called with no mQueue"</span>);</span><br><span class="line">            Log.w(<span class="string">"Looper"</span>, e.getMessage(), e);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> enqueueMessage(queue, msg, uptimeMillis);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">enqueueMessage</span><span class="params">(MessageQueue queue, Message msg, <span class="keyword">long</span> uptimeMillis)</span> </span>&#123;</span><br><span class="line">        msg.target = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">if</span> (mAsynchronous) &#123;</span><br><span class="line">            msg.setAsynchronous(<span class="keyword">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> queue.enqueueMessage(msg, uptimeMillis);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>辗转反侧到了enqueueMessage()方法中，首先为msg.target赋值为this，而在Looper的loop方法会取出每个msg，并交给msg.target.dispatchMessage(msg)去处理消息，也就是将当前的handler作为msg的target属性。最终调用queue的enqueueMessage的方法。简而言之，Handler发送消息的过程仅仅是向消息队列中插入一条消息。而消息由Looper交由Handler处理（dispatchMessage()）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dispatchMessage</span><span class="params">(Message msg)</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">if</span> (msg.callback != <span class="keyword">null</span>) &#123;  </span><br><span class="line">            handleCallback(msg);  </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">            <span class="keyword">if</span> (mCallback != <span class="keyword">null</span>) &#123;  </span><br><span class="line">                <span class="keyword">if</span> (mCallback.handleMessage(msg)) &#123;  </span><br><span class="line">                    <span class="keyword">return</span>;  </span><br><span class="line">                &#125;  </span><br><span class="line">            &#125;  </span><br><span class="line">            handleMessage(msg);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">     <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Subclasses must implement this to receive messages.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>handler处理消息的流程如下：<br>首先检查Message的callback是否为null， 不为null就通过handleCallback(msg)来处理消息。handleCallback()实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">handleCallback</span><span class="params">(Message message)</span> </span>&#123;</span><br><span class="line">        message.callback.run();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>message的callback是一个Runnable对象，实际上就是Handler的post传递的Runnable参数。其次检查mCallback是否为null，不为null就调用mCallback的handleMessage()方法。<br>mCallback是一个接口：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Callback interface you can use when instantiating a Handler to avoid</span></span><br><span class="line"><span class="comment">     * having to implement your own subclass of Handler.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> msg A &#123;<span class="doctag">@link</span> android.os.Message Message&#125; object</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> True if no further handling is desired</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Callback</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span></span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>最后还是调到handleMessage()方法。这就给我们提供了另一种方式来创建Handler对象，就如源码中的注释。<br>handleMessage()是一个空方法，消息的最终回调是由我们控制的，我们在创建Handler的时候都是复写handlerMessage方法，然后根据msg.what去处理消息的。</p>
-<p>当然，在使用Handler时，应注意内存泄漏问题，相关解决办法可自行google。</p>
-<p><strong>小结</strong></p>
-<ol>
-<li>Handler的构造方法会获取当前线程中保存的Looper实例，进而与Looper实例中的MessageQueue关联上。</li>
-<li>Handler的sendMessage()会将当前的handler作为msg的target属性。最终调用queue的enqueueMessage的方法。简而言之，Handler发送消息的过程仅仅是向消息队列中插入一条消息。而消息由Looper交由Handler处理（dispatchMessage()）。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/13/从源码解析Android异步消息处理机制（一）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/13/从源码解析Android异步消息处理机制（一）/" itemprop="url">从源码解析Android异步消息处理机制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-13T22:46:12+08:00">
-                2017-07-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="从源码解析Android异步消息处理机制（一）"><a href="#从源码解析Android异步消息处理机制（一）" class="headerlink" title="从源码解析Android异步消息处理机制（一）"></a>从源码解析Android异步消息处理机制（一）</h1><hr>
-<p><strong>前言：本篇纯属个人学习笔记，故摘录《Android开发艺术探索》大量语句，特此声明</strong></p>
-<hr>
-<ul>
-<li>目的：深入理解Looper、Handler、MessageQueue三者之间的关系。<h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2></li>
-</ul>
-<hr>
-<p>Android的消息机制主要指Handler的运行机制，Handler的运行又和MessageQueue、Looper这两者紧密相关。简单来说，异步消息处理线程启动后，Looper会以无限循环的形式去MessageQueue查找是否有新的消息，如果有的话就回调相应的消息处理函数，否则就一直等待着（阻塞）。</p>
-<h2 id="2-源码解析"><a href="#2-源码解析" class="headerlink" title="2.源码解析"></a>2.源码解析</h2><h3 id="MessageQueue"><a href="#MessageQueue" class="headerlink" title="MessageQueue"></a>MessageQueue</h3><p>MessageQueue（Android.os.MessageQueue类），消息队列。它的内部存储了一组消息，以队列的形式对外提供插入和读取的工作（读取操作本身会伴随着删除操作）。虽然叫消息队列，但是它的内部存储结构并不是真正的队列，而是采用<em>单链表的数据结构</em>来存储消息列表。插入和读取对应的方法分别是enqueueMessage()和next()。<br>我们主要看next()方法（而enqueueMessage()方法有兴趣的道友可自行查看源码）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Message <span class="title">next</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pendingIdleHandlerCount = -<span class="number">1</span>; <span class="comment">// -1 only during first iteration</span></span><br><span class="line">    <span class="keyword">int</span> nextPollTimeoutMillis = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        <span class="keyword">if</span> (nextPollTimeoutMillis != <span class="number">0</span>) &#123;</span><br><span class="line">            Binder.flushPendingCommands();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// We can assume mPtr != 0 because the loop is obviously still running.</span></span><br><span class="line">        <span class="comment">// The looper will not call this method after the loop quits.</span></span><br><span class="line">        nativePollOnce(mPtr, nextPollTimeoutMillis);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            <span class="comment">// Try to retrieve the next message.  Return if found.</span></span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">long</span> now = SystemClock.uptimeMillis();</span><br><span class="line">            Message prevMsg = <span class="keyword">null</span>;</span><br><span class="line">            Message msg = mMessages;</span><br><span class="line">            <span class="keyword">if</span> (msg != <span class="keyword">null</span> &amp;&amp; msg.target == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// Stalled by a barrier.  Find the next asynchronous message in the queue.</span></span><br><span class="line">                <span class="keyword">do</span> &#123;</span><br><span class="line">                    prevMsg = msg;</span><br><span class="line">                    msg = msg.next;</span><br><span class="line">                &#125; <span class="keyword">while</span> (msg != <span class="keyword">null</span> &amp;&amp; !msg.isAsynchronous());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (msg != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (now &lt; msg.when) &#123;</span><br><span class="line">                    <span class="comment">// Next message is not ready.  Set a timeout to wake up when it is ready.</span></span><br><span class="line">                    nextPollTimeoutMillis = (<span class="keyword">int</span>) Math.min(msg.when - now, Integer.MAX_VALUE);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// Got a message.</span></span><br><span class="line">                    mBlocked = <span class="keyword">false</span>;</span><br><span class="line">                    <span class="keyword">if</span> (prevMsg != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        prevMsg.next = msg.next;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        mMessages = msg.next;</span><br><span class="line">                    &#125;</span><br><span class="line">                    msg.next = <span class="keyword">null</span>;</span><br><span class="line">                    <span class="keyword">if</span> (<span class="keyword">false</span>) Log.v(<span class="string">"MessageQueue"</span>, <span class="string">"Returning message: "</span> + msg);</span><br><span class="line">                    msg.markInUse();</span><br><span class="line">                    <span class="keyword">return</span> msg;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// No more messages.</span></span><br><span class="line">                nextPollTimeoutMillis = -<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以发现next()方法是一个无限循环的方法，如果MessageQueue没有消息，那么next()会一直阻塞在那里，当有新消息时，next方法会返回这条消息并将其从单链表中移除。</p>
-<h3 id="Looper"><a href="#Looper" class="headerlink" title="Looper"></a>Looper</h3><p>Looper（Android.os.Looper类），消息循环。由于MessageQueue只是一个消息的存储单元，它不能去处理消息，而Looper就填补了这个功能，Looper会以无限循环的形式去MessageQueue查找是否有新的消息，如果有的话就回调相应的消息处理函数，否则就一直等待着（阻塞）。Looper中还有个特殊的概念——ThreadLocal，它并不是线程，它的作用是在每个线程中存储数据。<br>我们直接上源码开撸：<br>首先看一下它的构造函数：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Looper</span><span class="params">(<span class="keyword">boolean</span> quitAllowed)</span> </span>&#123;</span><br><span class="line">    mQueue = <span class="keyword">new</span> MessageQueue(quitAllowed);</span><br><span class="line">    mThread = Thread.currentThread();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们可以看到在构造方法中它会创建一个MessageQueue即消息队列，然后通过变量mThread将当前线程保存起来。<br>我们知道，Handler的运行需要Looper，没有Looper的线程会报错，那如何为一个线程创建Looper？Looper.prepare()这个方法就是提供了这个功能：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">(<span class="keyword">boolean</span> quitAllowed)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sThreadLocal.get() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Only one Looper may be created per thread"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    sThreadLocal.set(<span class="keyword">new</span> Looper(quitAllowed));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在Looper.prepare()方法中sThreadLocal是一个ThreadLocal对象，可以在一个线程中存储变量，通过sThreadLocal.set()将一个Looper实例放入了ThreadLocal，中间的if判断则说明了Looper.prepare()方法不能被调用两次，一个线程只能有一个Looper实例。<br>Looper最重要的一个方法是loop()，只有调用了loop后，消息循环机制才会真正地起作用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Run the message queue in this thread. Be sure to call</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> #quit()&#125; to end the loop.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Looper me = myLooper();</span><br><span class="line">    <span class="keyword">if</span> (me == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"No Looper; Looper.prepare() wasn't called on this thread."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> MessageQueue queue = me.mQueue;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Make sure the identity of this thread is that of the local process,</span></span><br><span class="line">    <span class="comment">// and keep track of what that identity token actually is.</span></span><br><span class="line">    Binder.clearCallingIdentity();</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">long</span> ident = Binder.clearCallingIdentity();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        Message msg = queue.next(); <span class="comment">// might block</span></span><br><span class="line">        <span class="keyword">if</span> (msg == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// No message indicates that the message queue is quitting.</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// This must be in a local variable, in case a UI event sets the logger</span></span><br><span class="line">        Printer logging = me.mLogging;</span><br><span class="line">        <span class="keyword">if</span> (logging != <span class="keyword">null</span>) &#123;</span><br><span class="line">            logging.println(<span class="string">"&gt;&gt;&gt;&gt;&gt; Dispatching to "</span> + msg.target + <span class="string">" "</span> +</span><br><span class="line">                    msg.callback + <span class="string">": "</span> + msg.what);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        msg.target.dispatchMessage(msg);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (logging != <span class="keyword">null</span>) &#123;</span><br><span class="line">            logging.println(<span class="string">"&lt;&lt;&lt;&lt;&lt; Finished to "</span> + msg.target + <span class="string">" "</span> + msg.callback);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure that during the course of dispatching the</span></span><br><span class="line">        <span class="comment">// identity of the thread wasn't corrupted.</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">long</span> newIdent = Binder.clearCallingIdentity();</span><br><span class="line">        <span class="keyword">if</span> (ident != newIdent) &#123;</span><br><span class="line">            Log.wtf(TAG, <span class="string">"Thread identity changed from 0x"</span></span><br><span class="line">                    + Long.toHexString(ident) + <span class="string">" to 0x"</span></span><br><span class="line">                    + Long.toHexString(newIdent) + <span class="string">" while dispatching to "</span></span><br><span class="line">                    + msg.target.getClass().getName() + <span class="string">" "</span></span><br><span class="line">                    + msg.callback + <span class="string">" what="</span> + msg.what);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        msg.recycle();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Return the Looper object associated with the current thread.  Returns</span></span><br><span class="line"><span class="comment"> * null if the calling thread is not associated with a Looper.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Looper <span class="title">myLooper</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sThreadLocal.get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们一行行看代码，在myLooper()方法中返回了sThreadLocal存储的Looper实例，如果me为null，则抛出异常，也就是说loop()必须在prepare()方法之后运行。接着拿到该looper实例中的mQueue（具体可见Looper的构造函数）。再接下来就进入一个for(;;)死循环，而唯一跳出循环的方式是MessageQueue的next()方法返回了null。紧接着把消息交给msg的target的disptchMessage(msg)方法去处理。而msg的target就是handler对象，下面会进行分析。最后一句msg.recycle()则释放消息占据的资源。</p>
-<p>接着我们分析一下MessageQueue.next()什么时候会返回null？我们先看看Looper的quit()方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">quit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    mQueue.quit(<span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">quitSafely</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    mQueue.quit(<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//MessageQueue的quit(boolean safe)方法</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quit</span><span class="params">(<span class="keyword">boolean</span> safe)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!mQuitAllowed) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Main thread not allowed to quit."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mQuitting) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        mQuitting = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (safe) &#123;</span><br><span class="line">            removeAllFutureMessagesLocked();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            removeAllMessagesLocked();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// We can assume mPtr != 0 because mQuitting was previously false.</span></span><br><span class="line">        nativeWake(mPtr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">removeAllMessagesLocked</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Message p = mMessages;</span><br><span class="line">    <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</span><br><span class="line">        Message n = p.next;</span><br><span class="line">        p.recycleUnchecked();</span><br><span class="line">        p = n;</span><br><span class="line">    &#125;</span><br><span class="line">    mMessages = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">removeAllFutureMessagesLocked</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">long</span> now = SystemClock.uptimeMillis();</span><br><span class="line">    Message p = mMessages;</span><br><span class="line">    <span class="keyword">if</span> (p != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p.when &gt; now) &#123;</span><br><span class="line">            removeAllMessagesLocked();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Message n;</span><br><span class="line">            <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">                n = p.next;</span><br><span class="line">                <span class="keyword">if</span> (n == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (n.when &gt; now) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                p = n;</span><br><span class="line">            &#125;</span><br><span class="line">            p.next = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">do</span> &#123;</span><br><span class="line">                p = n;</span><br><span class="line">                n = p.next;</span><br><span class="line">                p.recycleUnchecked();</span><br><span class="line">            &#125; <span class="keyword">while</span> (n != <span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>也就是说当Looper的quit方法被调用时，Looper就会调用MessageQueue的quit()或quitSafely()方法来通知消息队列退出，当消息队列被标记为退出状态时，它的next方法就会返回null。</p>
-<p><strong>小结</strong><br>Looper主要作用：</p>
-<ol>
-<li>与当前线程绑定，保证一个线程只会有一个Looper实例，同时一个Looper实例也只有一个MessageQueue。（具体可见Looper的构造函数）</li>
-<li>looper()方法，不断从MessageQueue中去取消息，交给消息的target属性的dispatchMessage()去处理。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1820,7 +1821,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
