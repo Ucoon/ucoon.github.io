@@ -81,14 +81,14 @@
 
 <meta name="description" content="从源码解析Android异步消息处理机制（二） 前言：本篇纯属个人学习笔记，故摘录《Android开发艺术探索》大量语句，特此声明   目的：深入理解Looper、Handler、MessageQueue三者之间的关系。MessageQueue以及Looper的相关知识请见此系列的第一篇Handler   Handler是Android消息机制的上层接口，对于Handler的使用我们是熟悉的，我们">
 <meta property="og:type" content="article">
-<meta property="og:title" content="从源码解析Android异步消息处理机制">
+<meta property="og:title" content="从源码解析Android异步消息处理机制（二）">
 <meta property="og:url" content="http://yoursite.com/2017/07/17/从源码解析Android异步消息处理机制（二）/index.html">
 <meta property="og:site_name" content="Forwards">
 <meta property="og:description" content="从源码解析Android异步消息处理机制（二） 前言：本篇纯属个人学习笔记，故摘录《Android开发艺术探索》大量语句，特此声明   目的：深入理解Looper、Handler、MessageQueue三者之间的关系。MessageQueue以及Looper的相关知识请见此系列的第一篇Handler   Handler是Android消息机制的上层接口，对于Handler的使用我们是熟悉的，我们">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-01T14:27:07.636Z">
+<meta property="og:updated_time" content="2018-11-05T14:50:06.152Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="从源码解析Android异步消息处理机制">
+<meta name="twitter:title" content="从源码解析Android异步消息处理机制（二）">
 <meta name="twitter:description" content="从源码解析Android异步消息处理机制（二） 前言：本篇纯属个人学习笔记，故摘录《Android开发艺术探索》大量语句，特此声明   目的：深入理解Looper、Handler、MessageQueue三者之间的关系。MessageQueue以及Looper的相关知识请见此系列的第一篇Handler   Handler是Android消息机制的上层接口，对于Handler的使用我们是熟悉的，我们">
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title>从源码解析Android异步消息处理机制 | Forwards</title>
+  <title>从源码解析Android异步消息处理机制（二） | Forwards</title>
   
 
 
@@ -249,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">从源码解析Android异步消息处理机制</h1>
+          <h1 class="post-title" itemprop="name headline">从源码解析Android异步消息处理机制（二）</h1>
         
 
         <div class="post-meta">
@@ -348,8 +348,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/13/从源码解析Android异步消息处理机制（一）/" rel="next" title="从源码解析Android异步消息处理机制">
-                <i class="fa fa-chevron-left"></i> 从源码解析Android异步消息处理机制
+              <a href="/2017/07/13/从源码解析Android异步消息处理机制（一）/" rel="next" title="从源码解析Android异步消息处理机制（一）">
+                <i class="fa fa-chevron-left"></i> 从源码解析Android异步消息处理机制（一）
               </a>
             
           </div>
@@ -358,8 +358,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/07/18/从源码解析Android异步消息处理机制（三）/" rel="prev" title="从源码解析Android异步消息处理机制">
-                从源码解析Android异步消息处理机制 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/07/18/从源码解析Android异步消息处理机制（三）/" rel="prev" title="从源码解析Android异步消息处理机制（三）">
+                从源码解析Android异步消息处理机制（三） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
