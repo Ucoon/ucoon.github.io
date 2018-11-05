@@ -79,19 +79,20 @@
 
 
 
-<meta name="description" content="前言：本文操作系统基于ubuntu 16.04（Windows搭建步骤大同小异），Appium有两种方式搭建：1、通过npm安装；2、通过Appium Desktop安装。 注：本系列文章仅为笔者学习笔记，大量文字均是摘录自热心网友的文章，如未注明转载皆为无心之失。 通过npm安装安装node.js和npm 安装node.js和npmd 从官网下载node.js最新稳定版本  本地解压：-Jxvf">
+<meta name="description" content="前言：本文操作系统基于ubuntu 16.04（Windows搭建步骤大同小异），Appium有两种方式搭建：1、通过npm安装；2、通过Appium Desktop安装。 注：本系列文章仅为笔者学习笔记，大量文字均是摘录自热心网友的文章，如未注明转载皆为无心之失。 通过npm安装安装node.js和npm 安装node.js和npmd 从官网下载node.js最新稳定版本  本地解压： -Jxv">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Appium入坑指南——环境搭建">
 <meta property="og:url" content="http://yoursite.com/2018/11/05/Appium入坑指南——环境搭建/index.html">
 <meta property="og:site_name" content="Forwards">
-<meta property="og:description" content="前言：本文操作系统基于ubuntu 16.04（Windows搭建步骤大同小异），Appium有两种方式搭建：1、通过npm安装；2、通过Appium Desktop安装。 注：本系列文章仅为笔者学习笔记，大量文字均是摘录自热心网友的文章，如未注明转载皆为无心之失。 通过npm安装安装node.js和npm 安装node.js和npmd 从官网下载node.js最新稳定版本  本地解压：-Jxvf">
+<meta property="og:description" content="前言：本文操作系统基于ubuntu 16.04（Windows搭建步骤大同小异），Appium有两种方式搭建：1、通过npm安装；2、通过Appium Desktop安装。 注：本系列文章仅为笔者学习笔记，大量文字均是摘录自热心网友的文章，如未注明转载皆为无心之失。 通过npm安装安装node.js和npm 安装node.js和npmd 从官网下载node.js最新稳定版本  本地解压： -Jxv">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/appium-doctor.png">
 <meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/权限拒绝.png">
-<meta property="og:updated_time" content="2018-11-05T14:50:53.463Z">
+<meta property="og:updated_time" content="2018-11-05T15:11:50.760Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Appium入坑指南——环境搭建">
-<meta name="twitter:description" content="前言：本文操作系统基于ubuntu 16.04（Windows搭建步骤大同小异），Appium有两种方式搭建：1、通过npm安装；2、通过Appium Desktop安装。 注：本系列文章仅为笔者学习笔记，大量文字均是摘录自热心网友的文章，如未注明转载皆为无心之失。 通过npm安装安装node.js和npm 安装node.js和npmd 从官网下载node.js最新稳定版本  本地解压：-Jxvf">
-<meta name="twitter:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/权限拒绝.png">
+<meta name="twitter:description" content="前言：本文操作系统基于ubuntu 16.04（Windows搭建步骤大同小异），Appium有两种方式搭建：1、通过npm安装；2、通过Appium Desktop安装。 注：本系列文章仅为笔者学习笔记，大量文字均是摘录自热心网友的文章，如未注明转载皆为无心之失。 通过npm安装安装node.js和npm 安装node.js和npmd 从官网下载node.js最新稳定版本  本地解压： -Jxv">
+<meta name="twitter:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/appium-doctor.png">
 
 
 
@@ -307,26 +308,29 @@
 <li><p>安装node.js和npmd</p>
 <p>从<a href="https://nodejs.org/en/" target="_blank" rel="noopener">官网</a>下载node.js最新稳定版本</p>
 </li>
-<li><p>本地解压：<figure class="highlight plain"><figcaption><span>-Jxvf node-v8.12.0-linux-x64.tar.xz```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">3. 在/etc/profile文件中添加环境变量：</span><br><span class="line"></span><br><span class="line">   ```export PATH=/home/hezj/Software/node/node-v8.12.0-linux-x64/bin:$PATH</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><figcaption><span>PATH</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   重启电脑使之生效。</span><br><span class="line"></span><br><span class="line">4. 验证node和npm是否安装成功</span><br><span class="line"></span><br><span class="line">   ```node -v```,```npm -v</span><br></pre></td></tr></table></figure>
+<li><p>本地解压： <figure class="highlight plain"><figcaption><span>-Jxvf node-v8.12.0-linux-x64.tar.xz```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">3. 在/etc/profile文件中添加环境变量：</span><br><span class="line"></span><br><span class="line">   ```java</span><br><span class="line">   export PATH=/home/hezj/Software/node/node-v8.12.0-linux-x64/bin:$PATH</span><br><span class="line">   </span><br><span class="line">   export PATH=/home/hezj/Software/node/node-v8.12.0-linux-x64/lib/node_modules:$PATH</span><br></pre></td></tr></table></figure></p>
+<p>重启电脑使之生效。</p>
+</li>
+<li><p>验证node和npm是否安装成功</p>
+<figure class="highlight plain"><figcaption><span>-v```,```npm -v```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 通过npm安装Appium</span><br><span class="line"></span><br><span class="line">1. npm安装需要翻墙，我们使用淘宝镜像</span><br><span class="line"></span><br><span class="line">   配置npm的下载镜像：</span><br><span class="line"></span><br><span class="line">   ```npm config set registry https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用淘宝定制的cnpm工具代替默认的npm</p>
+<figure class="highlight plain"><figcaption><span>install -g cnpm --registry</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">3. 使用：```cnpm install express</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装Appium：<figure class="highlight plain"><figcaption><span>install -g appium```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">5. 检查Appium是否安装成功：```appium -v</span><br></pre></td></tr></table></figure></p>
 </li>
 </ol>
-<h2 id="通过npm安装Appium"><a href="#通过npm安装Appium" class="headerlink" title="通过npm安装Appium"></a>通过npm安装Appium</h2><ol>
-<li><p>npm安装需要翻墙，我们使用淘宝镜像</p>
-<p>配置npm的下载镜像：<figure class="highlight plain"><figcaption><span>config set registry</span><a href="https://registry.npm.taobao.org```" target="_blank" rel="noopener">link</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. 使用淘宝定制的cnpm工具代替默认的npm</span><br><span class="line"></span><br><span class="line">   ```npm install -g cnpm --registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure></p>
-</li>
-<li><p>使用：<figure class="highlight plain"><figcaption><span>install express```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">4. 安装Appium：```cnpm install -g appium</span><br></pre></td></tr></table></figure></p>
-</li>
-<li><p>检查Appium是否安装成功：<figure class="highlight plain"><figcaption><span>-v```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 安装appium-doctor</span><br><span class="line"></span><br><span class="line">安装appium-doctor，检查appium的所有依赖环境是否已经安装好</span><br><span class="line"></span><br><span class="line">1. ```npm install -g appium-doctor</span><br></pre></td></tr></table></figure></p>
-</li>
-<li><p>运行appium-doctor：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   附上一张安装成功的截图：</span><br><span class="line"></span><br><span class="line">   &#123;% qnimg  appium-doctor.png %&#125;</span><br><span class="line"></span><br><span class="line">## 遇到的问题：</span><br><span class="line"></span><br><span class="line">1. 未设置ANDROID_HOME环境变量：</span><br><span class="line"></span><br><span class="line">   ```export ANDROID_HOME=/home/hezj/Software/AndroidStudio/SDK/</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><figcaption><span>PATH</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```export PATH=$&#123;ANDROID_HOME&#125;/platform-tools:$PATH</span><br></pre></td></tr></table></figure>
+<h2 id="安装appium-doctor"><a href="#安装appium-doctor" class="headerlink" title="安装appium-doctor"></a>安装appium-doctor</h2><p>安装appium-doctor，检查appium的所有依赖环境是否已经安装好</p>
+<ol>
+<li><figure class="highlight plain"><figcaption><span>install -g appium-doctor```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. 运行appium-doctor：</span><br><span class="line"></span><br><span class="line">   ```appium-doctor</span><br></pre></td></tr></table></figure>
+<p>附上一张安装成功的截图：</p>
+<img src="http://pcmve13p6.bkt.clouddn.com/static/images/appium-doctor.png">
 </li>
 </ol>
-<h1 id="通过Appium-Desktop安装"><a href="#通过Appium-Desktop安装" class="headerlink" title="通过Appium Desktop安装"></a>通过Appium Desktop安装</h1><ol>
-<li><p>在官网上下载<a href="https://github.com/appium/appium-desktop/releases/tag/1.7.0" target="_blank" rel="noopener">appium-desktop</a>，注意：ubuntu环境下要下载.AppImage结尾的文件</p>
-</li>
-<li><p>执行<code>chmod a+x appium-desktop-1.7.0-x86_64.AppImage</code>，然后<code>sudo ./appium-desktop-1.7.0-x86_64.AppImage</code></p>
+<h2 id="遇到的问题："><a href="#遇到的问题：" class="headerlink" title="遇到的问题："></a>遇到的问题：</h2><ol>
+<li><p>未设置ANDROID_HOME环境变量：</p>
+<figure class="highlight plain"><figcaption><span>ANDROID_HOME</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```export PATH=$&#123;ANDROID_HOME&#125;/tools:$PATH</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>PATH</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 通过Appium Desktop安装</span><br><span class="line"></span><br><span class="line">1. 在官网上下载[appium-desktop](https://github.com/appium/appium-desktop/releases/tag/1.7.0)，注意：ubuntu环境下要下载.AppImage结尾的文件</span><br><span class="line"></span><br><span class="line">2. 执行``` chmod a+x appium-desktop-1.7.0-x86_64.AppImage```，然后```sudo ./appium-desktop-1.7.0-x86_64.AppImage</span><br></pre></td></tr></table></figure>
 <p>遇到的问题：</p>
 <p>在直接启动appium-desktop-1.7.0-x86_64.AppImage之后，点击Start Server V1.9.0，会报错，错误截图如下：</p>
 <img src="http://pcmve13p6.bkt.clouddn.com/static/images/权限拒绝.png">
@@ -483,7 +487,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过npm安装"><span class="nav-number">1.</span> <span class="nav-text">通过npm安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装node-js和npm"><span class="nav-number">1.1.</span> <span class="nav-text">安装node.js和npm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过npm安装Appium"><span class="nav-number">1.2.</span> <span class="nav-text">通过npm安装Appium</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#通过Appium-Desktop安装"><span class="nav-number">2.</span> <span class="nav-text">通过Appium Desktop安装</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过npm安装"><span class="nav-number">1.</span> <span class="nav-text">通过npm安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装node-js和npm"><span class="nav-number">1.1.</span> <span class="nav-text">安装node.js和npm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装appium-doctor"><span class="nav-number">1.2.</span> <span class="nav-text">安装appium-doctor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遇到的问题："><span class="nav-number">1.3.</span> <span class="nav-text">遇到的问题：</span></a></li></ol></li></ol></div>
             
 
           </div>
