@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从什么是自动化测试开始自动化测试就是通过一定的编程手段，自动执行本来需要手动执行的一系列测试的活动。  自动化测试和手动测试的对比： 执行速度快 可靠性高  复用性高  节省人力资源成本      移动端自动化测试工具的选择 Appium:可以用来测试native、hybird和mobile web APP,最突出的一点是它既支持Android的自动化测试，也支持IOS的测试；另一方面是它支持使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自动化测试Robotium实战学习">
+<meta property="og:url" content="http://yoursite.com/2016/11/21/自动化测试Robotium实战学习/index.html">
+<meta property="og:site_name" content="Forwards">
+<meta property="og:description" content="从什么是自动化测试开始自动化测试就是通过一定的编程手段，自动执行本来需要手动执行的一系列测试的活动。  自动化测试和手动测试的对比： 执行速度快 可靠性高  复用性高  节省人力资源成本      移动端自动化测试工具的选择 Appium:可以用来测试native、hybird和mobile web APP,最突出的一点是它既支持Android的自动化测试，也支持IOS的测试；另一方面是它支持使用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-01T14:51:15.103Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自动化测试Robotium实战学习">
+<meta name="twitter:description" content="从什么是自动化测试开始自动化测试就是通过一定的编程手段，自动执行本来需要手动执行的一系列测试的活动。  自动化测试和手动测试的对比： 执行速度快 可靠性高  复用性高  节省人力资源成本      移动端自动化测试工具的选择 Appium:可以用来测试native、hybird和mobile web APP,最突出的一点是它既支持Android的自动化测试，也支持IOS的测试；另一方面是它支持使用">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/21/自动化测试Robotium实战学习/"/>
+
+
+
+
+
+  <title>自动化测试Robotium实战学习 | Forwards</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Forwards</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">有空的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/21/自动化测试Robotium实战学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">自动化测试Robotium实战学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-21T22:29:54+08:00">
+                2016-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="从什么是自动化测试开始"><a href="#从什么是自动化测试开始" class="headerlink" title="从什么是自动化测试开始"></a>从什么是自动化测试开始</h1><p>自动化测试就是通过一定的编程手段，自动执行本来需要手动执行的一系列测试的活动。 </p>
+<h1 id="自动化测试和手动测试的对比："><a href="#自动化测试和手动测试的对比：" class="headerlink" title="自动化测试和手动测试的对比："></a>自动化测试和手动测试的对比：</h1><ol>
+<li>执行速度快</li>
+<li>可靠性高 </li>
+<li>复用性高 </li>
+<li>节省人力资源成本    </li>
+</ol>
+<h1 id="移动端自动化测试工具的选择"><a href="#移动端自动化测试工具的选择" class="headerlink" title="移动端自动化测试工具的选择"></a>移动端自动化测试工具的选择</h1><ol>
+<li><strong>Appium</strong>:可以用来测试native、hybird和mobile web APP,最突出的一点是它既支持Android的自动化测试，也支持IOS的测试；另一方面是它支持使用不同的编程语言编写测试代码。缺点：稳定性有待提高。<a href="http://appium.io/" target="_blank" rel="noopener">点此进官网</a></li>
+<li><strong>Uiautomator</strong>:其是Google官方提供的一款自动化测试框架，主要特点是支持跨进程操作（<em>这一点极大的方便了对应用外控件的操作</em>）。缺点：只支持Android Platform、API16及以上，调试编译运行比较麻烦。<a href="https://developer.android.com/training/testing/ui-testing/uiautomator-testing.html" target="_blank" rel="noopener">具体可在官网查看</a> </li>
+<li><strong>Robotium</strong>:支持native和hybird的自动化测试，API使用起来方便简单，执行速度快，可根据控件ID操作；另外它既可以基于源码操作，也能基于APK测试，功能强大。缺点：不支持跨进程的操作；针对APK操作，而且需要对APK重新签名（有工具：re-sign），因此操作相对复杂。<a href="https://github.com/RobotiumTech/robotium" target="_blank" rel="noopener">点此进官网</a></li>
+<li><strong>其他的自动化测试框架</strong>：monkey,monkeyrunner,Testdroid(商业)和Eggplant(商业)等。</li>
+</ol>
+<h1 id="Robotium版“Hello-World”"><a href="#Robotium版“Hello-World”" class="headerlink" title="Robotium版“Hello World”"></a>Robotium版“Hello World”</h1><h2 id="基于源码自动化测试"><a href="#基于源码自动化测试" class="headerlink" title="基于源码自动化测试"></a>基于源码自动化测试</h2><ol>
+<li><strong>搭建实战测试项目</strong>：在eclipse中依次选择File-&gt;New-&gt;Other-&gt;Android Test Project,一路点击next,<em><a href="https://github.com/RobotiumTech/robotium/wiki/Downloads" target="_blank" rel="noopener">添加Robotium.jar 5.6.3</a></em>，在添加jar文件时应在java build path中查看，不然在初始化solo时容易碰到NullPointerException错误。</li>
+<li><strong>新建第一个测试用例</strong>：新建Java类，继承ActivityInstrumentationTestCase2&lt; &gt;.<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//泛型写入需要测试的工程的入口activity名-LoginActivity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCase1</span> <span class="keyword">extends</span> <span class="title">ActivityInstrumentationTestCase2</span>&lt;<span class="title">LoginActivity</span>&gt; </span>&#123;</span><br><span class="line">	 <span class="keyword">private</span> Solo solo;</span><br><span class="line">	 <span class="function"><span class="keyword">public</span> <span class="title">TestCase1</span><span class="params">()</span></span>&#123;</span><br><span class="line">	 <span class="comment">//LoginActivity是指启动的activity名称</span></span><br><span class="line">	 <span class="keyword">super</span>(LoginActivity.class);</span><br><span class="line"> &#125;</span><br><span class="line">	<span class="comment">//实现测试前的初始化工作，JUnit框架下的方法</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">	    <span class="keyword">super</span>.setUp();</span><br><span class="line">	    solo=<span class="keyword">new</span> Solo(getInstrumentation(),getActivity());</span><br><span class="line"> &#125;</span><br><span class="line">	<span class="comment">//实现测试完成后的垃圾回收等工作，JUnit框架下的方法</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">tearDown</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		solo.finishOpenedActivities();</span><br><span class="line">		<span class="keyword">super</span>.tearDown();</span><br><span class="line"> &#125;</span><br><span class="line">	<span class="comment">//测试用例</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testTestCase1</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//不推荐通过index的方式找到控件，应通过ID的方式</span></span><br><span class="line">		solo.enterText(<span class="number">0</span>, <span class="string">"abcd"</span>);</span><br><span class="line">		solo.enterText(<span class="number">1</span>, <span class="string">"1234567"</span>);</span><br><span class="line">		solo.clickOnButton(<span class="number">0</span>);</span><br><span class="line">		assertTrue(<span class="string">"错误提示信息没有出现，可能出现bug"</span>,</span><br><span class="line">		                solo.searchText(<span class="string">"用户名或者密码错误"</span>,<span class="keyword">true</span>));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>小结：在setUp()中实现一些前置动作，在tearDown()做一些恢复初始状态的动作，然后在test方法实现测试动作。 </p>
+<ol start="3">
+<li><strong>运行Robotium例子</strong>:在测试类中单击鼠标右键，选择Run As-&gt;Android JUnit Test. </li>
+</ol>
+<h2 id="基于APK的自动化测试"><a href="#基于APK的自动化测试" class="headerlink" title="基于APK的自动化测试"></a>基于APK的自动化测试</h2><p><strong>APK重签名</strong>：在基于APK的自动化测试过程中，需要确保被测试的APK必须与测试项目具有相同的签名。利用工具re-sign.jar，用法可自行Google。（<em>re-sign重签名找的debug.keystore是位于C://User/.android下的，而eclipse的debug.keystore要与re-sign的一致</em>）</p>
+<ol>
+<li><p>搭建项目和新建测试用例与上述一样</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//该注解的作用是给编译器一条指令，告诉它对被注解的代码内部的某些警告保持静默</span></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"rawtypes"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FirstQunarTest</span> <span class="keyword">extends</span> <span class="title">ActivityInstrumentationTestCase2</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LAUNCHER_ACTIVITY_FULL_CLASSNAME=<span class="string">"com.Qunar.NoteActivity"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Class&lt;?&gt; launcherActivityClass;</span><br><span class="line">	<span class="comment">/*static代码块（静态代码块）：在类中独立于类成员的static语句块，可随便存放</span></span><br><span class="line"><span class="comment">	它不在任何的方法体中，JVM加载类时会按照它们在类中出现的先后顺序依次执行它们，</span></span><br><span class="line"><span class="comment">	并且只会执行一次*/</span>	</span><br><span class="line">	<span class="keyword">static</span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			launcherActivityClass=Class.forName(LAUNCHER_ACTIVITY_FULL_CLASSNAME);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">			<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">FirstQunarTest</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(launcherActivityClass);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span> Solo solo;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		solo=<span class="keyword">new</span> Solo(getInstrumentation(),getActivity());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//测试用例：黑盒测试方式——无被测项目的源代码（基于APK）</span></span><br><span class="line">	<span class="comment">//robotium通过反射的方法来调用被测应用程序的代码（具体原理？？）</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testCanOpenSettings</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(solo.searchText(<span class="string">"软件更新"</span>))&#123;</span><br><span class="line">			solo.clickOnView(solo.getView(<span class="string">"button3"</span>));</span><br><span class="line">		&#125;</span><br><span class="line">		solo.pressMenuItem(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">tearDown</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		solo.finishOpenedActivities();</span><br><span class="line">		<span class="keyword">super</span>.tearDown();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>运行Robotium例子</strong>:在测试类中单击鼠标右键，选择Run As-&gt;Android JUnit Test. </p>
+</li>
+</ol>
+<h2 id="Robotium-API简介"><a href="#Robotium-API简介" class="headerlink" title="Robotium API简介"></a>Robotium API简介</h2><p><a href="http://recorder.robotium.com/javadoc/" target="_blank" rel="noopener">官网</a>(<a href="http://recorder.robotium.com/javadoc/" target="_blank" rel="noopener">http://recorder.robotium.com/javadoc/</a>)</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/21/Service 学习要点/" rel="next" title="Service 学习要点">
+                <i class="fa fa-chevron-left"></i> Service 学习要点
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/21/MVC与MVP的学习/" rel="prev" title="MVC与MVP的学习">
+                MVC与MVP的学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Forwards</p>
+              <p class="site-description motion-element" itemprop="description">Keep coding</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#从什么是自动化测试开始"><span class="nav-number">1.</span> <span class="nav-text">从什么是自动化测试开始</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动化测试和手动测试的对比："><span class="nav-number">2.</span> <span class="nav-text">自动化测试和手动测试的对比：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#移动端自动化测试工具的选择"><span class="nav-number">3.</span> <span class="nav-text">移动端自动化测试工具的选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Robotium版“Hello-World”"><span class="nav-number">4.</span> <span class="nav-text">Robotium版“Hello World”</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于源码自动化测试"><span class="nav-number">4.1.</span> <span class="nav-text">基于源码自动化测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于APK的自动化测试"><span class="nav-number">4.2.</span> <span class="nav-text">基于APK的自动化测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Robotium-API简介"><span class="nav-number">4.3.</span> <span class="nav-text">Robotium API简介</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forwards</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
