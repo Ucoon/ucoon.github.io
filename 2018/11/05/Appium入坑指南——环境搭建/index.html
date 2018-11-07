@@ -88,7 +88,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/appium-doctor.png">
 <meta property="og:image" content="http://pcmve13p6.bkt.clouddn.com/static/images/权限拒绝.png">
-<meta property="og:updated_time" content="2018-11-05T15:21:18.291Z">
+<meta property="og:updated_time" content="2018-11-07T13:04:33.195Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Appium入坑指南——环境搭建">
 <meta name="twitter:description" content="前言：本文操作系统基于ubuntu 16.04（Windows搭建步骤大同小异），Appium有两种方式搭建：1、通过npm安装；2、通过Appium Desktop安装。 注：本系列文章仅为笔者学习笔记，大量文字均是摘录自热心网友的文章，如未注明转载皆为无心之失。 通过npm安装安装node.js和npm 安装node.js和npmd 从官网下载node.js最新稳定版本  本地解压： tar">
@@ -359,7 +359,7 @@
 <img src="http://pcmve13p6.bkt.clouddn.com/static/images/权限拒绝.png">
 </li>
 </ol>
-<p>暂无解决办法，只好每次都执行<code>sudo ./appium-desktop-1.7.0-x86_64.AppImage</code>.</p>
+<p>解决办法：在安装Appium时用的是root用户，而双击执行的时候是当前用户，导致报权限拒绝的错误，所以修改<code>appium-desktop-1.7.0-x86_64.AppImage</code>的用户组即可。</p>
 
       
     </div>

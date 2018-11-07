@@ -793,7 +793,7 @@
 <img src="http://pcmve13p6.bkt.clouddn.com/static/images/权限拒绝.png">
 </li>
 </ol>
-<p>暂无解决办法，只好每次都执行<code>sudo ./appium-desktop-1.7.0-x86_64.AppImage</code>.</p>
+<p>解决办法：在安装Appium时用的是root用户，而双击执行的时候是当前用户，导致报权限拒绝的错误，所以修改<code>appium-desktop-1.7.0-x86_64.AppImage</code>的用户组即可。</p>
 
           
         
