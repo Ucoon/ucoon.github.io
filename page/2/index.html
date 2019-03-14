@@ -242,6 +242,154 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/01/1.1 Activity的LaunchMode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/01/1.1 Activity的LaunchMode/" itemprop="url">Activity的启动模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-01T15:25:54+08:00">
+                2018-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文结构：<br><img src="http://pcmve13p6.bkt.clouddn.com/static/images/ActivityLaunchMode.png"></p>
+<p>前言：介绍Activity的启动模式之前先介绍一下任务栈。任务栈是一个“后进先出”的栈结构，每按一下back键就有一个Activity出栈，直到栈空为止，当栈中无任何Activity的时候，系统就会回收这个任务栈。</p>
+<h2 id="1-1-Activity的LaunchMode"><a href="#1-1-Activity的LaunchMode" class="headerlink" title="1.1 Activity的LaunchMode"></a>1.1 Activity的LaunchMode</h2><p>Activity的LaunchMode目前有四种启动模式：standard、singleTop、singleTask以及singleInstance。</p>
+<ol>
+<li>standard：标准模式，也是系统的默认模式。每次启动一个Activity都会重新创建一个新的实例，不管这个实例是否已经存在。这种模式是典型的多实例实现，一个任务栈中可以有多个实例，每个实例也可以属于不同的任务栈。在这种模式下，谁启动了这个Activity，那么这个Activity就运行在启动它的那个Activity的所在的栈中。</li>
+</ol>
+<p>注意：当我们用ApplicationContext去启动standard模式的Activity的时候就会报错，log如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">...Calling startActivity from outside of an Activity context <span class="keyword">requires</span> the FLAG_ACTIVITY_NEW_TASK flag....</span><br></pre></td></tr></table></figure>
+<p>这是因为standard模式下的Activity默认会进入启动它的Activity所属的任务栈中，但是由于非Activity类型的context并没有任务栈，所以解决这个问题的办法是为待启动Activity指定FLAG_ACTIVITY_NEW_TASK标记位。这个时候待启动Activity实际上是以singleTask模式启动的。</p>
+<ol start="2">
+<li>singleTop：栈顶复用模式。在这种模式下，如果新Activity已经位于任务栈的栈顶，那么此Activity不会被重新创建，同时它的onNewIntent方法会被回调，通过此方法的参数我们就可以取出当前请求的信息；如果新Activity的实例已经存在但不是位于栈顶，那么新Activity会被重新创建。</li>
+<li>singleTask：栈内复用模式。这是一种单实例模式，在这种模式下，只要Activity在一个栈中存在，那么多次启动这个Activity都不会重新创建实例，同时系统会回调其onNewIntent。具体一点，当一个具有singleTask模式的Activity请求启动后，系统会首先寻找是否存在<strong>这个Activity想要的任务栈</strong>，如果不存在，就重新创建一个任务栈，然后创建这个Activity的实例后把这个Activity放入栈中，如果存在，这是要看这个Activity是否在栈中有实例存在，如果有实例存在，那么系统会把这个Activity调到栈顶并调用它的onNewIntent，如果实例不存在，就创建这个Activity的实例并将其压入栈中。<br>例子：如果D所需的任务栈为S1，并且当前S1的情况为ADBC，根据栈内复用原则，此时D不会被重新创建，系统会把D切换到栈顶并调用其onNewIntent，同时由于singleTask默认默认具有clearTop的效果，会导致栈内所有在D上面的Activity全部出栈，最终S1中的情况为AD。</li>
+<li>singleInstance：单实例模式，加强版的singleTask模式，它除了具有singleTask的所有特性外，还加强了一点，那就是此模式下的Activity只能单独的位于一个任务栈中。</li>
+</ol>
+<p>什么是Activity所需要的任务栈？这要从一个参数说起：TaskAffinity，任务相关性。这个参数标识了一个Activity所需要的任务栈的名字，默认情况下所有Activity所需的任务栈的名字为应用的包名，但是我们可以为每个Activity都单独指定TaskAffinity属性，这个属性值不能和包名一样，否则就相当于没有指定。TaskAffinity属性主要和singleTask启动模式和allowTaskReparenting属性配对使用，在其他情况下没有意义。</p>
+<h2 id="1-2-如何给Activity指定启动模式"><a href="#1-2-如何给Activity指定启动模式" class="headerlink" title="1.2 如何给Activity指定启动模式"></a>1.2 如何给Activity指定启动模式</h2><ol>
+<li><p>通过AndroidMenifest为Activity指定启动模式。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;activity</span><br><span class="line">	android:name=<span class="string">"com.my.test.TestActivity"</span></span><br><span class="line">	android:launchMode=<span class="string">"singleTask"</span></span><br><span class="line">	android:label=<span class="string">"@string/app_name"</span>&gt;</span><br><span class="line">&lt;/activity&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过在Intent设置标志位来为Activity指定启动模式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, TestActivity.class);</span><br><span class="line">intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>二者区别：首先，优先级上第二种高于第一种，当两种同时存在时，以第二种为准；其次，二者在限定范围上有所不同。</p>
+<h2 id="1-3-Activity的Flags"><a href="#1-3-Activity的Flags" class="headerlink" title="1.3 Activity的Flags"></a>1.3 Activity的Flags</h2><ol>
+<li>FLAG_ACTIVITY_NEW_TASK：这个标记位的作用是为Activity指定“singleTask”启动模式。</li>
+<li>FLAG_ACTIVITY_SINGLE_TOP：这个标记位的作用是为Activity指定“singleTop”启动模式。</li>
+<li>FLAG_ACTIVITY_CLEAR_TOP：具有此标记位的Activity，当它启动时，在同一个任务栈中所有位于它上面的Activity都要出栈，这个标记位一般和singleTask启动模式一起出现。在这种情况下，如果被启动的实例已经存在，那么系统会调用它的onNewIntent。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/25/Annotation注解类/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1492,156 +1640,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/21/自动化测试Robotium实战学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/21/自动化测试Robotium实战学习/" itemprop="url">自动化测试Robotium实战学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-21T22:29:54+08:00">
-                2016-11-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="从什么是自动化测试开始"><a href="#从什么是自动化测试开始" class="headerlink" title="从什么是自动化测试开始"></a>从什么是自动化测试开始</h1><p>自动化测试就是通过一定的编程手段，自动执行本来需要手动执行的一系列测试的活动。 </p>
-<h1 id="自动化测试和手动测试的对比："><a href="#自动化测试和手动测试的对比：" class="headerlink" title="自动化测试和手动测试的对比："></a>自动化测试和手动测试的对比：</h1><ol>
-<li>执行速度快</li>
-<li>可靠性高 </li>
-<li>复用性高 </li>
-<li>节省人力资源成本    </li>
-</ol>
-<h1 id="移动端自动化测试工具的选择"><a href="#移动端自动化测试工具的选择" class="headerlink" title="移动端自动化测试工具的选择"></a>移动端自动化测试工具的选择</h1><ol>
-<li><strong>Appium</strong>:可以用来测试native、hybird和mobile web APP,最突出的一点是它既支持Android的自动化测试，也支持IOS的测试；另一方面是它支持使用不同的编程语言编写测试代码。缺点：稳定性有待提高。<a href="http://appium.io/" target="_blank" rel="noopener">点此进官网</a></li>
-<li><strong>Uiautomator</strong>:其是Google官方提供的一款自动化测试框架，主要特点是支持跨进程操作（<em>这一点极大的方便了对应用外控件的操作</em>）。缺点：只支持Android Platform、API16及以上，调试编译运行比较麻烦。<a href="https://developer.android.com/training/testing/ui-testing/uiautomator-testing.html" target="_blank" rel="noopener">具体可在官网查看</a> </li>
-<li><strong>Robotium</strong>:支持native和hybird的自动化测试，API使用起来方便简单，执行速度快，可根据控件ID操作；另外它既可以基于源码操作，也能基于APK测试，功能强大。缺点：不支持跨进程的操作；针对APK操作，而且需要对APK重新签名（有工具：re-sign），因此操作相对复杂。<a href="https://github.com/RobotiumTech/robotium" target="_blank" rel="noopener">点此进官网</a></li>
-<li><strong>其他的自动化测试框架</strong>：monkey,monkeyrunner,Testdroid(商业)和Eggplant(商业)等。</li>
-</ol>
-<h1 id="Robotium版“Hello-World”"><a href="#Robotium版“Hello-World”" class="headerlink" title="Robotium版“Hello World”"></a>Robotium版“Hello World”</h1><h2 id="基于源码自动化测试"><a href="#基于源码自动化测试" class="headerlink" title="基于源码自动化测试"></a>基于源码自动化测试</h2><ol>
-<li><strong>搭建实战测试项目</strong>：在eclipse中依次选择File-&gt;New-&gt;Other-&gt;Android Test Project,一路点击next,<em><a href="https://github.com/RobotiumTech/robotium/wiki/Downloads" target="_blank" rel="noopener">添加Robotium.jar 5.6.3</a></em>，在添加jar文件时应在java build path中查看，不然在初始化solo时容易碰到NullPointerException错误。</li>
-<li><strong>新建第一个测试用例</strong>：新建Java类，继承ActivityInstrumentationTestCase2&lt; &gt;.<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//泛型写入需要测试的工程的入口activity名-LoginActivity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCase1</span> <span class="keyword">extends</span> <span class="title">ActivityInstrumentationTestCase2</span>&lt;<span class="title">LoginActivity</span>&gt; </span>&#123;</span><br><span class="line">	 <span class="keyword">private</span> Solo solo;</span><br><span class="line">	 <span class="function"><span class="keyword">public</span> <span class="title">TestCase1</span><span class="params">()</span></span>&#123;</span><br><span class="line">	 <span class="comment">//LoginActivity是指启动的activity名称</span></span><br><span class="line">	 <span class="keyword">super</span>(LoginActivity.class);</span><br><span class="line"> &#125;</span><br><span class="line">	<span class="comment">//实现测试前的初始化工作，JUnit框架下的方法</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">	    <span class="keyword">super</span>.setUp();</span><br><span class="line">	    solo=<span class="keyword">new</span> Solo(getInstrumentation(),getActivity());</span><br><span class="line"> &#125;</span><br><span class="line">	<span class="comment">//实现测试完成后的垃圾回收等工作，JUnit框架下的方法</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">tearDown</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		solo.finishOpenedActivities();</span><br><span class="line">		<span class="keyword">super</span>.tearDown();</span><br><span class="line"> &#125;</span><br><span class="line">	<span class="comment">//测试用例</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testTestCase1</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="comment">//不推荐通过index的方式找到控件，应通过ID的方式</span></span><br><span class="line">		solo.enterText(<span class="number">0</span>, <span class="string">"abcd"</span>);</span><br><span class="line">		solo.enterText(<span class="number">1</span>, <span class="string">"1234567"</span>);</span><br><span class="line">		solo.clickOnButton(<span class="number">0</span>);</span><br><span class="line">		assertTrue(<span class="string">"错误提示信息没有出现，可能出现bug"</span>,</span><br><span class="line">		                solo.searchText(<span class="string">"用户名或者密码错误"</span>,<span class="keyword">true</span>));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>小结：在setUp()中实现一些前置动作，在tearDown()做一些恢复初始状态的动作，然后在test方法实现测试动作。 </p>
-<ol start="3">
-<li><strong>运行Robotium例子</strong>:在测试类中单击鼠标右键，选择Run As-&gt;Android JUnit Test. </li>
-</ol>
-<h2 id="基于APK的自动化测试"><a href="#基于APK的自动化测试" class="headerlink" title="基于APK的自动化测试"></a>基于APK的自动化测试</h2><p><strong>APK重签名</strong>：在基于APK的自动化测试过程中，需要确保被测试的APK必须与测试项目具有相同的签名。利用工具re-sign.jar，用法可自行Google。（<em>re-sign重签名找的debug.keystore是位于C://User/.android下的，而eclipse的debug.keystore要与re-sign的一致</em>）</p>
-<ol>
-<li><p>搭建项目和新建测试用例与上述一样</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//该注解的作用是给编译器一条指令，告诉它对被注解的代码内部的某些警告保持静默</span></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"rawtypes"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FirstQunarTest</span> <span class="keyword">extends</span> <span class="title">ActivityInstrumentationTestCase2</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LAUNCHER_ACTIVITY_FULL_CLASSNAME=<span class="string">"com.Qunar.NoteActivity"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Class&lt;?&gt; launcherActivityClass;</span><br><span class="line">	<span class="comment">/*static代码块（静态代码块）：在类中独立于类成员的static语句块，可随便存放</span></span><br><span class="line"><span class="comment">	它不在任何的方法体中，JVM加载类时会按照它们在类中出现的先后顺序依次执行它们，</span></span><br><span class="line"><span class="comment">	并且只会执行一次*/</span>	</span><br><span class="line">	<span class="keyword">static</span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			launcherActivityClass=Class.forName(LAUNCHER_ACTIVITY_FULL_CLASSNAME);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">			<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">FirstQunarTest</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(launcherActivityClass);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span> Solo solo;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		solo=<span class="keyword">new</span> Solo(getInstrumentation(),getActivity());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//测试用例：黑盒测试方式——无被测项目的源代码（基于APK）</span></span><br><span class="line">	<span class="comment">//robotium通过反射的方法来调用被测应用程序的代码（具体原理？？）</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testCanOpenSettings</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(solo.searchText(<span class="string">"软件更新"</span>))&#123;</span><br><span class="line">			solo.clickOnView(solo.getView(<span class="string">"button3"</span>));</span><br><span class="line">		&#125;</span><br><span class="line">		solo.pressMenuItem(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">tearDown</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		solo.finishOpenedActivities();</span><br><span class="line">		<span class="keyword">super</span>.tearDown();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>运行Robotium例子</strong>:在测试类中单击鼠标右键，选择Run As-&gt;Android JUnit Test. </p>
-</li>
-</ol>
-<h2 id="Robotium-API简介"><a href="#Robotium-API简介" class="headerlink" title="Robotium API简介"></a>Robotium API简介</h2><p><a href="http://recorder.robotium.com/javadoc/" target="_blank" rel="noopener">官网</a>(<a href="http://recorder.robotium.com/javadoc/" target="_blank" rel="noopener">http://recorder.robotium.com/javadoc/</a>)</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1692,7 +1690,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1749,7 +1747,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
