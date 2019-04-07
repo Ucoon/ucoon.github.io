@@ -242,6 +242,148 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/21/MVC与MVP的学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/11/21/MVC与MVP的学习/" itemprop="url">MVC与MVP的学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-21T22:44:59+08:00">
+                2016-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>学习重点</strong>：</p>
+<ol>
+<li>概念、工作原理、优缺点</li>
+<li>具体在Android中的应用</li>
+<li>demo实例 <h1 id="1-MVC"><a href="#1-MVC" class="headerlink" title="1.MVC"></a>1.MVC</h1></li>
+</ol>
+<p><img src="http://upload-images.jianshu.io/upload_images/1952328-0fd64f5b86378f7f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>MVC编程模式（Model View Controller）<a href="http://baike.baidu.com/link?url=8Eg7wDsNXZUWAkZOhXt-rOKAG9NDJ1gSdVvxlI_xxpHQy4t4qmF2aGGz_5WPaBqCvSmWpc-qnY3i8wrAXNvbK60Ud3KtuhA9ytGNBD2nI3ENPvuE0o5l3cRbJiq_CJRZ" target="_blank" rel="noopener">点击这里看百度百科介绍</a> 简单来说就是通过controller的控制去操作model层的数据，并且返回给View层显示。具体如上图所示。<br>工作原理：当用户发出事件的时候，view层会发送指令到controller层，接着controller通知model层更新数据，model更新完数据后会直接显示在view层上。具体在Android中的情况：布局代码就是view层，controller就是activity，而各种java bean，还有一些类似repository类就对应于model层。<br>缺点：xml作为view层，控制能力太弱，若要动态的改变视图，只能在activity中实现，导致了activity既是view层也是controller层，耦合度大大提高，不利于项目管理，从上图也可知，view层和model层是相互可知的，这意味着两层之间存在耦合，耦合对于一个大型程序来说是非常致命的，因为这表示开发，测试，维护都需要花大量的精力。<br><a href="https://github.com/drakeet/Meizhi" target="_blank" rel="noopener">实例demo</a>:Meizhi            </p>
+<h1 id="2-MVP"><a href="#2-MVP" class="headerlink" title="2.MVP"></a>2.MVP</h1><p><img src="http://upload-images.jianshu.io/upload_images/1952328-5cd6c4982ffa7265.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>MVP(Model View Presenter)<a href="http://baike.baidu.com/link?url=3P55zapQRZuEqEKwQP3SC5tD5GoGmfSSi-_ufHiY8vfWwD13y6JCP6NYqZYgBOp9sZNO7BtNsric9kwYqiG2ua" target="_blank" rel="noopener">点击这里看百度百科介绍</a><br>MVP是MVC的升级（区别）：在MVP中View并不直接使用Model，它们之间的通信是通过Presenter（MVC中的Controller）来进行的，所有的交互都在Presenter内部进行，而在MVC中View会直接从Model中读取数据而不是通过Controller。从上图我们可以知道，view层和model层不再相互可知，而是完全的解耦，取而代之的presenter层充当了桥梁的作用，用于操作view层发出的事件传递到presenter层，presenter层去操作model层，并将数据返回给view层。<br>核心思想：<br>MVP把Activity中的UI逻辑抽象成View接口，把业务逻辑抽象成presenter接口，model不变。在MVP模式中，Activity的功能就是响应生命周期和显示界面，其他的工作都丢到presenter中完成。<br>如何使用MVP：<br>1.创建IPresenter接口，把所有的业务逻辑都放在这里，并创建它的实现类IPresenterCompl。<br>2.创建IView接口，把所有的视图逻辑都放在这里，其实现类是当前的activity或者fragment。<br>3.Activity里包含了一个IPresenter，而PresenterCompl里又包含了一个IView 并且依赖了Model。Activity里只保留对IPresenter的调用，其它工作全部留到PresenterCompl中实现。<br>项目中代码结构(层次分明)<br>[站外图片上传中……(3)]                    </p>
+<h2 id="Model层"><a href="#Model层" class="headerlink" title="Model层"></a>Model层</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;           </span><br><span class="line">        <span class="keyword">private</span> String userName;            </span><br><span class="line">        <span class="keyword">private</span> String password;</span><br><span class="line">    </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(String userName, String password)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.userName = userName;</span><br><span class="line">            <span class="keyword">this</span>.password = password;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getUserName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> userName;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> password;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserName</span><span class="params">(String userName)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.userName = userName;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.password = password;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="View层"><a href="#View层" class="headerlink" title="View层"></a>View层</h2><p>view层接口代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ILoginView</span> </span>&#123;     </span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clearText</span><span class="params">()</span></span>;       </span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLoginResult</span><span class="params">(<span class="keyword">boolean</span> result,<span class="keyword">int</span> code)</span></span>;  </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>​<br>ILogin的实现类： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">ILoginView</span>, <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;       </span><br><span class="line">    <span class="keyword">private</span> Button clear_btn;      </span><br><span class="line">    <span class="keyword">private</span> Button login_btn;             </span><br><span class="line">    <span class="keyword">private</span> EditText userName_edt;          </span><br><span class="line">    <span class="keyword">private</span> EditText pw_edt;           </span><br><span class="line">    <span class="keyword">private</span> ILoginPresenter iLoginPresenter;                   </span><br><span class="line">    <span class="meta">@Override</span>   </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span>    </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);      </span><br><span class="line">        clear_btn= (Button) findViewById(R.id.clear);   </span><br><span class="line">        login_btn= (Button) findViewById(R.id.login);  </span><br><span class="line">        userName_edt= (EditText) findViewById(R.id.username);</span><br><span class="line">        pw_edt= (EditText) findViewById(R.id.password);</span><br><span class="line">        clear_btn.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        login_btn.setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        iLoginPresenter=<span class="keyword">new</span> LoginPresenterCompl(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clearText</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        userName_edt.setText(<span class="string">""</span>);</span><br><span class="line">        pw_edt.setText(<span class="string">""</span>);</span><br><span class="line">        Toast.makeText(LoginActivity.<span class="keyword">this</span>,<span class="string">"Clear"</span>,Toast.LENGTH_LONG).show();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLoginResult</span><span class="params">(<span class="keyword">boolean</span> result, <span class="keyword">int</span> code)</span> </span>&#123;</span><br><span class="line">        clear_btn.setEnabled(<span class="keyword">true</span>);</span><br><span class="line">        login_btn.setEnabled(<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">if</span>(result)&#123;</span><br><span class="line">            Toast.makeText(LoginActivity.<span class="keyword">this</span>,<span class="string">"登陆成功"</span>+code,Toast.LENGTH_LONG).show();</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            Toast.makeText(LoginActivity.<span class="keyword">this</span>,<span class="string">"登陆失败"</span>+code,Toast.LENGTH_LONG).show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> id=view.getId();</span><br><span class="line">        String username=userName_edt.getText().toString();</span><br><span class="line">        String password=pw_edt.getText().toString();</span><br><span class="line">        <span class="keyword">switch</span> (id)&#123;</span><br><span class="line">            <span class="keyword">case</span> R.id.clear:</span><br><span class="line">                iLoginPresenter.clear();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> R.id.login:</span><br><span class="line">                iLoginPresenter.doLogin(username,password);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在LoginActivity中我们可以看出，LoginActivity实现ILoginView接口，实现了未实现的方法，在代码中可以看出LoginActivity并没有做一些逻辑处理工作，数据处理的工作都是调用ILoginPresenter完成的。   </p>
+<h2 id="Presenter层"><a href="#Presenter层" class="headerlink" title="Presenter层"></a>Presenter层</h2><p>presenter接口代码： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ILoginPresenter</span> </span>&#123;            </span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;           </span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doLogin</span><span class="params">(String username,String password)</span></span>;       </span><br><span class="line">   &#125;                 </span><br><span class="line">   IPresenter实现类：                            </span><br><span class="line">   <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginPresenterCompl</span> <span class="keyword">implements</span> <span class="title">ILoginPresenter</span> </span>&#123;          </span><br><span class="line">       <span class="keyword">private</span> LoginActivity loginActivity;       </span><br><span class="line">      </span><br><span class="line">      <span class="keyword">private</span> User user;         </span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">LoginPresenterCompl</span><span class="params">(LoginActivity loginActivity)</span>                                        </span></span><br><span class="line"><span class="function">       </span>&#123;                 </span><br><span class="line">           <span class="keyword">this</span>.loginActivity=loginActivity;</span><br><span class="line">           user=<span class="keyword">new</span> User(<span class="string">"张三"</span>,<span class="string">"123456"</span>);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p>​<br>​<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">       <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            loginActivity.clearText();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doLogin</span><span class="params">(String username, String password)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//逻辑处理</span></span><br><span class="line">        <span class="keyword">boolean</span> result=<span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">int</span> code=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(username.equals(user.getUserName())&amp;&amp;password.equals(user.getPassword()))&#123;</span><br><span class="line">            result=<span class="keyword">true</span>;</span><br><span class="line">            code=<span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            result=<span class="keyword">false</span>;</span><br><span class="line">            code=<span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        loginActivity.onLoginResult(result,code);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这就是最简单的MVP模式了。<br>MVP优势：               </p>
+<ol>
+<li>使activity代码更加简洁                </li>
+<li>方便进行单元测试                                     </li>
+<li>避免activity内存泄露</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/21/自动化测试Robotium实战学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -563,7 +705,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
