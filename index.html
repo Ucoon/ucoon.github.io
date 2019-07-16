@@ -451,226 +451,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/28/《Kotlin从零到精通》学习笔记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/28/《Kotlin从零到精通》学习笔记/" itemprop="url">未命名</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-28T20:43:38+08:00">
-                2019-05-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li><p>Kotlin是一种基于JVM的新型编程语言，它完全兼容Java语言，Kotlin代码可以编译成Java字节码，也可以编译成JavaScript，方便在没有JVM的设备上运行。</p>
-</li>
-<li><p>优势：</p>
-<ol>
-<li>更简洁</li>
-<li>更安全，它能够在编码阶段自动检测常见的Bug（比如引用了空指针等）</li>
-<li>更强大，它提供了扩展函数、默认参数、接口委托、属性代理等Java不具备的高级特性</li>
-</ol>
-</li>
-<li><p>Anko是使用Kotlin语言编写的一个Android增强库，它用于简化Android开发时的Kotlin代码，使得开发者只用较少的Kotlin代码便能表达完整的编程含义，同时也让App代码变得更加简洁易懂。</p>
-</li>
-<li><p>配置Anko库和Kotlin扩展库</p>
-</li>
-<li><p>Lambda表达式其实是一个匿名函数，匿名函数是指：它是一个没有名字的函数，但函数体的内部代码是完整的</p>
-</li>
-<li><p>基本类型的变量声明：var表示后面是一个变量声明语句：变量名:变量类型</p>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin基本数据类型.png" alt="Kotlin基本数据类型"></p>
-</li>
-<li><p>简单变量之间的转换：在Kotlin中，不允许通过Java的前缀表达式来强制转换类型，只能调用类型转换函数输出其他类型 的变量</p>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin数据类型转换函数.png" alt="Kotlin数据类型转换函数"></p>
-</li>
-<li><p>val与var的区别：</p>
-<p>val修饰过的变量只能在第一次声明时赋值，后续不能再赋值，相当于Java里的final关键字；而var修饰过的变量在任何时候都允许赋值。</p>
-</li>
-<li><p>数组的声明，以int为例，Kotlin的声明方式如下：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> int_array:IntArray = intArrayOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-<p>对比Java的声明：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] int_array = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
-<p>(1) Kotlin另外提供了新的整型数组类型，即IntArray</p>
-<p>(2) 分配一个常量数组，Kotlin调用的是intArrayOf()方法，并不是使用new关键字</p>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin基本数组类型.png" alt="Kotlin基本数组类型"></p>
-<p>（3）当然在Kotlin也有第二种声明方式，通过“Array&lt;数据类型&gt;”的方式：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> int_array:Array&lt;<span class="built_in">Int</span>&gt; = array(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>数组元素的操作：</p>
-<p>（1）获取数组的长度：Java用.length，而Kotlin用.size</p>
-<p>（2）获取指定位置的数组元素：(a)通过方括号加下角标来获取；（b）通过get和set方法</p>
-</li>
-<li><p>字符串与基本类型的转换：<img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin字符串与基本数据的转换.png" alt="Kotlin字符串与基本数据的转换"></p>
-</li>
-<li><p>字符串的常用方法（Kotlin基本兼容Java的相关方法）</p>
-<p>查找子串：index()；截取指定位置子串：substring()；替换子串：replace()；分隔子串：split()</p>
-<ol>
-<li><p>在Java中，split()方法返回的是String[]；但是在Kotlin中，split()返回的是<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. Kotlin允许直接通过下标访问字符串指定位置的字符，也可以通过get方法获取指定位置上的字符</span><br><span class="line"></span><br><span class="line">   ```java</span><br><span class="line">   tv_convert.text = origin[number].toString()</span><br><span class="line">   tv_convert.text = origin.get(number).toString()</span><br></pre></td></tr></table></figure></p>
-</li>
-<li><p>Kotlin格式化字符串：符号$后面跟变量名，系统会自动匹配最长的变量名；如果在取值前需要先运算，则需用大括号把运算表达式给括起来；$属于特殊字符，打印需转义：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">13. Kotlin中的容器</span><br><span class="line"></span><br><span class="line">    Kotlin有三类基本容器：**集合Set，队列List，映射Map**，每类容器又分作只读与可变两种类型，这是为了判断该容器能否进行增、删、改等操作（**Kotlin对变量的修改操作很慎重，每个变量在定义的时候就必须指定能否修改**）</span><br><span class="line"></span><br><span class="line">    1. 容器默认为只读容器，如果需要允许修改该容器变量，则需加上Mutable前缀形成新的容器：MutableSet表示可变集合，MutableList表示可变队列，MutableMap表示可变映射。</span><br><span class="line"></span><br><span class="line">    2. Kotlin允许在声明容器变量的时候就进行初始赋值，如同对数组变量进行初始化那样。</span><br><span class="line"></span><br><span class="line">       ```kotlin</span><br><span class="line">       val satellites:List&lt;String&gt; = listOf(&quot;水星&quot;, &quot;金星&quot;, &quot;地球&quot;,&quot;火星&quot;,&quot;木星&quot;,&quot;土星&quot;)</span><br></pre></td></tr></table></figure></p>
-</li>
-<li><p>容器公共方法如下：</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">isEmpty：判断该容器是否为空</span><br><span class="line">isNotEmpty：判断该容器是否非空</span><br><span class="line">clear：清空该容器</span><br><span class="line">contains：判断该容器是否包含指定元素</span><br><span class="line">iterator：获取该容器的迭代器</span><br><span class="line">count：获取该容器包含的元素个数，也可通过size属性</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>各种容器与其初始化方法的对应关系：</p>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin的容器及其初始化方法.png" alt="Kotlin的容器及其初始化方法"></p>
-</li>
-</ol>
-</li>
-</ol>
-<p>13.1 集合Set/MutableSet</p>
-<ol>
-<li><p>集合的特性：</p>
-<ol>
-<li>容器内部的元素不按顺序排列，因此无法按照下标进行访问</li>
-<li>容器内部的元素存在唯一性，通过哈希值检验是否存在相同的元素，若存在，则将其覆盖。</li>
-</ol>
-</li>
-<li><p>MutableSet的变更操作的限制：</p>
-<ol>
-<li>MutableSet的add方法仅仅往集合中添加元素，由于集合是无序的，因此没办法知道添加的具体位置</li>
-<li>MutableSet没有修改元素值的方法，一个元素一旦被添加，就不可修改</li>
-<li>MutableSet的remove方法用于删除指定元素，但无法删除某个位置的元素，这是因为集合内的元素不是按顺序排列的</li>
-</ol>
-</li>
-<li>集合的遍历：for-in循环、迭代器遍历、forEach遍历<ol>
-<li>迭代器与指针的概念接近，它自身并非具体的元素，而是指向元素的存放地址，所以迭代器遍历其实是遍历所有元素的地址。</li>
-<li>forEach方法在编码时采用匿名函数的形式，内部使用it代表每个元素</li>
-</ol>
-</li>
-</ol>
-<p>13.2 队列List/MutableList</p>
-<ol>
-<li>队列是一种元素之间按照顺序排列的容器</li>
-<li>MutableList比集合多出来的功能：<ol>
-<li>队列能通过get方法获取指定位置的元素，也可通过下标获得该位置的元素</li>
-<li>MultableList的add方法每次都是将元素添加到队列末尾，也可指定添加的位置</li>
-<li>MutableList的set方法允许替换或修改指定位置的元素</li>
-<li>MutableList的removeAt方法允许删除指定位置的元素</li>
-</ol>
-</li>
-<li>队列的遍历：for-in循环、迭代器遍历、forEach遍历，<strong>按元素下标循环遍历</strong></li>
-</ol>
-<p>13.3 映射Map/MutableMap</p>
-<ol>
-<li><p>映射内部保存的是一组键值对（Key-Value），元素的键与值是一一对应的关系</p>
-<ol>
-<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. MutableMap的put函数会先根据key寻找同名元素，如果找不到就添加新元素，如果找得到就用新元素代替旧元素</span><br><span class="line"></span><br><span class="line">3. MutableMap的remove是通过key来删除元素</span><br><span class="line"></span><br><span class="line">4. 如何表示单个键值对元素：（1）“key to value”；（2）采取Pair配对方式，形如“Pair(key, value)”</span><br><span class="line"></span><br><span class="line">   ```kotlin</span><br><span class="line">   //to方式初始化映射</span><br><span class="line">   var goodsMap: Map&lt;String, String&gt; = mapOf(&quot;苹果&quot; to &quot;iPhone8&quot;, &quot;华为&quot; to &quot;Mate10&quot;, &quot;小米&quot; to &quot;小米6&quot;, &quot;欧珀&quot; to &quot;OPPO R11&quot;, &quot;步步高&quot; to &quot;vivo X9S&quot;, &quot;魅族&quot; to &quot;魅族Pro6S&quot;)</span><br><span class="line">   //Pair方式初始化映射</span><br><span class="line">   var goodsMutMap: MutableMap&lt;String, String&gt; = mutableMapOf(Pair(&quot;苹果&quot;, &quot;iPhone8&quot;), Pair(&quot;华为&quot;, &quot;Mate10&quot;), Pair(&quot;小米&quot;, &quot;小米6&quot;), Pair(&quot;欧珀&quot;, &quot;OPPO R11&quot;), Pair(&quot;步步高&quot;, &quot;vivo X9S&quot;), Pair(&quot;魅族&quot;, &quot;魅族Pro6S&quot;))</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-<li><p>映射的遍历：for-in循环、迭代器遍历、forEach遍历</p>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/04/Android事件分发机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2028,6 +1808,126 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/17/软件设计原则和设计模式小记(二)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/17/软件设计原则和设计模式小记(二)/" itemprop="url">软件设计原则和设计模式小记（二）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-17T22:38:36+08:00">
+                2018-09-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在上篇<a href="http://ucoon.tech/2018/08/07/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%E5%92%8C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%B0%8F%E8%AE%B0/" target="_blank" rel="noopener">软件设计原则和设计模式小记（一）</a>中，主要介绍了面向对象的S.O.L.I.D原则和高内聚、低耦合的概念。本文将继续介绍常用的几种设计模式：单例模式、简单工厂模式、策略模式、适配器模式、模板方法模式、装饰者模式以及享元模式。</p>
+<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2078,7 +1978,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
