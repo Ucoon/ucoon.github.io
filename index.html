@@ -242,6 +242,435 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/10/Android埋点技术分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/07/10/Android埋点技术分析/" itemprop="url">Android埋点技术分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-10T22:05:22+08:00">
+                2019-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><h2 id="1-什么是埋点"><a href="#1-什么是埋点" class="headerlink" title="1. 什么是埋点"></a>1. 什么是埋点</h2><blockquote>
+<p>埋点是数据采集的一种方法，将每个需要统计的点击事件、页面上装摄像头，采集相应的信息和行为。</p>
+</blockquote>
+<p>通过埋点、可以收集用户行为数据，进而用于分析和优化产品体验，也可以为产品的运营提供数据支撑，通常可以采集到以下类型数据：</p>
+<ol>
+<li>行为数据：时间、地点、人物、交互的内容等</li>
+<li>质量数据：App运行情况、浏览器加载情况、错误异常等</li>
+<li>环境数据：手机型号、操作系统版本、浏览器UA（User Agent）、地理、运营商、网络环境等</li>
+<li>运营数据：PV（Page View）、UV（Unique Visitor）、点击量、日活、留存、渠道来源等</li>
+</ol>
+<h2 id="2-埋点事件分类"><a href="#2-埋点事件分类" class="headerlink" title="2. 埋点事件分类"></a>2. 埋点事件分类</h2><ol>
+<li><p>点击事件</p>
+<p>点击事件，用户点击按钮即算点击事件，不管点击后有无结果，点击一次记一次</p>
+</li>
+<li><p>曝光事件</p>
+<p>成功打开一次页面记一次，刷新页面一次记一次，加载下一页新页，加载一次记一次</p>
+</li>
+<li><p>页面停留时间事件</p>
+<p>表示一个用户在某个页面的停留时长记为停留时长</p>
+</li>
+</ol>
+<h2 id="3-移动端的埋点需求表"><a href="#3-移动端的埋点需求表" class="headerlink" title="3. 移动端的埋点需求表"></a>3. 移动端的埋点需求表</h2><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>event_id</td>
+<td>埋点ID</td>
+</tr>
+<tr>
+<td>event_key</td>
+<td>埋点名</td>
+</tr>
+<tr>
+<td>status</td>
+<td>埋点状态</td>
+</tr>
+<tr>
+<td>state</td>
+<td>埋点所在页面</td>
+</tr>
+<tr>
+<td>desc</td>
+<td>埋点描述</td>
+</tr>
+<tr>
+<td>event_value</td>
+<td>事件属性</td>
+</tr>
+<tr>
+<td>value_comments</td>
+<td>事件属性描述</td>
+</tr>
+<tr>
+<td>opportunity</td>
+<td>埋点发送时机</td>
+</tr>
+<tr>
+<td>remark</td>
+<td>备注</td>
+</tr>
+<tr>
+<td>event_table</td>
+<td>埋点发送日志</td>
+</tr>
+<tr>
+<td>req_release</td>
+<td>需求提出版本</td>
+</tr>
+<tr>
+<td>achieve_release</td>
+<td>需求实现版本</td>
+</tr>
+<tr>
+<td>priority</td>
+<td>需求优先级</td>
+</tr>
+<tr>
+<td>update_time</td>
+<td>需求更新事件</td>
+</tr>
+</tbody>
+</table>
+<h1 id="二、埋点的技术方案"><a href="#二、埋点的技术方案" class="headerlink" title="二、埋点的技术方案"></a>二、埋点的技术方案</h1><h2 id="1-代码埋点"><a href="#1-代码埋点" class="headerlink" title="1. 代码埋点"></a>1. 代码埋点</h2><p><strong>代码埋点是指在某个事件发生时调用数据发送接口上报数据。</strong>基于<strong>预先编码</strong>实现的代码埋点，其优点是：控制精准、采集灵活性强，可以自由的选择什么时候发送什么样的数据；缺点：开发、测试成本高，对于客户端而言需要等待发版才能修改线上的埋点。</p>
+<h2 id="2-无痕埋点"><a href="#2-无痕埋点" class="headerlink" title="2. 无痕埋点"></a>2. 无痕埋点</h2><p>无痕埋点也可称为无埋点或者全埋点，它指的是<strong>将App内产生的所有的、满足某个条件的行为，全部上报到后台服务器</strong>，在计算时筛选出可用的数据。其优点是很大程度上减少开发、测试的重复劳动，数据可以回溯并且全面。缺点：采集信息不够灵活，并且数据量大，里面可能很多是没有价值的数据。</p>
+<h2 id="3-可视化埋点"><a href="#3-可视化埋点" class="headerlink" title="3. 可视化埋点"></a>3. 可视化埋点</h2><p>可视化埋点是指通过可视化工具选择需要收集的埋点数据，下发配置给客户端，从而解析配置采集相应的埋点的方式。其优点是在于很大程度上减少开发、测试的重复劳动，数据量可控，可以在线上动态的进行埋点配置，无需等待App发版；缺点：采集信息不够灵活，并且无法解决数据回溯的问题。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/28/《Kotlin从零到精通》学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/28/《Kotlin从零到精通》学习笔记/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-28T20:43:38+08:00">
+                2019-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>Kotlin是一种基于JVM的新型编程语言，它完全兼容Java语言，Kotlin代码可以编译成Java字节码，也可以编译成JavaScript，方便在没有JVM的设备上运行。</p>
+</li>
+<li><p>优势：</p>
+<ol>
+<li>更简洁</li>
+<li>更安全，它能够在编码阶段自动检测常见的Bug（比如引用了空指针等）</li>
+<li>更强大，它提供了扩展函数、默认参数、接口委托、属性代理等Java不具备的高级特性</li>
+</ol>
+</li>
+<li><p>Anko是使用Kotlin语言编写的一个Android增强库，它用于简化Android开发时的Kotlin代码，使得开发者只用较少的Kotlin代码便能表达完整的编程含义，同时也让App代码变得更加简洁易懂。</p>
+</li>
+<li><p>配置Anko库和Kotlin扩展库</p>
+</li>
+<li><p>Lambda表达式其实是一个匿名函数，匿名函数是指：它是一个没有名字的函数，但函数体的内部代码是完整的</p>
+</li>
+<li><p>基本类型的变量声明：var表示后面是一个变量声明语句：变量名:变量类型</p>
+<p><img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin基本数据类型.png" alt="Kotlin基本数据类型"></p>
+</li>
+<li><p>简单变量之间的转换：在Kotlin中，不允许通过Java的前缀表达式来强制转换类型，只能调用类型转换函数输出其他类型 的变量</p>
+<p><img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin数据类型转换函数.png" alt="Kotlin数据类型转换函数"></p>
+</li>
+<li><p>val与var的区别：</p>
+<p>val修饰过的变量只能在第一次声明时赋值，后续不能再赋值，相当于Java里的final关键字；而var修饰过的变量在任何时候都允许赋值。</p>
+</li>
+<li><p>数组的声明，以int为例，Kotlin的声明方式如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> int_array:IntArray = intArrayOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>对比Java的声明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] int_array = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>(1) Kotlin另外提供了新的整型数组类型，即IntArray</p>
+<p>(2) 分配一个常量数组，Kotlin调用的是intArrayOf()方法，并不是使用new关键字</p>
+<p><img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin基本数组类型.png" alt="Kotlin基本数组类型"></p>
+<p>（3）当然在Kotlin也有第二种声明方式，通过“Array&lt;数据类型&gt;”的方式：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> int_array:Array&lt;<span class="built_in">Int</span>&gt; = array(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数组元素的操作：</p>
+<p>（1）获取数组的长度：Java用.length，而Kotlin用.size</p>
+<p>（2）获取指定位置的数组元素：(a)通过方括号加下角标来获取；（b）通过get和set方法</p>
+</li>
+<li><p>字符串与基本类型的转换：<img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin字符串与基本数据的转换.png" alt="Kotlin字符串与基本数据的转换"></p>
+</li>
+<li><p>字符串的常用方法（Kotlin基本兼容Java的相关方法）</p>
+<p>查找子串：index()；截取指定位置子串：substring()；替换子串：replace()；分隔子串：split()</p>
+<ol>
+<li><p>在Java中，split()方法返回的是String[]；但是在Kotlin中，split()返回的是<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. Kotlin允许直接通过下标访问字符串指定位置的字符，也可以通过get方法获取指定位置上的字符</span><br><span class="line"></span><br><span class="line">   ```java</span><br><span class="line">   tv_convert.text = origin[number].toString()</span><br><span class="line">   tv_convert.text = origin.get(number).toString()</span><br></pre></td></tr></table></figure></p>
+</li>
+<li><p>Kotlin格式化字符串：符号$后面跟变量名，系统会自动匹配最长的变量名；如果在取值前需要先运算，则需用大括号把运算表达式给括起来；$属于特殊字符，打印需转义：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">13. Kotlin中的容器</span><br><span class="line"></span><br><span class="line">    Kotlin有三类基本容器：**集合Set，队列List，映射Map**，每类容器又分作只读与可变两种类型，这是为了判断该容器能否进行增、删、改等操作（**Kotlin对变量的修改操作很慎重，每个变量在定义的时候就必须指定能否修改**）</span><br><span class="line"></span><br><span class="line">    1. 容器默认为只读容器，如果需要允许修改该容器变量，则需加上Mutable前缀形成新的容器：MutableSet表示可变集合，MutableList表示可变队列，MutableMap表示可变映射。</span><br><span class="line"></span><br><span class="line">    2. Kotlin允许在声明容器变量的时候就进行初始赋值，如同对数组变量进行初始化那样。</span><br><span class="line"></span><br><span class="line">       ```kotlin</span><br><span class="line">       val satellites:List&lt;String&gt; = listOf(&quot;水星&quot;, &quot;金星&quot;, &quot;地球&quot;,&quot;火星&quot;,&quot;木星&quot;,&quot;土星&quot;)</span><br></pre></td></tr></table></figure></p>
+</li>
+<li><p>容器公共方法如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">isEmpty：判断该容器是否为空</span><br><span class="line">isNotEmpty：判断该容器是否非空</span><br><span class="line">clear：清空该容器</span><br><span class="line">contains：判断该容器是否包含指定元素</span><br><span class="line">iterator：获取该容器的迭代器</span><br><span class="line">count：获取该容器包含的元素个数，也可通过size属性</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>各种容器与其初始化方法的对应关系：</p>
+<p><img src="http://sdssdccddd.gitee.io/myblogimg/Kotlin的容器及其初始化方法.png" alt="Kotlin的容器及其初始化方法"></p>
+</li>
+</ol>
+</li>
+</ol>
+<p>13.1 集合Set/MutableSet</p>
+<ol>
+<li><p>集合的特性：</p>
+<ol>
+<li>容器内部的元素不按顺序排列，因此无法按照下标进行访问</li>
+<li>容器内部的元素存在唯一性，通过哈希值检验是否存在相同的元素，若存在，则将其覆盖。</li>
+</ol>
+</li>
+<li><p>MutableSet的变更操作的限制：</p>
+<ol>
+<li>MutableSet的add方法仅仅往集合中添加元素，由于集合是无序的，因此没办法知道添加的具体位置</li>
+<li>MutableSet没有修改元素值的方法，一个元素一旦被添加，就不可修改</li>
+<li>MutableSet的remove方法用于删除指定元素，但无法删除某个位置的元素，这是因为集合内的元素不是按顺序排列的</li>
+</ol>
+</li>
+<li>集合的遍历：for-in循环、迭代器遍历、forEach遍历<ol>
+<li>迭代器与指针的概念接近，它自身并非具体的元素，而是指向元素的存放地址，所以迭代器遍历其实是遍历所有元素的地址。</li>
+<li>forEach方法在编码时采用匿名函数的形式，内部使用it代表每个元素</li>
+</ol>
+</li>
+</ol>
+<p>13.2 队列List/MutableList</p>
+<ol>
+<li>队列是一种元素之间按照顺序排列的容器</li>
+<li>MutableList比集合多出来的功能：<ol>
+<li>队列能通过get方法获取指定位置的元素，也可通过下标获得该位置的元素</li>
+<li>MultableList的add方法每次都是将元素添加到队列末尾，也可指定添加的位置</li>
+<li>MutableList的set方法允许替换或修改指定位置的元素</li>
+<li>MutableList的removeAt方法允许删除指定位置的元素</li>
+</ol>
+</li>
+<li>队列的遍历：for-in循环、迭代器遍历、forEach遍历，<strong>按元素下标循环遍历</strong></li>
+</ol>
+<p>13.3 映射Map/MutableMap</p>
+<ol>
+<li><p>映射内部保存的是一组键值对（Key-Value），元素的键与值是一一对应的关系</p>
+<ol>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. MutableMap的put函数会先根据key寻找同名元素，如果找不到就添加新元素，如果找得到就用新元素代替旧元素</span><br><span class="line"></span><br><span class="line">3. MutableMap的remove是通过key来删除元素</span><br><span class="line"></span><br><span class="line">4. 如何表示单个键值对元素：（1）“key to value”；（2）采取Pair配对方式，形如“Pair(key, value)”</span><br><span class="line"></span><br><span class="line">   ```kotlin</span><br><span class="line">   //to方式初始化映射</span><br><span class="line">   var goodsMap: Map&lt;String, String&gt; = mapOf(&quot;苹果&quot; to &quot;iPhone8&quot;, &quot;华为&quot; to &quot;Mate10&quot;, &quot;小米&quot; to &quot;小米6&quot;, &quot;欧珀&quot; to &quot;OPPO R11&quot;, &quot;步步高&quot; to &quot;vivo X9S&quot;, &quot;魅族&quot; to &quot;魅族Pro6S&quot;)</span><br><span class="line">   //Pair方式初始化映射</span><br><span class="line">   var goodsMutMap: MutableMap&lt;String, String&gt; = mutableMapOf(Pair(&quot;苹果&quot;, &quot;iPhone8&quot;), Pair(&quot;华为&quot;, &quot;Mate10&quot;), Pair(&quot;小米&quot;, &quot;小米6&quot;), Pair(&quot;欧珀&quot;, &quot;OPPO R11&quot;), Pair(&quot;步步高&quot;, &quot;vivo X9S&quot;), Pair(&quot;魅族&quot;, &quot;魅族Pro6S&quot;))</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>映射的遍历：for-in循环、迭代器遍历、forEach遍历</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/04/Android事件分发机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1599,361 +2028,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/17/软件设计原则和设计模式小记(二)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/17/软件设计原则和设计模式小记(二)/" itemprop="url">软件设计原则和设计模式小记（二）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-17T22:38:36+08:00">
-                2018-09-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在上篇<a href="http://ucoon.tech/2018/08/07/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%E5%92%8C%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%B0%8F%E8%AE%B0/" target="_blank" rel="noopener">软件设计原则和设计模式小记（一）</a>中，主要介绍了面向对象的S.O.L.I.D原则和高内聚、低耦合的概念。本文将继续介绍常用的几种设计模式：单例模式、简单工厂模式、策略模式、适配器模式、模板方法模式、装饰者模式以及享元模式。</p>
-<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/07/软件设计原则和设计模式小记/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/07/软件设计原则和设计模式小记/" itemprop="url">软件设计原则和设计模式小记（一）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-07T21:36:44+08:00">
-                2018-08-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>从部门老大对于软件设计原则和设计模式的分享，再到近阶段的工作都涉及了软件设计相关的知识，都让我对软件设计这一块难啃的骨头有了小小的认识。本文中的软件设计原则也只简要论述了<strong>面向对象的S.O.L.I.D原则</strong> ，设计模式也只介绍了常用的几种。</p>
-<h1 id="面向对象的S-O-L-I-D原则"><a href="#面向对象的S-O-L-I-D原则" class="headerlink" title="面向对象的S.O.L.I.D原则"></a>面向对象的S.O.L.I.D原则</h1><p><strong>SOLID</strong>是五个面向对象编程的重要原则的缩写，它是由Robert C. Martin（Bob大叔）在21世纪初定义的。它是每个开发者必备的基本知识。运用这些原则能让我们写出更优质的代码，能使我们的代码更健壮，更易于维护，有更好的可持续性、扩展性和鲁棒的代码。</p>
-<h2 id="高内聚"><a href="#高内聚" class="headerlink" title="高内聚"></a>高内聚</h2><p>内聚：一个模块内各个元素彼此结合的紧密程度；高内聚就是每个模块尽可能独立完成自己的功能，不依赖模块外部的代码。</p>
-<h3 id="Single-Responsibility-Principle-SRP-—-单一职责原则"><a href="#Single-Responsibility-Principle-SRP-—-单一职责原则" class="headerlink" title="Single Responsibility Principle(SRP) — 单一职责原则"></a>Single Responsibility Principle(SRP) — 单一职责原则</h3><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><blockquote>
-<p>一个类或者模块应该有且只有一个改变的原因</p>
-</blockquote>
-<p>职责单一原则的核心思想是：一个类或模块只负责一个功能，并且只有一个引起它变化的原因。单一职责原则可以看作是低耦合，高内聚在面向对象的引申，将职责定义为引起变化的原因，以提高内聚性来减少引起变化的原因。 职责越多，可能引起它变化的原因就越多，也将导致职责依赖严重，从而使耦合度增大。</p>
-<h4 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h4><p>首先我们先看一个用户信息类（UserInfo）：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IUserInfo</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getId</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setId</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getName</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getPassword</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addUser</span><span class="params">(UserInfo user)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">deleteUser</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面的代码将业务对象和业务逻辑的内容放到了一个类中，业务对象和业务逻辑都会引起IUserInfo类的变化，上面的代码就违反了单一职责原则。按照SRP原则，我们应该<strong>为不同的职责创建不同的类</strong>，修改如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IUserBro</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getId</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setId</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getName</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span></span>;</span><br><span class="line">    <span class="function">String <span class="title">getPassword</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IUserBiz</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addUser</span><span class="params">(UserInfo user)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">deleteUser</span><span class="params">(<span class="keyword">int</span> id)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样，我们就有了两个类，但是<strong>每个类都有单一的职责</strong>，我们使它变成了低耦合高内聚。</p>
-<h4 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h4><ul>
-<li>降低耦合性</li>
-<li>代码易于理解和维护</li>
-</ul>
-<h3 id="Interface-Segregation-Principle-ISP-—-接口隔离原则"><a href="#Interface-Segregation-Principle-ISP-—-接口隔离原则" class="headerlink" title="Interface Segregation Principle(ISP) — 接口隔离原则"></a>Interface Segregation Principle(ISP) — 接口隔离原则</h3><h4 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h4><blockquote>
-<p>使用多个专用的接口比使用一个通用接口好</p>
-</blockquote>
-<p>ISP原则意思是把功能实现在接口中，而不是类中；并且一个类绝不要实现不会用到的接口。不遵循这个原则意味着我们在实现里会依赖很多我们并不需要的方法，但又不得不去定义。所以，实现多个特定的接口比实现一个通用接口要好。一个接口被需要用到的类所定义，所以这个接口不应该有这个类不需要实现的其他方法。</p>
-<h4 id="代码示例-1"><a href="#代码示例-1" class="headerlink" title="代码示例"></a>代码示例</h4><p>我们有一个ICar的接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ICar</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">startEngine</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">accelerate</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>同时也有一个实现ICar接口的Mustang类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Mustang</span> <span class="keyword">implements</span> <span class="title">ICar</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startEngine</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//start engine...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accelerate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//accelerate...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>现在要添加一个新的车型：一辆DeloRean，可以穿梭时空。</p>
-<p>我们修改ICar接口类以满足此需求：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ICar</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">startEngine</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">accelerate</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">backToThePast</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">backToTheFuture</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>新增DeloRean类实现ICar接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeloRean</span> <span class="keyword">implements</span> <span class="title">ICar</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startEngine</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//start engine...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accelerate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//accelerate...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backToThePast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//back to the past...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backToTheFuture</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//back to the future...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>同时修改Mustang类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Mustang</span> <span class="keyword">implements</span> <span class="title">ICar</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startEngine</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//start engine...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accelerate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//accelerate...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backToThePast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//Mustang没有穿梭时空的能力</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backToTheFuture</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//Mustang没有穿梭时空的能力</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这种情况下，Mustang违反了接口隔离原则，它实现了它不需要的方法。</p>
-<p><strong>使用接口隔离的解决方法：</strong></p>
-<p>重构ICar接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ICar</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">startEngine</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">accelerate</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>新增ITimeMachine接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ITimeMachine</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">backToThePast</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">backToTheFuture</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重构Mustang（只实现ICar接口）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Mustang</span> <span class="keyword">implements</span> <span class="title">ICar</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startEngine</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//start engine...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accelerate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//accelerate...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重构DeloRean（同时实现ICar和ITimeMachine）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeloRean</span> <span class="keyword">implements</span> <span class="title">ICar</span>, <span class="title">ITimeMachine</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startEngine</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//start engine...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accelerate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//accelerate...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backToThePast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//back to the past...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backToTheFuture</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//back to the future...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="好处-1"><a href="#好处-1" class="headerlink" title="好处"></a>好处</h4><ul>
-<li>系统解耦</li>
-<li>代码易于重构</li>
-</ul>
-<h2 id="低耦合"><a href="#低耦合" class="headerlink" title="低耦合"></a>低耦合</h2><p>耦合：模块与模块之间接口的复杂程度，模块之间联系越复杂耦合度越高，牵一发动全身；低耦合就是要尽可能减少模块之间的交互复杂程度。</p>
-<h3 id="Open-Closed-Principle-OCP-—-开闭原则"><a href="#Open-Closed-Principle-OCP-—-开闭原则" class="headerlink" title="Open/Closed Principle(OCP) — 开闭原则"></a>Open/Closed Principle(OCP) — 开闭原则</h3><h4 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h4><blockquote>
-<p>软件中的对象（类、模块、函数等等）应该对于扩展是开放的，但是对于修改是封闭的</p>
-</blockquote>
-<p>根据这一原则，一个实体是允许在不改变它的源代码的前提下变更它的行为。</p>
-<ul>
-<li><strong>open for extension</strong>：对扩展开放，意味着有新的需求或变化时，可以对现有代码进行扩展，以适应新的情况。</li>
-<li><strong>close for modification</strong>：对修改封闭，意味着扩展新的功能行为而不需要也不应该修改现有的代码。</li>
-</ul>
-<p>对于面向对象来说，需要你依赖抽象，而不是实现。</p>
-<h4 id="代码示例-2"><a href="#代码示例-2" class="headerlink" title="代码示例"></a>代码示例</h4><p>首先我们有两个不同形状的类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> width;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> height;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//getter and setter methods...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Square</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> side;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//getter and setter methods...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其次我们还有一个类可以画出不同的形状：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShapePrinter</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawShape</span><span class="params">(Object shape)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(shape <span class="keyword">instanceof</span> Rectangle)&#123;</span><br><span class="line">            <span class="comment">//Draw Rectangle...</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(shape <span class="keyword">instanceof</span> Square)&#123;</span><br><span class="line">            <span class="comment">//Draw Square...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面可以看到，当我们每次想画一个新的形状就要<strong>修改ShapePrinter类的drawShape方法来接受这个新的形状</strong>。这样当形状种类多了之后，ShapePrinter类就会存在大量的<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">按照OCP原则，修改如下：</span><br><span class="line"></span><br><span class="line">我们添加一个Shape接口类：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">public interface Shape&#123;</span><br><span class="line">    void draw();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>重构Rectangle类和Square类以实现Shape：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span> <span class="keyword">implements</span> <span class="title">Shape</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> width;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> height;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//getter and setter methods...</span></span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//Draw Rectangle...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">implements</span> <span class="title">Shape</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> side;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//getter and setter methods...</span></span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//Draw Square...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>ShapePrinter类的重构：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawShape</span><span class="params">(Shape shape)</span></span>&#123;</span><br><span class="line">        shape.draw();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h4 id="好处-2"><a href="#好处-2" class="headerlink" title="好处"></a>好处</h4><ul>
-<li>代码的可维护性和复用性</li>
-<li>代码会更健壮 </li>
-</ul>
-<h3 id="Liskov-Substitution-Principle-LSP-—-里氏替换原则"><a href="#Liskov-Substitution-Principle-LSP-—-里氏替换原则" class="headerlink" title="Liskov Substitution Principle(LSP) — 里氏替换原则"></a>Liskov Substitution Principle(LSP) — 里氏替换原则</h3><h4 id="定义-3"><a href="#定义-3" class="headerlink" title="定义"></a>定义</h4><blockquote>
-<p>派生类（子类）对象可以在程式中代替其基类（超类）对象。“Subtypes must be substituable for their base types”</p>
-</blockquote>
-<p>根据定义所说，程序里的对象都应该可以被它的子类实例替换而不用更改程序，另外不应该在代码中出现if/else之类对子类类型进行判断的条件。里氏替换原则是使代码符合开闭原则的一个重要保证。正是由于子类的可替换性才使得父类型的模块在无需修改的情况下就可以扩展。</p>
-<h4 id="代码示例-3"><a href="#代码示例-3" class="headerlink" title="代码示例"></a>代码示例</h4><p>我们有一个Rectangle类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> width;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> height;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setHeight</span><span class="params">(<span class="keyword">int</span> height)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.height = height;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setWidth</span><span class="params">(<span class="keyword">int</span> width)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.width = width;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getArea</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> width*height;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>还有一个Square类（从数学上讲正方形也是长方形的一种）：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">Rectangle</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setHeight</span><span class="params">(<span class="keyword">int</span> height)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.setWidth(height);</span><br><span class="line">        <span class="keyword">super</span>.setHeight(height);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setWidth</span><span class="params">(<span class="keyword">int</span> width)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.setWidth(width);</span><br><span class="line">        <span class="keyword">super</span>.setHeight(width);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后我们写个测试函数：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LiskovSubstitutionTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        Rectangle rectangle = <span class="keyword">new</span> Rectangle();</span><br><span class="line">        rectangle.setWidth(<span class="number">2</span>);</span><br><span class="line">        rectangle.setHeight(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (rectangle.getArea() == <span class="number">10</span>)&#123;</span><br><span class="line">         System.out.println(rectangle.getArea());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>同样的函数却不适用Square：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LiskovSubstitutionTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        Rectangle rectangle = <span class="keyword">new</span> Square();</span><br><span class="line">        rectangle.setWidth(<span class="number">2</span>);</span><br><span class="line">        rectangle.setHeight(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (rectangle.getArea() == <span class="number">10</span>)&#123;</span><br><span class="line">         System.out.println(rectangle.getArea());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从代码上看出Square并不能正确替代Rectangle类，因为它不遵循Rectangle的行为规则，违反了LSP原则。</p>
-<p>解决方法：</p>
-<p>用IShape接口来获取面积：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IShape</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">area</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重构Rectangle和Square以实现IShape：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span> <span class="keyword">implements</span> <span class="title">IShape</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> width;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> height;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setHeight</span><span class="params">(<span class="keyword">int</span> height)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.height = height;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setWidth</span><span class="params">(<span class="keyword">int</span> width)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.width = width;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">area</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> width*height;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>修改函数：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LiskovSubstitutionTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        IShape shape = <span class="keyword">new</span> Square();</span><br><span class="line">        shape.setWidth(<span class="number">2</span>);</span><br><span class="line">        shape.setHeight(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (shape.getArea() == <span class="number">10</span>)&#123;</span><br><span class="line">         System.out.println(shape.getArea());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="好处-3"><a href="#好处-3" class="headerlink" title="好处"></a>好处</h4><ul>
-<li>更高的代码复用性</li>
-<li>类的层次结构易于理解</li>
-</ul>
-<h3 id="Dependency-Inversion-Principle-DIP-—-依赖倒置原则"><a href="#Dependency-Inversion-Principle-DIP-—-依赖倒置原则" class="headerlink" title="Dependency Inversion Principle(DIP) — 依赖倒置原则"></a>Dependency Inversion Principle(DIP) — 依赖倒置原则</h3><h4 id="定义-4"><a href="#定义-4" class="headerlink" title="定义"></a>定义</h4><blockquote>
-<p>高层次的模块不应该依赖于低层次的模块，两者都应该依赖于抽象接口</p>
-<p>抽象接口不应该依赖于具体实现，而具体实现则应该依赖于抽象接口</p>
-</blockquote>
-<p>在面向对象编程领域中，依赖反转原则是指一个特定的类不应该直接依赖于另一个类，但是可以依赖于这个类的抽象（接口）。</p>
-<p>附上来自维基百科上的图：</p>
-<img src="http://pcmve13p6.bkt.clouddn.com/static/images/Dependency_inversion.jpg">
-<p>图1中，高层对象A依赖于底层对象B的实现；图2中，把高层对象A对底层对象的需求抽象为一个接口A，底层对象B实现了接口A，这就是依赖反转。 </p>
-<h4 id="代码示例-4"><a href="#代码示例-4" class="headerlink" title="代码示例"></a>代码示例</h4><p>我们有个DeliveryDriver类代表着一个司机为快递公司工作：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeliveryDriver</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deliveryProduct</span><span class="params">(Product product)</span></span>&#123;</span><br><span class="line">        <span class="comment">//运送产品</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其次有个DeliveryCompany类处理货物装运：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeliveryCompany</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendProduct</span><span class="params">(Product product)</span></span>&#123;</span><br><span class="line">        DeliveryDriver deliveryDriver = <span class="keyword">new</span> DeliveryDriver();</span><br><span class="line">        deliveryDriver.deliveryProduct(product);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在上述代码中，DeliveryCompany创建并使用DeliveryDriver实例，所以DeliveryCompany是一个依赖于低层次类的高层次的类，这就违反了依赖反转原则（在上述代码中DeliveryCompany需要运送货物，必须需要一个DeliveryDriver参与，但如果以后对DeliveryDriver有更多的要求，那我们既要修改DeliveryDriver也要修改上述代码，这样造成的依赖，耦合度高。）</p>
-<p>解决方法：</p>
-<p>创建DeliveryService接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DeliveryService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">deliveryProduct</span><span class="params">(Product product)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重构DeliveryDriver类以实现DeliveryService接口：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeliveryDriver</span> <span class="keyword">implements</span> <span class="title">DeliveryService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deliveryProduct</span><span class="params">(Product product)</span></span>&#123;</span><br><span class="line">        <span class="comment">//运送产品</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>重构DeliveryCompany类，使它依赖于一个抽象而不是一个具体的类：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeliveryCompany</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> DeliveryService deliveryService;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DeliveryCompany</span><span class="params">(DeliveryService deliveryService)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.deliveryService = deliveryService;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendProduct</span><span class="params">(Product product)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.deliveryService.deliveryProduct(product);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="好处-4"><a href="#好处-4" class="headerlink" title="好处"></a>好处</h4><ul>
-<li>减少耦合</li>
-<li>代码更高的复用性</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2004,7 +2078,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
