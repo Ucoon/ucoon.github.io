@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="title：网络请求之“重试设计”：退避 重试的场景    重试的定义：我们认为这个故障是暂时的，而不是永久的，所以我们会去重试。    要重试：调用超时，被调用端返回了某种可以重试的错误（如繁忙中，流程中，维护中，资源不足等）    不要重试：业务级别的错误（如没有权限，或者是非法数据等），技术上的错误（如http的500等），这类型的错误重试下去没有意义。  重试的策略： 总原则：有个重试次">
+<meta name="description" content="重试的场景    重试的定义：我们认为这个故障是暂时的，而不是永久的，所以我们会去重试。    要重试：调用超时，被调用端返回了某种可以重试的错误（如繁忙中，流程中，维护中，资源不足等）    不要重试：业务级别的错误（如没有权限，或者是非法数据等），技术上的错误（如http的500等），这类型的错误重试下去没有意义。  重试的策略： 总原则：有个重试次数的最大值，经过一段时间不断的重试之后，就">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Forwards">
-<meta property="og:url" content="http://yoursite.com/2020/02/20/网络请求之“重试设计”：退避/index.html">
+<meta property="og:title" content="网络请求之“重试设计”：退避">
+<meta property="og:url" content="http://yoursite.com/2020/02/20/网络请求之“重试设计”—退避/index.html">
 <meta property="og:site_name" content="Forwards">
-<meta property="og:description" content="title：网络请求之“重试设计”：退避 重试的场景    重试的定义：我们认为这个故障是暂时的，而不是永久的，所以我们会去重试。    要重试：调用超时，被调用端返回了某种可以重试的错误（如繁忙中，流程中，维护中，资源不足等）    不要重试：业务级别的错误（如没有权限，或者是非法数据等），技术上的错误（如http的500等），这类型的错误重试下去没有意义。  重试的策略： 总原则：有个重试次">
+<meta property="og:description" content="重试的场景    重试的定义：我们认为这个故障是暂时的，而不是永久的，所以我们会去重试。    要重试：调用超时，被调用端返回了某种可以重试的错误（如繁忙中，流程中，维护中，资源不足等）    不要重试：业务级别的错误（如没有权限，或者是非法数据等），技术上的错误（如http的500等），这类型的错误重试下去没有意义。  重试的策略： 总原则：有个重试次数的最大值，经过一段时间不断的重试之后，就">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-20T03:59:43.183Z">
+<meta property="og:updated_time" content="2020-02-20T04:06:58.195Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Forwards">
-<meta name="twitter:description" content="title：网络请求之“重试设计”：退避 重试的场景    重试的定义：我们认为这个故障是暂时的，而不是永久的，所以我们会去重试。    要重试：调用超时，被调用端返回了某种可以重试的错误（如繁忙中，流程中，维护中，资源不足等）    不要重试：业务级别的错误（如没有权限，或者是非法数据等），技术上的错误（如http的500等），这类型的错误重试下去没有意义。  重试的策略： 总原则：有个重试次">
+<meta name="twitter:title" content="网络请求之“重试设计”：退避">
+<meta name="twitter:description" content="重试的场景    重试的定义：我们认为这个故障是暂时的，而不是永久的，所以我们会去重试。    要重试：调用超时，被调用端返回了某种可以重试的错误（如繁忙中，流程中，维护中，资源不足等）    不要重试：业务级别的错误（如没有权限，或者是非法数据等），技术上的错误（如http的500等），这类型的错误重试下去没有意义。  重试的策略： 总原则：有个重试次数的最大值，经过一段时间不断的重试之后，就">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/20/网络请求之“重试设计”：退避/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/02/20/网络请求之“重试设计”—退避/"/>
 
 
 
 
 
-  <title> | Forwards</title>
+  <title>网络请求之“重试设计”：退避 | Forwards</title>
   
 
 
@@ -242,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/20/网络请求之“重试设计”：退避/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/20/网络请求之“重试设计”—退避/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Forwards">
@@ -259,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">网络请求之“重试设计”：退避</h1>
         
 
         <div class="post-meta">
@@ -309,8 +309,7 @@
       
 
       
-        <hr>
-<h2 id="title：网络请求之“重试设计”：退避"><a href="#title：网络请求之“重试设计”：退避" class="headerlink" title="title：网络请求之“重试设计”：退避"></a>title：网络请求之“重试设计”：退避</h2><ol>
+        <ol>
 <li><p>重试的场景</p>
 <p>   重试的定义：我们认为这个故障是暂时的，而不是永久的，所以我们会去重试。</p>
 <p>   要重试：调用超时，被调用端返回了某种可以重试的错误（如繁忙中，流程中，维护中，资源不足等）</p>
@@ -362,8 +361,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/07/17/Android渗透安全简析/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2019/07/10/Android埋点技术分析/" rel="next" title="Android埋点技术分析">
+                <i class="fa fa-chevron-left"></i> Android埋点技术分析
               </a>
             
           </div>
@@ -422,17 +421,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -447,7 +437,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -490,22 +480,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title：网络请求之“重试设计”：退避"><span class="nav-number">1.</span> <span class="nav-text">title：网络请求之“重试设计”：退避</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
