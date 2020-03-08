@@ -319,19 +319,14 @@
 <h1 id="内存泄漏的危害"><a href="#内存泄漏的危害" class="headerlink" title="内存泄漏的危害"></a>内存泄漏的危害</h1><p>App可能因为大量的内存泄漏导致内存耗尽，引发Crash，如果内存未耗尽，App也会由于内存空间不足，出现频繁的GC，每一次GC都是非常耗时的阻塞性操作，会造成设备非常严重的卡顿。</p>
 <h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><p>Handler：我们经常会在activity中这样使用handler：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private class MyHandler extends Handler&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">//使用</span><br><span class="line">MyHandler myHandler = new MyHandler(this);</span><br></pre></td></tr></table></figure>
-<p>由于<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 非静态内部类创建静态实例</span><br><span class="line"></span><br><span class="line">非静态内部类可以自由使用外部类的所有变量和方法，非静态内部类默认持有外部类的引用，此时如果在外部类创建静态```static```的非静态匿名内部类的实例（声明为```static```静态成员变量），或者在非静态内部类创建了一个静态实例， 这样就导致内部类的生命周期和应用程序```ClassLoader```一样长，导致外部类无法正常销毁。</span><br><span class="line"></span><br><span class="line"># 分析</span><br><span class="line"></span><br><span class="line">1. 为什么非静态内部类对外部类会存在一个隐式引用？</span><br><span class="line">2. 为什么非静态内部类存在异步任务，可能会导致其对应的外部类内存资源无法正常释放？</span><br><span class="line">3. 为什么非静态内部类中创建了一个静态实例，会导致内存泄漏？</span><br><span class="line"></span><br><span class="line">## 隐式引用</span><br></pre></td></tr></table></figure></p>
-<p>public class MainActivity extends AppCompatActivity {<br>    @Override<br>    protected void onCreate(Bundle savedInstanceState) {<br>        super.onCreate(savedInstanceState);<br>    }<br>    private void testMethod(){</p>
-<pre><code>}
-private class MyHandler extends Handler{
-    @Override
-    public void handleMessage(Message msg) {
-        super.handleMessage(msg);
-        testMethod();
-       //MainActivity.this 这个就是隐式引用
-        MainActivity.this.testMethod();
-    }
-}
-</code></pre><p>}<br><code>`</code></p>
+<p>由于myHandler是Handler的非静态匿名内部类的实例，而这个<strong>非静态匿名内部类对其外部类存在一个隐式引用</strong>，其外部类在销毁之前，如果该非静态匿名内部类的handleMessage还未处理完成，将会导致外部类的内存资源无法正常释放，造成了内存泄漏。</p>
+<h1 id="非静态内部类创建静态实例"><a href="#非静态内部类创建静态实例" class="headerlink" title="非静态内部类创建静态实例"></a>非静态内部类创建静态实例</h1><p>非静态内部类可以自由使用外部类的所有变量和方法，非静态内部类默认持有外部类的引用，此时如果在外部类创建静态static的非静态匿名内部类的实例（声明为static静态成员变量），或者在非静态内部类创建了一个静态实例， 这样就导致内部类的生命周期和应用程序ClassLoader一样长，导致外部类无法正常销毁。</p>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><ol>
+<li>为什么非静态内部类对外部类会存在一个隐式引用？</li>
+<li>为什么非静态内部类存在异步任务，可能会导致其对应的外部类内存资源无法正常释放？</li>
+<li>为什么非静态内部类中创建了一个静态实例，会导致内存泄漏？</li>
+</ol>
+<h2 id="隐式引用"><a href="#隐式引用" class="headerlink" title="隐式引用"></a>隐式引用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">    &#125;</span><br><span class="line">    private void testMethod()&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    private class MyHandler extends Handler&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void handleMessage(Message msg) &#123;</span><br><span class="line">            super.handleMessage(msg);</span><br><span class="line">            testMethod();</span><br><span class="line">		   //MainActivity.this 这个就是隐式引用</span><br><span class="line">            MainActivity.this.testMethod();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在非静态匿名内部类中，我们可以访问到外部类的<code>testMethod</code>方法，这个就是隐式引用的作用</p>
 <h2 id="对比非静态匿名内部类的源码和编译后的字节码"><a href="#对比非静态匿名内部类的源码和编译后的字节码" class="headerlink" title="对比非静态匿名内部类的源码和编译后的字节码"></a>对比非静态匿名内部类的源码和编译后的字节码</h2><p><img src="http://ucoon.gitee.io/myblogimg/%E9%9D%9E%E9%9D%99%E6%80%81%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB.png" alt=""></p>
 <p><img src="http://ucoon.gitee.io/myblogimg/%E9%9D%9E%E9%9D%99%E6%80%81%E5%8C%BF%E5%90%8D%E5%86%85%E9%83%A8%E7%B1%BB%E5%AD%97%E8%8A%82%E7%A0%81.jpg" alt=""></p>
