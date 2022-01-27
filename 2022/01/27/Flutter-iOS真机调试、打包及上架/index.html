@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1. 在Mac上搭建Flutter环境这部分只需参考官网搭建即可 注意事项  多个Path环境变量设置：  1234567export PUB_HOSTED_URL=https://pub.flutter-io.cnexport FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cnJAVA_HOME=/Library/Java/JavaVir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter iOS真机调试、打包及上架">
+<meta property="og:url" content="http://yoursite.com/2022/01/27/Flutter-iOS真机调试、打包及上架/index.html">
+<meta property="og:site_name" content="Forwards">
+<meta property="og:description" content="1. 在Mac上搭建Flutter环境这部分只需参考官网搭建即可 注意事项  多个Path环境变量设置：  1234567export PUB_HOSTED_URL=https://pub.flutter-io.cnexport FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cnJAVA_HOME=/Library/Java/JavaVir">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ucoon.gitee.io/myblogimg/csr文件申请_1.png">
+<meta property="og:image" content="http://ucoon.gitee.io/myblogimg/csr文件申请_2.png">
+<meta property="og:image" content="http://ucoon.gitee.io/myblogimg/证书导入.png">
+<meta property="og:updated_time" content="2022-01-27T07:20:48.447Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flutter iOS真机调试、打包及上架">
+<meta name="twitter:description" content="1. 在Mac上搭建Flutter环境这部分只需参考官网搭建即可 注意事项  多个Path环境变量设置：  1234567export PUB_HOSTED_URL=https://pub.flutter-io.cnexport FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cnJAVA_HOME=/Library/Java/JavaVir">
+<meta name="twitter:image" content="http://ucoon.gitee.io/myblogimg/csr文件申请_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/01/27/Flutter-iOS真机调试、打包及上架/"/>
+
+
+
+
+
+  <title>Flutter iOS真机调试、打包及上架 | Forwards</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/Ucoon" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Forwards</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">有空的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/27/Flutter-iOS真机调试、打包及上架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flutter iOS真机调试、打包及上架</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-27T15:21:57+08:00">
+                2022-01-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-在Mac上搭建Flutter环境"><a href="#1-在Mac上搭建Flutter环境" class="headerlink" title="1. 在Mac上搭建Flutter环境"></a>1. 在Mac上搭建Flutter环境</h1><p>这部分只需参考<a href="https://flutterchina.club/setup-macos/" target="_blank" rel="noopener">官网</a>搭建即可</p>
+<p><strong>注意事项</strong></p>
+<ul>
+<li>多个Path环境变量设置：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export PUB_HOSTED_URL=https://pub.flutter-io.cn</span><br><span class="line">export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn</span><br><span class="line">JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home</span><br><span class="line">FLUTTER_HOME=/Users/yardi_wuhan/Library/FlutterSDK</span><br><span class="line">PATH=$JAVA_HOME/bin:$FLUTTER_HOME/bin:$PATH</span><br><span class="line">CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br><span class="line">export JAVA_HOME PATH CLASSPATH</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果你使用的是zsh，终端启动时 <code>~/.bash_profile</code> 将不会被加载，解决办法就是修改 <code>~/.zshrc</code> ，在其中添加：source ~/.bash_profile</li>
+</ul>
+<h1 id="2-Ruby、CocoaPods安装"><a href="#2-Ruby、CocoaPods安装" class="headerlink" title="2. Ruby、CocoaPods安装"></a>2. Ruby、CocoaPods安装</h1><blockquote>
+<p><strong>CocoaPods</strong> 就是iOS 项目的开发 第三方库的管理工具。</p>
+<p><code>CocoaPods</code> 是用 <code>ruby</code> 实现的,要想使用它首先需要有<code>ruby</code>环境。 虽然 <code>Mac</code> 系统默认可以运行<code>ruby</code>。但是<code>ruby</code>版本过低是无法正常支持<code>CocoaPods</code>的使用</p>
+</blockquote>
+<ol>
+<li><p><a href="https://gems.ruby-china.com/" target="_blank" rel="noopener">更换Ruby源</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 查看现有的源</span><br><span class="line">gem source -l </span><br><span class="line"><span class="meta">#</span> 移除</span><br><span class="line">gem sources --remove  https://rubygems.org/</span><br><span class="line"><span class="meta">#</span> 添加 ruby-china 的源</span><br><span class="line">gem sources -a https://gems.ruby-china.org/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装CocoaPods：<code>sudo gem install cocoapods</code></p>
+</li>
+<li><p>切换<a href="https://mirrors.tuna.tsinghua.edu.cn/help/CocoaPods/" target="_blank" rel="noopener">清华源</a>安装CocoaPods</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 移除原仓库镜像</span><br><span class="line">pod repo remove master</span><br><span class="line"><span class="meta">#</span> 使用清华源安装到本地 cd  ~/.cocoapods/repos/master</span><br><span class="line">git clone https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git </span><br><span class="line"><span class="meta">#</span> 设置一下</span><br><span class="line">pod setup</span><br><span class="line"><span class="meta">#</span> 查看仓库信息</span><br><span class="line">pod repo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装完成之后进入到项目的iOS目录下，执行<code>pod install</code></p>
+</li>
+</ol>
+<h1 id="3-证书相关申请"><a href="#3-证书相关申请" class="headerlink" title="3. 证书相关申请"></a>3. 证书相关申请</h1><ol>
+<li><p>登录<a href="https://developer.apple.com/account/resources/identifiers/list" target="_blank" rel="noopener">apple开发者平台</a></p>
+</li>
+<li><p>Register a new identifier（常见app的功能如第三方应用登录（Associated Domains）、推送（Push Notifications）可提前勾选Capabilities）</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注意事项：</span><br><span class="line"><span class="number">1.</span> Bundle ID的区别</span><br><span class="line">   - Explicit App ID「明确的 App ID」，一般格式是：com.company.appName；这种 id 只能用在一个app上，每一个新应用都要创建并只有一个。</span><br><span class="line">   - Wildcard App ID「通配符 App ID」， 一般格式是：com.domainname.* ；这种 id 可以用在多个应用上，虽然方便，但是使用这种id的应用不能使用通知功能，所以不常用。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在mac上通过钥匙串应用创建两个证书请求文件（CSR文件），分别对应Development环境和Distribution环境</p>
+<p><img src="http://ucoon.gitee.io/myblogimg/csr文件申请_1.png" style="zoom:25%;"></p>
+</li>
+</ol>
+<p>   <img src="http://ucoon.gitee.io/myblogimg/csr文件申请_2.png" style="zoom:25%;"></p>
+<ol start="4">
+<li><p>Create a New Certificate(证书)</p>
+<ol>
+<li><p>分别申请开发证书（iOS Development）和分发证书（iOS Distribution），开发证书用于开发和调试应用程序，可用于真机调试；生产证书用于打包上传App Store或者蒲公英，用于验证开发者身份。如果项目集成了推送功能，还需配置推送证书，推送证书同样也分两种：开发环境和生产环境（Apple Push Notification service SSL ：Sandbox &amp; Production)，同时生成的p12文件需上传到服务端后台（如阿里云移动推送后台）</p>
+</li>
+<li><p>生成后的证书需要下载并通过钥匙串导入到Mac</p>
+<p><img src="http://ucoon.gitee.io/myblogimg/证书导入.png" alt="证书导入" style="zoom: 25%;"></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">注意事项：</span><br><span class="line">    打开钥匙串应用，在点击登录--&gt;我的证书页面下，双击证书导入即可</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<ol start="5">
+<li><p>Register a New Provisioning Profile(描述文件)</p>
+<p>可参考<a href="https://zhuanlan.zhihu.com/p/69162456" target="_blank" rel="noopener">iOS 证书配置</a></p>
+</li>
+</ol>
+<h1 id="4-Xcode中的配置"><a href="#4-Xcode中的配置" class="headerlink" title="4. Xcode中的配置"></a>4. Xcode中的配置</h1><p>Xcode中的配置</p>
+<ol>
+<li><p>点击<code>TARGETS</code>中的<code>Runner</code>，选中<code>Build Settings</code>栏，在<code>Code Signing Identity</code>中配置已下载导入的iOS证书</p>
+</li>
+<li><p>选中<code>Signing &amp; Capabilities</code>栏，<code>Provisioning Profile</code>选择下载相应的描述文件</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注意事项：Automatically manage signing不选中</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>到此即可连接iOS真机在Android Studio中运行</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注意事项：需要将真机的UDID添加到apple开发者平台的设备列表(Devices)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="5-打包及上架"><a href="#5-打包及上架" class="headerlink" title="5. 打包及上架"></a>5. 打包及上架</h1><ol>
+<li>运行命令：<code>flutter build ipa --release</code></li>
+<li>在 Xcode 中打开 <code>build/ios/archive/MyApp.xcarchive</code></li>
+<li>点击 <code>Distribute App</code> 按钮，选择分发的方式：App Store Connect（用于App Store上架）、Ad Hoc（用于蒲公英的分发平台）</li>
+</ol>
+<p>参考文章：</p>
+<p><a href="https://flutterchina.club/setup-macos/" target="_blank" rel="noopener">在macOS上搭建Flutter开发环境</a></p>
+<p><a href="https://juejin.cn/post/6844903827297009677" target="_blank" rel="noopener">CocoaPods 换源 git 安装 与 使用</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/60854366" target="_blank" rel="noopener">App Bundle ID 基本信息介绍</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/69162456" target="_blank" rel="noopener">iOS 证书配置</a></p>
+<p><a href="https://flutter.cn/docs/deployment/ios" target="_blank" rel="noopener">构建和发布为 iOS 应用</a></p>
+<p><a href="https://www.pgyer.com/tools/udid" target="_blank" rel="noopener">一步快速获取 iOS 设备的 UDID</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/15/Android中的缓存策略/" rel="next" title="Android中的缓存策略">
+                <i class="fa fa-chevron-left"></i> Android中的缓存策略
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Forwards</p>
+              <p class="site-description motion-element" itemprop="description">Keep coding</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Ucoon" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/0b3edec737da" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-在Mac上搭建Flutter环境"><span class="nav-number">1.</span> <span class="nav-text">1. 在Mac上搭建Flutter环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Ruby、CocoaPods安装"><span class="nav-number">2.</span> <span class="nav-text">2. Ruby、CocoaPods安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-证书相关申请"><span class="nav-number">3.</span> <span class="nav-text">3. 证书相关申请</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Xcode中的配置"><span class="nav-number">4.</span> <span class="nav-text">4. Xcode中的配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-打包及上架"><span class="nav-number">5.</span> <span class="nav-text">5. 打包及上架</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forwards</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

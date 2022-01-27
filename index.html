@@ -242,6 +242,329 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/27/Flutter-iOS真机调试、打包及上架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/01/27/Flutter-iOS真机调试、打包及上架/" itemprop="url">Flutter iOS真机调试、打包及上架</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-27T15:21:57+08:00">
+                2022-01-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-在Mac上搭建Flutter环境"><a href="#1-在Mac上搭建Flutter环境" class="headerlink" title="1. 在Mac上搭建Flutter环境"></a>1. 在Mac上搭建Flutter环境</h1><p>这部分只需参考<a href="https://flutterchina.club/setup-macos/" target="_blank" rel="noopener">官网</a>搭建即可</p>
+<p><strong>注意事项</strong></p>
+<ul>
+<li>多个Path环境变量设置：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export PUB_HOSTED_URL=https://pub.flutter-io.cn</span><br><span class="line">export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn</span><br><span class="line">JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home</span><br><span class="line">FLUTTER_HOME=/Users/yardi_wuhan/Library/FlutterSDK</span><br><span class="line">PATH=$JAVA_HOME/bin:$FLUTTER_HOME/bin:$PATH</span><br><span class="line">CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br><span class="line">export JAVA_HOME PATH CLASSPATH</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果你使用的是zsh，终端启动时 <code>~/.bash_profile</code> 将不会被加载，解决办法就是修改 <code>~/.zshrc</code> ，在其中添加：source ~/.bash_profile</li>
+</ul>
+<h1 id="2-Ruby、CocoaPods安装"><a href="#2-Ruby、CocoaPods安装" class="headerlink" title="2. Ruby、CocoaPods安装"></a>2. Ruby、CocoaPods安装</h1><blockquote>
+<p><strong>CocoaPods</strong> 就是iOS 项目的开发 第三方库的管理工具。</p>
+<p><code>CocoaPods</code> 是用 <code>ruby</code> 实现的,要想使用它首先需要有<code>ruby</code>环境。 虽然 <code>Mac</code> 系统默认可以运行<code>ruby</code>。但是<code>ruby</code>版本过低是无法正常支持<code>CocoaPods</code>的使用</p>
+</blockquote>
+<ol>
+<li><p><a href="https://gems.ruby-china.com/" target="_blank" rel="noopener">更换Ruby源</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 查看现有的源</span><br><span class="line">gem source -l </span><br><span class="line"><span class="meta">#</span> 移除</span><br><span class="line">gem sources --remove  https://rubygems.org/</span><br><span class="line"><span class="meta">#</span> 添加 ruby-china 的源</span><br><span class="line">gem sources -a https://gems.ruby-china.org/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装CocoaPods：<code>sudo gem install cocoapods</code></p>
+</li>
+<li><p>切换<a href="https://mirrors.tuna.tsinghua.edu.cn/help/CocoaPods/" target="_blank" rel="noopener">清华源</a>安装CocoaPods</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 移除原仓库镜像</span><br><span class="line">pod repo remove master</span><br><span class="line"><span class="meta">#</span> 使用清华源安装到本地 cd  ~/.cocoapods/repos/master</span><br><span class="line">git clone https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git </span><br><span class="line"><span class="meta">#</span> 设置一下</span><br><span class="line">pod setup</span><br><span class="line"><span class="meta">#</span> 查看仓库信息</span><br><span class="line">pod repo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装完成之后进入到项目的iOS目录下，执行<code>pod install</code></p>
+</li>
+</ol>
+<h1 id="3-证书相关申请"><a href="#3-证书相关申请" class="headerlink" title="3. 证书相关申请"></a>3. 证书相关申请</h1><ol>
+<li><p>登录<a href="https://developer.apple.com/account/resources/identifiers/list" target="_blank" rel="noopener">apple开发者平台</a></p>
+</li>
+<li><p>Register a new identifier（常见app的功能如第三方应用登录（Associated Domains）、推送（Push Notifications）可提前勾选Capabilities）</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注意事项：</span><br><span class="line"><span class="number">1.</span> Bundle ID的区别</span><br><span class="line">   - Explicit App ID「明确的 App ID」，一般格式是：com.company.appName；这种 id 只能用在一个app上，每一个新应用都要创建并只有一个。</span><br><span class="line">   - Wildcard App ID「通配符 App ID」， 一般格式是：com.domainname.* ；这种 id 可以用在多个应用上，虽然方便，但是使用这种id的应用不能使用通知功能，所以不常用。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在mac上通过钥匙串应用创建两个证书请求文件（CSR文件），分别对应Development环境和Distribution环境</p>
+<p><img src="http://ucoon.gitee.io/myblogimg/csr文件申请_1.png" style="zoom:25%;"></p>
+</li>
+</ol>
+<p>   <img src="http://ucoon.gitee.io/myblogimg/csr文件申请_2.png" style="zoom:25%;"></p>
+<ol start="4">
+<li><p>Create a New Certificate(证书)</p>
+<ol>
+<li><p>分别申请开发证书（iOS Development）和分发证书（iOS Distribution），开发证书用于开发和调试应用程序，可用于真机调试；生产证书用于打包上传App Store或者蒲公英，用于验证开发者身份。如果项目集成了推送功能，还需配置推送证书，推送证书同样也分两种：开发环境和生产环境（Apple Push Notification service SSL ：Sandbox &amp; Production)，同时生成的p12文件需上传到服务端后台（如阿里云移动推送后台）</p>
+</li>
+<li><p>生成后的证书需要下载并通过钥匙串导入到Mac</p>
+<p><img src="http://ucoon.gitee.io/myblogimg/证书导入.png" alt="证书导入" style="zoom: 25%;"></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">注意事项：</span><br><span class="line">    打开钥匙串应用，在点击登录--&gt;我的证书页面下，双击证书导入即可</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<ol start="5">
+<li><p>Register a New Provisioning Profile(描述文件)</p>
+<p>可参考<a href="https://zhuanlan.zhihu.com/p/69162456" target="_blank" rel="noopener">iOS 证书配置</a></p>
+</li>
+</ol>
+<h1 id="4-Xcode中的配置"><a href="#4-Xcode中的配置" class="headerlink" title="4. Xcode中的配置"></a>4. Xcode中的配置</h1><p>Xcode中的配置</p>
+<ol>
+<li><p>点击<code>TARGETS</code>中的<code>Runner</code>，选中<code>Build Settings</code>栏，在<code>Code Signing Identity</code>中配置已下载导入的iOS证书</p>
+</li>
+<li><p>选中<code>Signing &amp; Capabilities</code>栏，<code>Provisioning Profile</code>选择下载相应的描述文件</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注意事项：Automatically manage signing不选中</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>到此即可连接iOS真机在Android Studio中运行</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注意事项：需要将真机的UDID添加到apple开发者平台的设备列表(Devices)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="5-打包及上架"><a href="#5-打包及上架" class="headerlink" title="5. 打包及上架"></a>5. 打包及上架</h1><ol>
+<li>运行命令：<code>flutter build ipa --release</code></li>
+<li>在 Xcode 中打开 <code>build/ios/archive/MyApp.xcarchive</code></li>
+<li>点击 <code>Distribute App</code> 按钮，选择分发的方式：App Store Connect（用于App Store上架）、Ad Hoc（用于蒲公英的分发平台）</li>
+</ol>
+<p>参考文章：</p>
+<p><a href="https://flutterchina.club/setup-macos/" target="_blank" rel="noopener">在macOS上搭建Flutter开发环境</a></p>
+<p><a href="https://juejin.cn/post/6844903827297009677" target="_blank" rel="noopener">CocoaPods 换源 git 安装 与 使用</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/60854366" target="_blank" rel="noopener">App Bundle ID 基本信息介绍</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/69162456" target="_blank" rel="noopener">iOS 证书配置</a></p>
+<p><a href="https://flutter.cn/docs/deployment/ios" target="_blank" rel="noopener">构建和发布为 iOS 应用</a></p>
+<p><a href="https://www.pgyer.com/tools/udid" target="_blank" rel="noopener">一步快速获取 iOS 设备的 UDID</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/15/Android中的缓存策略/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/15/Android中的缓存策略/" itemprop="url">Android中的缓存策略</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-15T22:03:37+08:00">
+                2020-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="缓存策略"><a href="#缓存策略" class="headerlink" title="缓存策略"></a>缓存策略</h1><p>一般来说，缓存策略主要包含缓存的添加，获取和删除这三类操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">删除缓存的原因：不管是内存缓存还是硬盘缓存，它们的缓存大小都是有限制的，当缓存容量满了之后，再想向其添加缓存，这个时候就需要删除一些旧的缓存并添加新的缓存。因此，如何定义缓存的新旧这就是一种策略，不同的策略对应着不同的缓存算法</span><br></pre></td></tr></table></figure>
+<h1 id="LRU算法"><a href="#LRU算法" class="headerlink" title="LRU算法"></a>LRU算法</h1><p>   LRU(Least Recently Used)，近期最少使用算法，它的核心思想是当缓存满了，会优先淘汰那些近期最少使用的缓存对象。采用LRU算法的缓存有两种：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## LruCache</span><br><span class="line"></span><br><span class="line">### LruCache的介绍</span><br><span class="line"></span><br><span class="line">核心思想：采用一个```LinkedHashMap```以强引用的方式存储外界的缓存对象，```LinkedHashMap```提供get和put方法来完成缓存的获取和添加操作，当缓存满时，```LruCache```会移除较早使用的缓存对象，然后再添加新的缓存对象。</span><br><span class="line"></span><br><span class="line">1. 强引用、软引用和弱引用的区别：</span><br><span class="line"></span><br><span class="line">   - 强引用：直接的对象引用；</span><br><span class="line">   - 软引用：当一个对象只有软引用存在时，系统内存不足时此对象会被gc回收；</span><br><span class="line">   - 弱引用：当一个对象只有弱引用存在时，此对象会随时被gc回收。</span><br><span class="line"></span><br><span class="line">2. ```LinkedHashMap```：是哈希表和链表的实现，它是线程不安全的，继承自```HashMap```，实现```Map&lt;K, V&gt;```接口。内部维护了一个双向链表，在插入、访问、修改数据时，会增加节点、或调整链表的节点顺序，双向链表结构可以保证迭代顺序是插入顺序。</span><br><span class="line"></span><br><span class="line">   ```LinkedHashMap```的构造函数</span><br><span class="line"></span><br><span class="line">   ```java</span><br><span class="line">   /**</span><br><span class="line">    * @param accessOrder  the ordering mode </span><br><span class="line">    * 					 true: access-order; false: insertion-order</span><br><span class="line">    */</span><br><span class="line">   public LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder)&#123;</span><br><span class="line">       super(initialCapacity, loadFactor);</span><br><span class="line">       this.accessOrder = accessOrder;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">另外```LruCache```是线程安全的，下面为其构造函数：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">public LruCache(int maxSize)&#123;</span><br><span class="line">    if(maxSize &lt;= 0)&#123;</span><br><span class="line">        throw new IllegalArgumentException(&quot;maxSize &lt;= 0&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">  	this.maxSize = maxSize;</span><br><span class="line">    this.map = new LinkedHashMap(0, 0.75f, true);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="LruCache的使用"><a href="#LruCache的使用" class="headerlink" title="LruCache的使用"></a>LruCache的使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> maxMemory = (<span class="keyword">int</span>) (Runtime.getRuntime().maxMemory() / <span class="number">1024</span>);</span><br><span class="line"><span class="keyword">int</span> cacheSize = maxMemory / <span class="number">8</span>;</span><br><span class="line">LruCache&lt;String, Bitmap&gt; memoryCache = <span class="keyword">new</span> LruCache&lt;String, Bitmap&gt;(cacheSize)&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">sizeOf</span><span class="params">(String key, Bitmap value)</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">return</span> value.getRowBytes() * value.getHeight() / <span class="number">1024</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>设置<code>LruCache</code>缓存的大小</li>
+<li>重写<code>sizeOf</code>方法</li>
+</ol>
+<h3 id="LruCache的实现原理"><a href="#LruCache的实现原理" class="headerlink" title="LruCache的实现原理"></a>LruCache的实现原理</h3>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/08/Android非静态内部类导致内存泄漏原因深入剖析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1631,289 +1954,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——Appium中文版介绍/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/05/Appium入坑指南——Appium中文版介绍/" itemprop="url">Appium入坑指南——Appium中文版介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:31:04+08:00">
-                2018-11-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Appium-介绍"><a href="#Appium-介绍" class="headerlink" title="Appium 介绍"></a>Appium 介绍</h1><p>Appium 是一个开源工具，用于自动化 iOS 手机 、 Android 手机和 Windows 桌面平台上的原生、移动 Web 和混合应用。“原生应用”指那些用 iOS 、 Android 或者 Windows SDK 编写的应用。“移动 web 应用”是用移动端浏览器访问的应用（Appium 支持 iOS 上的 Safari 、Chrome 和 Android 上的内置浏览器）。“混合应用”带有一个 “webview” 的包装器——用来和 Web 内容交互的原生控件。类似 <a href="http://phonegap.com/" target="_blank" rel="noopener">Phonegap</a> 的项目，让用 Web 技术开发然后打包进原生包装器创建一个混合应用变得容易了。</p>
-<p>重要的是，Appium 是跨平台的：它允许你用同样的 API 对多平台写测试，做到在 iOS 、Android 和 Windows 测试套件之间复用代码。</p>
-<p>了解 Appium “支持”这些平台意味着什么、有哪些自动化方式的详细信息，请参见<a href="http://appium.io/docs/cn/appium-setup/platform-support/index.html" target="_blank" rel="noopener"> Appium 支持的平台</a>。</p>
-<h1 id="Appium-的理念"><a href="#Appium-的理念" class="headerlink" title="Appium 的理念"></a>Appium 的理念</h1><p>Appium 旨在满足移动端自动化需求的理念，概述为以下四个原则：</p>
-<ol>
-<li>你没有必要为了自动化而重新编译你的应用或者以任何方式修改它。</li>
-<li>你不应该被限制在特定的语言或框架上来编写运行测试。</li>
-<li>移动端自动化框架在自动化接口方面不应该重造轮子。</li>
-<li>移动端自动化框架应该开源，不但在名义上而且在精神和实践上都要实至名归。</li>
-</ol>
-<h2 id="Appium-的设计"><a href="#Appium-的设计" class="headerlink" title="Appium 的设计"></a>Appium 的设计</h2><p>那么 Appium 项目的架构如何实现这一理念呢？为了实现第一点要求，我们其实使用了系统自带的自动化框架。这样，我们不需要把 Appium 特定的或者第三方的代码编译进你的应用。这意味着你测试使用的应用与最终发布的应用并无二致。我们使用以下系统自带的自动化框架：</p>
-<ul>
-<li>iOS 9.3 及以上：苹果的 <a href="https://developer.apple.com/reference/xctest" target="_blank" rel="noopener">XCUITest</a></li>
-<li>iOS 9.3 及以下：苹果的 <a href="https://web.archive.org/web/20160904214108/https://developer.apple.com/library/ios/documentation/DeveloperTools/Reference/UIAutomationRef/" target="_blank" rel="noopener">UIAutomation</a></li>
-<li>Android 4.2+: 谷歌的 <a href="https://developer.android.com/training/testing/ui-automator" target="_blank" rel="noopener">UiAutomator</a></li>
-<li>Android 2.3+: 谷歌的 <a href="http://developer.android.com/reference/android/app/Instrumentation.html" target="_blank" rel="noopener">Instrumentation</a>（通过绑定另外的项目——<a href="http://selendroid.io/" target="_blank" rel="noopener"> Selendroid </a>提供 Instrumentation 的支持）</li>
-<li>Windows: 微软的 <a href="http://github.com/microsoft/winappdriver" target="_blank" rel="noopener">WinAppDriver</a></li>
-</ul>
-<p>为了实现第二点要求，我们把这些（系统本身的）供应商提供的框架包装进一套 API —— <a href="http://docs.seleniumhq.org/projects/webdriver/" target="_blank" rel="noopener">WebDriver</a> API 中。WebDriver（也叫 “Selenium WebDriver”）规定了一个客户端-服务器协议（称为 <a href="https://w3c.github.io/webdriver/webdriver-spec.html" target="_blank" rel="noopener">JSON Wire Protocol</a>），按照这种客户端-服务器架构，可以使用任何语言编写的客户端向服务器发送适当的 HTTP 请求。已经有<a href="http://appium.io/downloads" target="_blank" rel="noopener">各个流行编程语言编写的客户端</a>了。这也意味着你可以自由使用任何你想要的测试运行器和测试框架；客户端程序库不过是 HTTP 客户端，可以以任何你喜欢的方式混入你的代码。换句话说，Appium 和 WebDriver 客户端不是严格意义上的“测试框架”，而是“自动化程序库”。你可以以任何你喜欢的方式管理你的测试环境！</p>
-<p>我们以同样的方式实现第三点要求：WebDriver 已经成为 Web 浏览器自动化事实上的标准，并且是一个<a href="https://dvcs.w3.org/hg/webdriver/raw-file/tip/webdriver-spec.html" target="_blank" rel="noopener"> W3C 工作草案</a>。何必在移动端做完全不同的尝试？我们通过附加可用于移动端自动化的 API 方法<a href="https://github.com/SeleniumHQ/mobile-spec/blob/master/spec-draft.md" target="_blank" rel="noopener">扩展了协议</a>。</p>
-<p>显然第 4 点是你在阅读的前提——<a href="https://github.com/appium/appium" target="_blank" rel="noopener"> Appium 是开源的</a></p>
-<h1 id="Appium-概念"><a href="#Appium-概念" class="headerlink" title="Appium 概念"></a>Appium 概念</h1><h2 id="客户端-服务器架构"><a href="#客户端-服务器架构" class="headerlink" title="客户端/服务器架构"></a>客户端/服务器架构</h2><p>Appium 的核心是暴露 REST API 的网络服务器。它接受来自客户端的连接，监听命令并在移动设备上执行，答复表示执行结果的 HTTP 响应。客户端/服务器架构实际给予了许多可能性：我们可以使用任何有 http 客户端 API 的语言编写我们的测试代码，不过选一个<a href="http://appium.io/downloads" target="_blank" rel="noopener"> Appium 客户端程序库 </a>用更容易。我们可以把服务器放在另一台机器上，而不是执行测试的机器。我们可以编写测试代码，并依靠类似 <a href="https://saucelabs.com/mobile" target="_blank" rel="noopener">Sauce Labs</a> 的云服务接收和解释命令。</p>
-<h2 id="会话-session"><a href="#会话-session" class="headerlink" title="会话(session)"></a>会话(session)</h2><p>自动化始终在一个会话的上下文中执行，这些客户端程序库以各自的方式发起与服务器的会话，但都以发给服务器一个 <code>POST /session</code> 请求结束，请求中包含一个被称作 ‘desired capabilities’ 的 JSON 对象。这时服务器就会开启这个自动化会话，并返回一个用于发送后续命令的会话 ID。</p>
-<h2 id="Desired-Capabilities"><a href="#Desired-Capabilities" class="headerlink" title="Desired Capabilities"></a>Desired Capabilities</h2><p>Desired capabilities 是一些发送给 Appium 服务器的键值对集合 (比如 map 或 hash），告诉服务器我们想要启动什么类型的自动化会话。也有各种可以在自动化运行时修改服务器行为的 capabilities。例如，我们可以把 <code>platformName</code> capability 设置为 <code>iOS</code>，告诉 Appium 我们想要 iOS 会话，而不是 Android 或者 Windows 会话。我们也可以设置 <code>safariAllowPopups</code> capability 为 <code>true</code> ，确保我们在 Safari 自动化会话中可以使用 javascript 打开新窗口。有关 Appium capabilities 的完整列表，请参阅 <a href="http://appium.io/docs/cn/writing-running-appium/caps/index.html" target="_blank" rel="noopener">capabilities doc</a> 。</p>
-<h2 id="Appium-服务器"><a href="#Appium-服务器" class="headerlink" title="Appium 服务器"></a>Appium 服务器</h2><p>Appium 是用 Node.js 写的服务器。它可以从<a href="https://github.com/appium/appium/blob/master/docs/en/contributing-to-appium/appium-from-source.md" target="_blank" rel="noopener">源码</a>构建安装或者从 NPM 直接安装：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g appium</span><br><span class="line">$ appium</span><br></pre></td></tr></table></figure>
-<p><strong>Appium 客户端</strong><br>有多个客户端程序库（Java、Ruby、Python、PHP,、JavaScript 和 C# 的）支持 Appium 对 WebDriver 协议的扩展，你需要用这些客户端程序库代替通常的 WebDriver 客户端。在<a href="http://appium.io/docs/cn/about-appium/appium-clients/" target="_blank" rel="noopener">这里</a>浏览所有程序库的列表。</p>
-<p><strong>Appium.app, Appium.exe</strong><br>有 Appium 服务器的图形界面包装器可以下载。它们打包了 Appium 服务器运行需要的所有东西，所以你不需要为 Node 而烦恼。它们还提供一个 Inspector 使你可以查看你应用的层级结构，这在写测试时很方便。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——Appium原理分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/05/Appium入坑指南——Appium原理分析/" itemprop="url">Appium入坑指南——Appium原理分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:29:10+08:00">
-                2018-11-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h1><p><img src="http://sdssdccddd.gitee.io/myblogimg/Appium架构图.jpeg" alt="Appium架构图"></p>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/Appium架构图-2.jpg" alt="Appium架构图-2"></p>
-<h1 id="主要原理"><a href="#主要原理" class="headerlink" title="主要原理"></a>主要原理</h1><ol>
-<li><p>Appium Client</p>
-<p>主要是指实现了Appium功能的WebDriver协议的客户端Library，它负责与Appium服务器建立连接（<code>JSON Wire Protocol</code>），并将测试脚本的指令发送到Appium服务器。正如官网中文版介绍一样，它支持多种语言的客户端。</p>
-</li>
-<li><p>Bootstrap.jar</p>
-<p>Bootstrap是Appium运行在目标测试机器上的一个UiAutomator测试脚本，该脚本的唯一一个测试方法所做的事情是在目标机器开启一个socket服务器来把一个session中Appium从PC端过来的命令发送给UiAutomator来执行处理。这个定义说明了Bootstrap在appium和uiautomator中究竟处于一个什么样的角色：<br>首先，它是一个uiautomator的测试脚本，它的入口类Bootstrap继承于UiAutomatorTestCase，所以UiAututomator可以正常运行它，它也可以正常的使用uiautomator的方法，这个就是Appium的命令可以转换成uiautomator的命令的关键<br>其次，它是一个socket服务器，它专门监听4724端口过来的appium的连接和命令数据，并把appium的命令转换成uiautomator的命令来让uiautomator进行处理<br>最后，它处理的是appium从pc端过来的命令，而非一个文件。这在初次接触appium的朋友是很容易困惑的，以为appium是整个脚本文件发送到目标机器再由bootstrap进行分析处理的，事实并非如此</p>
-</li>
-<li><p>Appium Server</p>
-<p>Appium服务器是Appium框架的核心。它是一个基于Node.js实现的HTTP服务器。Appium服务器的主要功能是起了一个Server（4723端口），跟selenium WebDriver测试框架类似，Appium支持标准的WebDriver JSONWireProtocol。Appium Server接收web driver标准请求，解析请求内容，调用对应的框架响应操作。将命令发送给bootstrap.jar（iOS手机为bootstrap.js）执行，并将命令的执行结果通过HTTP应答反馈给Appium客户端。</p>
-</li>
-</ol>
-<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>Appium在Android上基于UIAutomator实现了测试的代理程序（Bootstrap.jar），在iOS上基于UIAutomation实现了测试的代理程序（Bootstrap.js）。当测试脚本运行时，每行WebDriver的脚本都将转换成Appium的指令发送给Appium服务器，而Appium服务器将测试指令交给代理程序，将由代理程序负责执行测试。比如脚本上的一个点击操作，在Appium服务器上都是touch指令，当指令发送到Android系统上时，Android系统上的Bootstrap.jar将调用UIAutomator的方法实现点击操作；而当指令发送到iOS系统上时，iOS的Bootstrap.js将调用UIAutomation的方法实现点击操作。由于Appium有了这样的能力，同样的测试脚本可以实现跨平台运行。</p>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://www.jianshu.com/p/06aa73eb9b90" target="_blank" rel="noopener">https://www.jianshu.com/p/06aa73eb9b90</a></p>
-<p><a href="https://testerhome.com/topics/1972" target="_blank" rel="noopener">https://testerhome.com/topics/1972</a></p>
-<p><a href="https://discuss.appium.io/t/what-is-working-on-android-side/10222/2" target="_blank" rel="noopener">https://discuss.appium.io/t/what-is-working-on-android-side/10222/2</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1964,7 +2004,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2021,7 +2061,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

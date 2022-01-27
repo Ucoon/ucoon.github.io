@@ -242,6 +242,289 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——Appium中文版介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/05/Appium入坑指南——Appium中文版介绍/" itemprop="url">Appium入坑指南——Appium中文版介绍</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:31:04+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Appium-介绍"><a href="#Appium-介绍" class="headerlink" title="Appium 介绍"></a>Appium 介绍</h1><p>Appium 是一个开源工具，用于自动化 iOS 手机 、 Android 手机和 Windows 桌面平台上的原生、移动 Web 和混合应用。“原生应用”指那些用 iOS 、 Android 或者 Windows SDK 编写的应用。“移动 web 应用”是用移动端浏览器访问的应用（Appium 支持 iOS 上的 Safari 、Chrome 和 Android 上的内置浏览器）。“混合应用”带有一个 “webview” 的包装器——用来和 Web 内容交互的原生控件。类似 <a href="http://phonegap.com/" target="_blank" rel="noopener">Phonegap</a> 的项目，让用 Web 技术开发然后打包进原生包装器创建一个混合应用变得容易了。</p>
+<p>重要的是，Appium 是跨平台的：它允许你用同样的 API 对多平台写测试，做到在 iOS 、Android 和 Windows 测试套件之间复用代码。</p>
+<p>了解 Appium “支持”这些平台意味着什么、有哪些自动化方式的详细信息，请参见<a href="http://appium.io/docs/cn/appium-setup/platform-support/index.html" target="_blank" rel="noopener"> Appium 支持的平台</a>。</p>
+<h1 id="Appium-的理念"><a href="#Appium-的理念" class="headerlink" title="Appium 的理念"></a>Appium 的理念</h1><p>Appium 旨在满足移动端自动化需求的理念，概述为以下四个原则：</p>
+<ol>
+<li>你没有必要为了自动化而重新编译你的应用或者以任何方式修改它。</li>
+<li>你不应该被限制在特定的语言或框架上来编写运行测试。</li>
+<li>移动端自动化框架在自动化接口方面不应该重造轮子。</li>
+<li>移动端自动化框架应该开源，不但在名义上而且在精神和实践上都要实至名归。</li>
+</ol>
+<h2 id="Appium-的设计"><a href="#Appium-的设计" class="headerlink" title="Appium 的设计"></a>Appium 的设计</h2><p>那么 Appium 项目的架构如何实现这一理念呢？为了实现第一点要求，我们其实使用了系统自带的自动化框架。这样，我们不需要把 Appium 特定的或者第三方的代码编译进你的应用。这意味着你测试使用的应用与最终发布的应用并无二致。我们使用以下系统自带的自动化框架：</p>
+<ul>
+<li>iOS 9.3 及以上：苹果的 <a href="https://developer.apple.com/reference/xctest" target="_blank" rel="noopener">XCUITest</a></li>
+<li>iOS 9.3 及以下：苹果的 <a href="https://web.archive.org/web/20160904214108/https://developer.apple.com/library/ios/documentation/DeveloperTools/Reference/UIAutomationRef/" target="_blank" rel="noopener">UIAutomation</a></li>
+<li>Android 4.2+: 谷歌的 <a href="https://developer.android.com/training/testing/ui-automator" target="_blank" rel="noopener">UiAutomator</a></li>
+<li>Android 2.3+: 谷歌的 <a href="http://developer.android.com/reference/android/app/Instrumentation.html" target="_blank" rel="noopener">Instrumentation</a>（通过绑定另外的项目——<a href="http://selendroid.io/" target="_blank" rel="noopener"> Selendroid </a>提供 Instrumentation 的支持）</li>
+<li>Windows: 微软的 <a href="http://github.com/microsoft/winappdriver" target="_blank" rel="noopener">WinAppDriver</a></li>
+</ul>
+<p>为了实现第二点要求，我们把这些（系统本身的）供应商提供的框架包装进一套 API —— <a href="http://docs.seleniumhq.org/projects/webdriver/" target="_blank" rel="noopener">WebDriver</a> API 中。WebDriver（也叫 “Selenium WebDriver”）规定了一个客户端-服务器协议（称为 <a href="https://w3c.github.io/webdriver/webdriver-spec.html" target="_blank" rel="noopener">JSON Wire Protocol</a>），按照这种客户端-服务器架构，可以使用任何语言编写的客户端向服务器发送适当的 HTTP 请求。已经有<a href="http://appium.io/downloads" target="_blank" rel="noopener">各个流行编程语言编写的客户端</a>了。这也意味着你可以自由使用任何你想要的测试运行器和测试框架；客户端程序库不过是 HTTP 客户端，可以以任何你喜欢的方式混入你的代码。换句话说，Appium 和 WebDriver 客户端不是严格意义上的“测试框架”，而是“自动化程序库”。你可以以任何你喜欢的方式管理你的测试环境！</p>
+<p>我们以同样的方式实现第三点要求：WebDriver 已经成为 Web 浏览器自动化事实上的标准，并且是一个<a href="https://dvcs.w3.org/hg/webdriver/raw-file/tip/webdriver-spec.html" target="_blank" rel="noopener"> W3C 工作草案</a>。何必在移动端做完全不同的尝试？我们通过附加可用于移动端自动化的 API 方法<a href="https://github.com/SeleniumHQ/mobile-spec/blob/master/spec-draft.md" target="_blank" rel="noopener">扩展了协议</a>。</p>
+<p>显然第 4 点是你在阅读的前提——<a href="https://github.com/appium/appium" target="_blank" rel="noopener"> Appium 是开源的</a></p>
+<h1 id="Appium-概念"><a href="#Appium-概念" class="headerlink" title="Appium 概念"></a>Appium 概念</h1><h2 id="客户端-服务器架构"><a href="#客户端-服务器架构" class="headerlink" title="客户端/服务器架构"></a>客户端/服务器架构</h2><p>Appium 的核心是暴露 REST API 的网络服务器。它接受来自客户端的连接，监听命令并在移动设备上执行，答复表示执行结果的 HTTP 响应。客户端/服务器架构实际给予了许多可能性：我们可以使用任何有 http 客户端 API 的语言编写我们的测试代码，不过选一个<a href="http://appium.io/downloads" target="_blank" rel="noopener"> Appium 客户端程序库 </a>用更容易。我们可以把服务器放在另一台机器上，而不是执行测试的机器。我们可以编写测试代码，并依靠类似 <a href="https://saucelabs.com/mobile" target="_blank" rel="noopener">Sauce Labs</a> 的云服务接收和解释命令。</p>
+<h2 id="会话-session"><a href="#会话-session" class="headerlink" title="会话(session)"></a>会话(session)</h2><p>自动化始终在一个会话的上下文中执行，这些客户端程序库以各自的方式发起与服务器的会话，但都以发给服务器一个 <code>POST /session</code> 请求结束，请求中包含一个被称作 ‘desired capabilities’ 的 JSON 对象。这时服务器就会开启这个自动化会话，并返回一个用于发送后续命令的会话 ID。</p>
+<h2 id="Desired-Capabilities"><a href="#Desired-Capabilities" class="headerlink" title="Desired Capabilities"></a>Desired Capabilities</h2><p>Desired capabilities 是一些发送给 Appium 服务器的键值对集合 (比如 map 或 hash），告诉服务器我们想要启动什么类型的自动化会话。也有各种可以在自动化运行时修改服务器行为的 capabilities。例如，我们可以把 <code>platformName</code> capability 设置为 <code>iOS</code>，告诉 Appium 我们想要 iOS 会话，而不是 Android 或者 Windows 会话。我们也可以设置 <code>safariAllowPopups</code> capability 为 <code>true</code> ，确保我们在 Safari 自动化会话中可以使用 javascript 打开新窗口。有关 Appium capabilities 的完整列表，请参阅 <a href="http://appium.io/docs/cn/writing-running-appium/caps/index.html" target="_blank" rel="noopener">capabilities doc</a> 。</p>
+<h2 id="Appium-服务器"><a href="#Appium-服务器" class="headerlink" title="Appium 服务器"></a>Appium 服务器</h2><p>Appium 是用 Node.js 写的服务器。它可以从<a href="https://github.com/appium/appium/blob/master/docs/en/contributing-to-appium/appium-from-source.md" target="_blank" rel="noopener">源码</a>构建安装或者从 NPM 直接安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g appium</span><br><span class="line">$ appium</span><br></pre></td></tr></table></figure>
+<p><strong>Appium 客户端</strong><br>有多个客户端程序库（Java、Ruby、Python、PHP,、JavaScript 和 C# 的）支持 Appium 对 WebDriver 协议的扩展，你需要用这些客户端程序库代替通常的 WebDriver 客户端。在<a href="http://appium.io/docs/cn/about-appium/appium-clients/" target="_blank" rel="noopener">这里</a>浏览所有程序库的列表。</p>
+<p><strong>Appium.app, Appium.exe</strong><br>有 Appium 服务器的图形界面包装器可以下载。它们打包了 Appium 服务器运行需要的所有东西，所以你不需要为 Node 而烦恼。它们还提供一个 Inspector 使你可以查看你应用的层级结构，这在写测试时很方便。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——Appium原理分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/05/Appium入坑指南——Appium原理分析/" itemprop="url">Appium入坑指南——Appium原理分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:29:10+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h1><p><img src="http://sdssdccddd.gitee.io/myblogimg/Appium架构图.jpeg" alt="Appium架构图"></p>
+<p><img src="http://sdssdccddd.gitee.io/myblogimg/Appium架构图-2.jpg" alt="Appium架构图-2"></p>
+<h1 id="主要原理"><a href="#主要原理" class="headerlink" title="主要原理"></a>主要原理</h1><ol>
+<li><p>Appium Client</p>
+<p>主要是指实现了Appium功能的WebDriver协议的客户端Library，它负责与Appium服务器建立连接（<code>JSON Wire Protocol</code>），并将测试脚本的指令发送到Appium服务器。正如官网中文版介绍一样，它支持多种语言的客户端。</p>
+</li>
+<li><p>Bootstrap.jar</p>
+<p>Bootstrap是Appium运行在目标测试机器上的一个UiAutomator测试脚本，该脚本的唯一一个测试方法所做的事情是在目标机器开启一个socket服务器来把一个session中Appium从PC端过来的命令发送给UiAutomator来执行处理。这个定义说明了Bootstrap在appium和uiautomator中究竟处于一个什么样的角色：<br>首先，它是一个uiautomator的测试脚本，它的入口类Bootstrap继承于UiAutomatorTestCase，所以UiAututomator可以正常运行它，它也可以正常的使用uiautomator的方法，这个就是Appium的命令可以转换成uiautomator的命令的关键<br>其次，它是一个socket服务器，它专门监听4724端口过来的appium的连接和命令数据，并把appium的命令转换成uiautomator的命令来让uiautomator进行处理<br>最后，它处理的是appium从pc端过来的命令，而非一个文件。这在初次接触appium的朋友是很容易困惑的，以为appium是整个脚本文件发送到目标机器再由bootstrap进行分析处理的，事实并非如此</p>
+</li>
+<li><p>Appium Server</p>
+<p>Appium服务器是Appium框架的核心。它是一个基于Node.js实现的HTTP服务器。Appium服务器的主要功能是起了一个Server（4723端口），跟selenium WebDriver测试框架类似，Appium支持标准的WebDriver JSONWireProtocol。Appium Server接收web driver标准请求，解析请求内容，调用对应的框架响应操作。将命令发送给bootstrap.jar（iOS手机为bootstrap.js）执行，并将命令的执行结果通过HTTP应答反馈给Appium客户端。</p>
+</li>
+</ol>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>Appium在Android上基于UIAutomator实现了测试的代理程序（Bootstrap.jar），在iOS上基于UIAutomation实现了测试的代理程序（Bootstrap.js）。当测试脚本运行时，每行WebDriver的脚本都将转换成Appium的指令发送给Appium服务器，而Appium服务器将测试指令交给代理程序，将由代理程序负责执行测试。比如脚本上的一个点击操作，在Appium服务器上都是touch指令，当指令发送到Android系统上时，Android系统上的Bootstrap.jar将调用UIAutomator的方法实现点击操作；而当指令发送到iOS系统上时，iOS的Bootstrap.js将调用UIAutomation的方法实现点击操作。由于Appium有了这样的能力，同样的测试脚本可以实现跨平台运行。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://www.jianshu.com/p/06aa73eb9b90" target="_blank" rel="noopener">https://www.jianshu.com/p/06aa73eb9b90</a></p>
+<p><a href="https://testerhome.com/topics/1972" target="_blank" rel="noopener">https://testerhome.com/topics/1972</a></p>
+<p><a href="https://discuss.appium.io/t/what-is-working-on-android-side/10222/2" target="_blank" rel="noopener">https://discuss.appium.io/t/what-is-working-on-android-side/10222/2</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——环境搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1532,269 +1815,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/31/Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/31/Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期/" itemprop="url">Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-31T22:08:36+08:00">
-                2017-07-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Fragment学习之-懒加载-Fragment在ViewPager中的生命周期"><a href="#Fragment学习之-懒加载-Fragment在ViewPager中的生命周期" class="headerlink" title="Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期"></a>Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期</h1><p>前言：最近做了个新项目，第一次用到了Fragment的懒加载，顺便学习了下ViewPager的预加载。</p>
-<h2 id="ViewPager的预加载"><a href="#ViewPager的预加载" class="headerlink" title="ViewPager的预加载"></a>ViewPager的预加载</h2><p>首先说明一下什么是ViewPager的预加载：默认情况下ViewPager会把当前Fragment的左右相邻页面预先初始化（俗称预加载），比如你当前在第二个Fragment的页面，其实左右第一和第三的Fragment已经初始化好了，这样做的好处是ViewPager左右滑动更流畅。我们可以写个简单例子（部分代码）：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">        NoScrollViewPager viewPager = (NoScrollViewPager) findViewById(R.id.viewPager);</span><br><span class="line">        viewPager.setAdapter(<span class="keyword">new</span> MainAdapter(getSupportFragmentManager()));</span><br><span class="line">        AlphaIndicator alphaIndicator = (AlphaIndicator) findViewById(R.id.alphaIndicator);</span><br><span class="line">        alphaIndicator.setViewPager(viewPager);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">MainAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> List&lt;Fragment&gt; fragments = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">MainAdapter</span><span class="params">(FragmentManager fm)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(fm);</span><br><span class="line">            fragments.add(<span class="keyword">new</span> Fragment01());</span><br><span class="line">            fragments.add(<span class="keyword">new</span> Fragment02());</span><br><span class="line">            fragments.add(<span class="keyword">new</span> Fragment03());</span><br><span class="line">            fragments.add(<span class="keyword">new</span> Fragment04());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> fragments.get(position);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> fragments.size();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//Fragment01.java:</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Fragment01</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"Fragment"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAttach</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onAttach(context);</span><br><span class="line">        Log.d(TAG, <span class="string">"Fragment01 ==&gt; onAttach()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"Fragment01 ==&gt; onCreateView()"</span>);</span><br><span class="line">        <span class="comment">//引用创建好的xml布局</span></span><br><span class="line">        View view = inflater.inflate(R.layout.item01,container,<span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">return</span> view;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroyView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroyView();</span><br><span class="line">        Log.d(TAG, <span class="string">"Fragment01 ==&gt; onDestroyView()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        Log.d(TAG, <span class="string">"Fragment01 ==&gt; onDestroy()"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后我们运行并打印日志：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">29.809</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment01 ==&gt; onAttach()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">29.809</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment02 ==&gt; onAttach()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">29.809</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment01 ==&gt; onCreateView()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">29.856</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment02 ==&gt; onCreateView()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">42.110</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment03 ==&gt; onAttach()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">42.110</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment03 ==&gt; onCreateView()</span><br><span class="line">                                           </span><br><span class="line">                                           [ <span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">51</span>:<span class="number">42.319</span>    <span class="number">81</span>:   <span class="number">81</span> D/         ]</span><br><span class="line">                                           Socket deconnection</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">55</span>:<span class="number">21.653</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment04 ==&gt; onAttach()</span><br><span class="line"><span class="number">07</span>-<span class="number">31</span> <span class="number">08</span>:<span class="number">55</span>:<span class="number">21.653</span> <span class="number">1987</span>-<span class="number">1987</span>/? D/Fragment: Fragment04 ==&gt; onCreateView</span><br></pre></td></tr></table></figure></p>
-<p>从日志中我们可以看出，当位于Fragment02时，Fragment01和Fragment03是已经初始化完成了的，viewpager预加载是3页。这种特性会导致资源浪费：</p>
-<ul>
-<li>预加载不可见的Fragment时，初始化数据和其页面会占用大量资源（用户很可能只看第一个，后面两个不想看了）</li>
-<li>如果当前页面内有动画或其他持续性操作，Fragment的状态切换时操作的相关问题。<br>所以，为了保持良好的用户体验，我们应该在页面处于可见状态时再去初始化和加载数据。<br><strong>解决方法</strong>：封装Fragment懒加载</li>
-</ul>
-<h2 id="Fragment-懒加载"><a href="#Fragment-懒加载" class="headerlink" title="Fragment 懒加载"></a>Fragment 懒加载</h2><p>懒加载指的是当有需要的时候才去加载。我们可以重写Fragment的setUserVisibleHint()。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseLazyFragment</span> <span class="keyword">extends</span> <span class="title">Fragment</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String TAG = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//第一次可见状态，第一次不可见状态</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isFirstVisible = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isFirstInVisible = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isPrepared;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        TAG = <span class="keyword">this</span>.getClass().getSimpleName();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">onCreateView</span><span class="params">(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (getContentViewLayoutID() != <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> inflater.inflate(getContentViewLayoutID(), <span class="keyword">null</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.onCreateView(inflater, container, savedInstanceState);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewCreated</span><span class="params">(View view, @Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState);</span><br><span class="line">        initView(view);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onActivityCreated</span><span class="params">(@Nullable Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onActivityCreated(savedInstanceState);</span><br><span class="line">        initPrepared();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">initPrepared</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(isPrepared)&#123;</span><br><span class="line">            onFirstUserVisible();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            isPrepared = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//可见状态，不可见状态</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserVisibleHint</span><span class="params">(<span class="keyword">boolean</span> isVisibleToUser)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.setUserVisibleHint(isVisibleToUser);</span><br><span class="line">        <span class="keyword">if</span>(isVisibleToUser)&#123;</span><br><span class="line">            <span class="keyword">if</span>(isFirstVisible)&#123;</span><br><span class="line">                isFirstVisible = <span class="keyword">false</span>;</span><br><span class="line">                initPrepared();</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                onUserVisible();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (isFirstInVisible)&#123;</span><br><span class="line">                isFirstInVisible = <span class="keyword">false</span>;</span><br><span class="line">                onFirstUserInVisible();</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                onUserInVisible();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        destroyViewAndThing();</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">getContentViewLayoutID</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">(View view)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//建议在此函数内初始化view或请求数据（only once的那种）</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onFirstUserVisible</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onFirstUserInVisible</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//相当于onResume()</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onUserVisible</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onUserInVisible</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">destroyViewAndThing</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>当然在这个基类中我们还可以封装一些通用的方法，比如页面跳转，吐司…</p>
-<p>ps：不排除存在我们需要在界面不可见的时候去请求数据的需求，所以还是具体业务具体分析，然后再选择最合适的解决方案。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/18/从源码解析Android异步消息处理机制（三）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/18/从源码解析Android异步消息处理机制（三）/" itemprop="url">从源码解析Android异步消息处理机制（三）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-18T21:06:46+08:00">
-                2017-07-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="从源码解析Android异步消息处理机制（三）"><a href="#从源码解析Android异步消息处理机制（三）" class="headerlink" title="从源码解析Android异步消息处理机制（三）"></a>从源码解析Android异步消息处理机制（三）</h1><hr>
-<p><strong>前言：本篇纯属个人学习笔记，故摘录《Android开发艺术探索》大量语句，特此声明</strong></p>
-<hr>
-<ul>
-<li>目的：本篇主要学习主线程中的消息循环以及Handler、HandlerThread和Thread的相区别。<br><em><a href="https://ucoon.github.io/2017/07/13/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89/" target="_blank" rel="noopener">MessageQueue以及Looper的相关知识请见此系列的第一篇</a></em><br><em><a href="https://ucoon.github.io/2017/07/17/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90Android%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89/" target="_blank" rel="noopener">Handler的相关知识请见此系列的第二篇</a></em><br>主线程中的消息循环</li>
-</ul>
-<hr>
-<p>问题：主线程默认可以使用Handler的原因？<br>Android的主线程是ActivityThread（Android.app.ActivityThread类），我们可以看它的main方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SamplingProfilerIntegration.start();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// CloseGuard defaults to true and can be quite spammy.  We</span></span><br><span class="line">        <span class="comment">// disable it here, but selectively enable it later (via</span></span><br><span class="line">        <span class="comment">// StrictMode) on debug builds, but using DropBox, not logs.</span></span><br><span class="line">        CloseGuard.setEnabled(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        Environment.initForCurrentUser();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Set the reporter for event logging in libcore</span></span><br><span class="line">        EventLogger.setReporter(<span class="keyword">new</span> EventLoggingReporter());</span><br><span class="line"></span><br><span class="line">        Security.addProvider(<span class="keyword">new</span> AndroidKeyStoreProvider());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure TrustedCertificateStore looks in the right place for CA certificates</span></span><br><span class="line">        <span class="keyword">final</span> File configDir = Environment.getUserConfigDirectory(UserHandle.myUserId());</span><br><span class="line">        TrustedCertificateStore.setDefaultUserDirectory(configDir);</span><br><span class="line"></span><br><span class="line">        Process.setArgV0(<span class="string">"&lt;pre-initialized&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        Looper.prepareMainLooper();</span><br><span class="line"></span><br><span class="line">        ActivityThread thread = <span class="keyword">new</span> ActivityThread();</span><br><span class="line">        thread.attach(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (sMainThreadHandler == <span class="keyword">null</span>) &#123;</span><br><span class="line">            sMainThreadHandler = thread.getHandler();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">false</span>) &#123;</span><br><span class="line">            Looper.myLooper().setMessageLogging(<span class="keyword">new</span></span><br><span class="line">                    LogPrinter(Log.DEBUG, <span class="string">"ActivityThread"</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Looper.loop();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Main thread loop unexpectedly exited"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Initialize the current thread as a looper, marking it as an</span></span><br><span class="line"><span class="comment">     * application's main looper. The main looper for your application</span></span><br><span class="line"><span class="comment">     * is created by the Android environment, so you should never need</span></span><br><span class="line"><span class="comment">     * to call this function yourself.  See also: &#123;<span class="doctag">@link</span> #prepare()&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prepareMainLooper</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        prepare(<span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">synchronized</span> (Looper.class) &#123;</span><br><span class="line">            <span class="keyword">if</span> (sMainLooper != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"The main Looper has already been prepared."</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            sMainLooper = myLooper();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">(<span class="keyword">boolean</span> quitAllowed)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (sThreadLocal.get() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"Only one Looper may be created per thread"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    sThreadLocal.set(<span class="keyword">new</span> Looper(quitAllowed));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在main方法中通过Looper.prepareMainLooper()来创建主线程的Looper以及MessageQueue，并通过Looper.loop()来开启主线程的消息循环。当然ActivityThread还需要一个Handler来和消息队列进行交换，从源码我们看出sMainThreadHandler就是ActivityThread.H，它内部定义了一组消息类型，主要包含了四大组件的启动和停止等过程。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> LAUNCH_ACTIVITY         = <span class="number">100</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PAUSE_ACTIVITY          = <span class="number">101</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PAUSE_ACTIVITY_FINISHING= <span class="number">102</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STOP_ACTIVITY_SHOW      = <span class="number">103</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STOP_ACTIVITY_HIDE      = <span class="number">104</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SHOW_WINDOW             = <span class="number">105</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> HIDE_WINDOW             = <span class="number">106</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RESUME_ACTIVITY         = <span class="number">107</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SEND_RESULT             = <span class="number">108</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DESTROY_ACTIVITY        = <span class="number">109</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> BIND_APPLICATION        = <span class="number">110</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> EXIT_APPLICATION        = <span class="number">111</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> NEW_INTENT              = <span class="number">112</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RECEIVER                = <span class="number">113</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CREATE_SERVICE          = <span class="number">114</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SERVICE_ARGS            = <span class="number">115</span>;</span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> STOP_SERVICE            = <span class="number">116</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">          <span class="keyword">if</span> (DEBUG_MESSAGES) Slog.v(TAG, <span class="string">"&gt;&gt;&gt; handling: "</span> + msg.what);</span><br><span class="line">          <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">           ...</span><br><span class="line">		<span class="keyword">case</span> EXIT_APPLICATION:</span><br><span class="line">                   <span class="keyword">if</span> (mInitialApplication != <span class="keyword">null</span>) &#123;</span><br><span class="line">                       mInitialApplication.onTerminate();</span><br><span class="line">                   &#125;</span><br><span class="line">                   Looper.myLooper().quit();</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">				...</span><br><span class="line">			&#125;</span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">scheduleExit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">          queueOrSendMessage(H.EXIT_APPLICATION, <span class="keyword">null</span>);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure></p>
-<p>而在学习Looper.loop()时，我们提过，只有调用了Looper.quit()，loop()才会跳出循环，对于主程序的消息循环，我一直没有找到源码是在哪里调用了scheduleExit()（如果读者知道，恳请赐教…）<br>对于主线程的消息循环还涉及了ApplicationThread和AMS的相关知识，由于笔者学的尚浅，所以此处留空以待学完再来补充……</p>
-<p><strong>HandlerThread</strong></p>
-<p>我们知道在子线程之间通信可以使用Handler+Thread来完成（需操作Looper：调用Looper.prepare()和Looper.loop()），对于这个需求Google官方已经封装了一个类——HandlerThread<br>HandlerThread的源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HandlerThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> mPriority;</span><br><span class="line">    <span class="keyword">int</span> mTid = -<span class="number">1</span>;</span><br><span class="line">    Looper mLooper;</span><br><span class="line">    </span><br><span class="line">	...</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mTid = Process.myTid();</span><br><span class="line">        Looper.prepare();</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            mLooper = Looper.myLooper();</span><br><span class="line">            notifyAll();</span><br><span class="line">        &#125;</span><br><span class="line">        Process.setThreadPriority(mPriority);</span><br><span class="line">        onLooperPrepared();</span><br><span class="line">        Looper.loop();</span><br><span class="line">        mTid = -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以看到HandlerThread继承了Thread，它是一种可以使用Handler的Thread，它在run方法中通过Looper.prepare()来创建消息队列，并通过Looper.loop来开启消息循环。它和普通线程的区别就是多了一个Looper，这是子线程特有的Looper，用来做消息的取出和处理。由于HandlerThread的run方法是个死循环，因此当不需要使用HandlerThread时，可以通过它的quit()或quitSafely()来终止线程的执行。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">quit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       Looper looper = getLooper();</span><br><span class="line">       <span class="keyword">if</span> (looper != <span class="keyword">null</span>) &#123;</span><br><span class="line">           looper.quit();</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">quitSafely</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       Looper looper = getLooper();</span><br><span class="line">       <span class="keyword">if</span> (looper != <span class="keyword">null</span>) &#123;</span><br><span class="line">           looper.quitSafely();</span><br><span class="line">           <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
-<p>最后撸一个示例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> HandlerThread mHandlerThread;</span><br><span class="line">......</span><br><span class="line">mHandlerThread = <span class="keyword">new</span> HandlerThread(<span class="string">"HandlerThread"</span>);</span><br><span class="line">handlerThread.start();</span><br><span class="line"><span class="comment">//创建Handler，使用mHandlerThread.getLooper()生成Looper</span></span><br><span class="line"><span class="keyword">final</span> Handler handler = <span class="keyword">new</span> Handler(mHandlerThread.getLooper())&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">                System.out.println(<span class="string">"收到消息"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"><span class="comment">//然后再新建一个子线程来发送消息</span></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">1000</span>);<span class="comment">//模拟耗时操作</span></span><br><span class="line">                    handler.sendEmptyMessage(<span class="number">0</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"><span class="comment">//最后一定不要忘了在onDestroy释放,避免内存泄漏</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        mHandlerThread.quit();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1845,7 +1865,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1902,7 +1922,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
