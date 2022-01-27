@@ -242,6 +242,153 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/25/Annotation注解类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/25/Annotation注解类/" itemprop="url">Annotation注解类</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-25T00:13:22+08:00">
+                2018-01-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Annotation注解类"><a href="#Annotation注解类" class="headerlink" title="Annotation注解类"></a>Annotation注解类</h1><p>本文结构：<br><img src="http://pcmve13p6.bkt.clouddn.com/static/images/Annotation.png"></p>
+<p><img src="http://sdssdccddd.gitee.io/myblogimg/Annotation.png" alt="Annotation.png"></p>
+<h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><p> Java Annotation是JDK5.0引入的一种注释机制。</p>
+<p> 关于Annotation注解的概念，我们可以先看下官方的解释：</p>
+<blockquote>
+<p>Annotations, a form of metadata;<br>provide data about a program that is not part of the program itself.<br>Annotations have no direct effect on the operation of the code they annotate</p>
+</blockquote>
+<p>Annotation注解是Java中的一种元数据，它可以往程序中添加额外的数据，并且对注解的代码无直接的影响。注解是一种接口，可以作用于包名、类、方法、属性、参数等。它可以通过反射机制来访问annotation信息，获得所加的注解信息。</p>
+<h2 id="2-Java-lang中的注解"><a href="#2-Java-lang中的注解" class="headerlink" title="2. Java.lang中的注解"></a>2. Java.lang中的注解</h2><p> Java.lang中的注解又称为标准Annotation，即常用到的Deprecated、Override和SuppressWarnings。<br> （1）@Deprecated 过时：表示该方法已过时，建议使用新的一些方法代替。<br> （2）@Override 复写：表示复写父类的方法，如果方法上有这条注解但没有重写父类方法，则会生成一条错误信息。这个注解保证了方法一定会被复写。比如在开发过程中，手动在子类中复写父类的方法，只正确写出了方法名称，未写出正确的方法参数，则相当于方法的重载，并不是复写。所以使用@Override注解，有效地表明，此方法是复写父类的方法，不会产生手动的错误问题。<br> （3）@SuppressWarnings 阻止警告，阻止弹出的警告，比如加上此注解可屏蔽上述过时的警告。</p>
+<h2 id="3-元注解"><a href="#3-元注解" class="headerlink" title="3. 元注解"></a>3. 元注解</h2><p>元注解是指注解Annotation的注解。以Override的源代码为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.METHOD)  </span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.SOURCE)  </span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Override &#123;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注解类的定义方法以及注解类上所加的注解。元注解有四个，位于java.lang.annotation包中：Target，Retention，Documented、Inherited。</p>
+<p>3.1  @Target 表示注解作用的目标。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target&#123;</span><br><span class="line">	ElementType[] value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 注解作用的目标由枚举类ElementType决定。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ElementType&#123;</span><br><span class="line">	TYPE,<span class="comment">//类、接口、注解类型或枚举</span></span><br><span class="line">	FIELD,<span class="comment">//属性</span></span><br><span class="line">	METHOD,<span class="comment">//方法</span></span><br><span class="line">	PARAMETER,<span class="comment">//用于描述参数</span></span><br><span class="line">	CONSTRUCTOR,<span class="comment">//构造方法</span></span><br><span class="line">	LOCAL_VARIABLE,<span class="comment">//局部变量</span></span><br><span class="line">	ANNOTATION_TYPE,<span class="comment">//注解类</span></span><br><span class="line">	PACKAGE,<span class="comment">//包</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注</strong>：Class，interface等都实现了java中的Type接口，因此ElementType.TYPE表示注解作用于这些“类”（并不是单纯的Class类）</p>
+<p>3.2 @Retention 表示注解的作用时段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target&#123;</span><br><span class="line">	<span class="function">RetentionPolicy <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由源码可见，Retention定义的是RetentionPolicy类型的数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> RetentionPolicy&#123;</span><br><span class="line">	SOURCE,<span class="comment">//表示注解只在源文件中保留</span></span><br><span class="line">	CLASS,<span class="comment">//表示注解保留到.class文件中</span></span><br><span class="line">	RUNTIME,<span class="comment">//表示注解一直保留到内存中，类加载器把.class文件加载到内存中产生的字节码中要保留注解信息</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>3.3 @Documented 表示javadoc所生成的文档会带上注解信息。<br>3.4 @Inherited 表示子类可以集成加载父类上的注解，但要注意：（1）注解定义在类上面，子类可以继承该注解；（2）注解定义在方法上，子类也可继承该注解；但是如果子类复写了父类中定义了注解的方法，子类将无法继承该方法上的注解；（3）Interface的实现类无法继承接口中所定义的被@Inherited标注的注解</p>
+<h2 id="4-注解的参数"><a href="#4-注解的参数" class="headerlink" title="4. 注解的参数"></a>4. 注解的参数</h2><p>参数类型支持基本数据类型、Class类型、enum类型、Annotation类型以及上述所有类型的数组。</p>
+<h2 id="5-自定义注解"><a href="#5-自定义注解" class="headerlink" title="5. 自定义注解"></a>5. 自定义注解</h2><p>步骤：</p>
+<ol>
+<li>使用@interface定义一个注解类（其内部自行继承了Annotation类）</li>
+<li>在该类中定义注解的参数（类似定义方法）</li>
+<li>注解元素必须由确定的值，可在定义注解的默认值中指定，也可在使用注解时指定（非基本类型的注解元素的值不可为null）<br>example：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Car&#123;</span><br><span class="line">	<span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">number</span><span class="params">()</span> <span class="keyword">default</span> -1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Car</span>(name = <span class="string">"宝马"</span>, number = <span class="number">666</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CarBWM</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		<span class="comment">//判断CarBMW是否有注解类Car</span></span><br><span class="line">		<span class="keyword">if</span>(CarBMW.class.isAnnotationPresent(Car.class))&#123;</span><br><span class="line">			Car carAnnotation = (Car)CarBMW.class.getAnnotation(Car.class);</span><br><span class="line">			System.out.println(<span class="string">"car name "</span> + carAnnotation.name());</span><br><span class="line">			System.out.println(<span class="string">"car number "</span> + carAnnotation.number());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/31/Fragment学习之 懒加载 + Fragment在ViewPager中的生命周期/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1499,145 +1646,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/21/Service 学习要点/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/21/Service 学习要点/" itemprop="url">Service 学习要点</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-21T22:17:40+08:00">
-                2016-11-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="1-Service概述"><a href="#1-Service概述" class="headerlink" title="1.Service概述"></a>1.Service概述</h1><p>Service的主要作用是让系统在后台在后台做一些不与用户交互的操作（例如耗时操作：下载网络资源，长期运行的操作：播放音乐）<br>Service与Thread的区别：(1)Service不是在一个独立的进程中，它与我们的应用程序在同一进程(process)中 (2)Service也不是一个线程，相反，它是运行在主线程的（即UI线程），因此若我们要在Service中进行耗时操作时，需要开启一个子线程，在其中进行耗时操作，否则很容易出现ANR错误(Application Not Responding 程序无响应)</p>
-<h1 id="2-Service用法"><a href="#2-Service用法" class="headerlink" title="2.Service用法"></a>2.Service用法</h1><p>ServiceTest.java如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceTest</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MyLocalBinder myLocalBinder=<span class="keyword">new</span> MyLocalBinder();</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate();</span><br><span class="line">        Log.e(<span class="string">"TAG"</span>,<span class="string">"onCreate"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">onStartCommand</span><span class="params">(Intent intent, <span class="keyword">int</span> flags, <span class="keyword">int</span> startId)</span> </span>&#123;</span><br><span class="line">        Log.e(<span class="string">"TAG"</span>,<span class="string">"onStartCommand"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onStartCommand(intent, flags, startId);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.e(<span class="string">"TAG"</span>,<span class="string">"onBind"</span>);</span><br><span class="line">        <span class="keyword">return</span> myLocalBinder;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onUnbind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.e(<span class="string">"TAG"</span>,<span class="string">"onUnbind"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onUnbind(intent);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        Log.e(<span class="string">"TAG"</span>,<span class="string">"onDestroy"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//对外提供的访问方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">downLoad</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Log.e(<span class="string">"downLoad"</span>,<span class="string">"正在下载..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">undownLoad</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Log.e(<span class="string">"downLoad"</span>,<span class="string">"取消下载..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyLocalBinder</span> <span class="keyword">extends</span> <span class="title">Binder</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ServiceTest <span class="title">getServiceTestInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> ServiceTest.<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="comment">//...这里也可以继续写方法对外提供</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>与Activity相似，使用Service也需要通过intent，不能忘记的是<strong>在使用Service前，需要在AndroidManifest.xml中进行声明</strong></p>
-<h2 id="启动方式一：startService"><a href="#启动方式一：startService" class="headerlink" title="启动方式一：startService()"></a>启动方式一：startService()</h2><p>通过打印Service的生命周期，我们发现第一次启动Service的时候，会执行onCreate()和onStartCommand()，<strong><br>再次启动时，只会执行onStartCommand()，也就是说onCreate()只会在第一次启动的时候进行初始化
-</strong>点击“stopService”后，Service被销毁，进入onDestroy()方法。不管我们启动了多少次Service，只要我们在外部调用一次Context.stopService()或者在Service内部调用stopSelf(),Service就会被销毁</p>
-<p>上面这种启动方式的缺点：启动完Service后，这个Service就在后台运行了，同时也与启动它的Activity失去了联系，因为不能通过ServiceTest service = new ServiceTest()的方式启动Service，因而我们的Activity中不能获取到ServiceTest的实例。<br>为了解决与启动Service的组件的通信能力，还有一个解决方案就是通过广播的形式。我们在Activity中发出一些想用操作广播，在Service中注册该广播，Service接收到该广播信息后，完成相应的功能。但是频繁发送广播比较消耗性能，同时，由于广播接受者中的onReceive()中，不能执行长时间的工作，时间超过后，可能就直接跳出了方法。因此，这种方案不是首选。</p>
-<h2 id="启动方式二：bindService-Bound机制"><a href="#启动方式二：bindService-Bound机制" class="headerlink" title="启动方式二：bindService() Bound机制"></a>启动方式二：bindService() Bound机制</h2><p>通过bindService()方式第一次启动后，会执行onCreate()和onBind()方法，当我们点击“unBindService“时，走的是onUnbind()和onDestroy()方法。如果有另一个组件对同一个Service进行bindService()操作（也就是在bindService()中传入不同的ServiceConnection，此时只会进入onBind()方法，即onCreate()只会在第一次启动的时候进行初始化</p>
-<p>总结：可以看到，不管是通过哪种方式启动Service，同一个Service在整个应用程序中只有一个实例存在。区别：（1）两种方式所走的生命周期是不一样的（2）何时被销毁：当我们通过startService()启动时，不管我们启动了多少次Service，只要我们在外部调用一次Context.stopService()或者在Service内部调用stopSelf(),Service就会被销毁；而当我们通过bindService()启动时，前面我们多次启动service后，当<strong>所有客户端发出unBindService()</strong>,这个Service将被系统销毁。（3）当Service即被startService()启动也被bindService()启动时，这种情况下，Service必须在既没有任何activity关联又停止的情况下，Service才会被销毁。</p>
-<h1 id="3-IntentService"><a href="#3-IntentService" class="headerlink" title="3.IntentService"></a>3.IntentService</h1><p>我们在第一部分谈到，有时需要在service中进行耗时操作，此时就需要开启一个子线程，而对于这种需求,Android提供了IntentService给用户，intentservice内部已经帮我们开启了线程，我们只需要实现它的onHandleIntent方法，在里面实现我们的功能即可，<strong>注：intentservice不能处理多个线程的请求，但是可以处理多个service的请求(此处求解？)</strong></p>
-<p>IntentService提供的功能：（1）所有请求处理完成后自动停止服务（2）提供了默认onBind()的实现，直接返回null，意味着我们只能通过startService()的方式启动IntentService<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyIntentService</span> <span class="keyword">extends</span> <span class="title">IntentService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyIntentService</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(<span class="string">"MyIntentService"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onHandleIntent</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.e(<span class="string">"MyIntentService"</span>,<span class="string">"Thread    </span></span><br><span class="line"><span class="string">                is"</span>+Thread.currentThread().getId());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        Log.e(<span class="string">"OnDestroy"</span>,<span class="string">"OnDestroy"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>使用时需注意两点：首先要提供一个无参的构造方法，里面调用父类的有参构造方法，第二是实现onHandleIntent这个抽象方法。</p>
-<h1 id="4-前台Service"><a href="#4-前台Service" class="headerlink" title="4.前台Service"></a>4.前台Service</h1><p>Service默认都是在后台默默运行的，用户基本察觉不到有Service在运行。此时，Service的优先级是比较低的，当系统资源不足的时候，易被销毁。因此，如果我们想让用户知道有Service在后台运行，如音乐播放器，或者想让Service一直保持运行状态，不容易被系统回收，此时，就可以考虑使用前台Service。前台Service是被认为是用户已知的正在运行的服务，当系统需要释放内存时不会优先杀掉该进程。<br>用法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onCreate();</span><br><span class="line">    Log.e(<span class="string">"TAG"</span>,<span class="string">"onCreate"</span>);</span><br><span class="line">    Notification notification=<span class="keyword">new</span>                   </span><br><span class="line">    Notification(R.mipmap.ic_launcher,<span class="string">"前台通知"</span>,System.<span class="function">currentTi                         <span class="title">meMillis</span><span class="params">()</span>)</span>;</span><br><span class="line">    Intent intent=<span class="keyword">new</span> Intent(<span class="keyword">this</span>,MainActivity.class);</span><br><span class="line">    PendingIntent pendingIntent=PendingIntent.getActivity(<span class="keyword">this</span>,<span class="number">0</span>,</span><br><span class="line">                            intent,<span class="number">0</span>);</span><br><span class="line">    notification.setLatestEventInfo(<span class="keyword">this</span>, <span class="string">"通知标题"</span>,          </span><br><span class="line">                           <span class="string">"前台Service内容"</span>, pendingIntent);</span><br><span class="line">    <span class="comment">//设置到前台运行,第一个参数为通知notification的唯一ID</span></span><br><span class="line">    startForeground(<span class="number">1</span>,notification);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<pre><code>（关于Notification在SDK23以后和SDK22之前用法不一样，上面是SDK22以前的，下面是SDK23以后的）
-</code></pre><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Notification.Builder builder=<span class="keyword">new</span>      </span><br><span class="line">                     Notification.Builder(getApplication());</span><br><span class="line">builder.setContentInfo(<span class="string">"补充内容"</span>);</span><br><span class="line">builder.setContentText(<span class="string">"主内容区"</span>);</span><br><span class="line">builder.setContentTitle(<span class="string">"通知标题"</span>);</span><br><span class="line">builder.setSmallIcon(R.mipmap.ic_launcher);</span><br><span class="line">builder.setTicker(<span class="string">"新消息"</span>);</span><br><span class="line">builder.setAutoCancel(<span class="keyword">true</span>);</span><br><span class="line">builder.setWhen(System.currentTimeMillis());</span><br><span class="line">Intent intent = <span class="keyword">new</span> Intent(getApplication(), MainActivity.class);</span><br><span class="line">PendingIntent pendingIntent =     </span><br><span class="line">       PendingIntent.getActivity(getApplication(), <span class="number">0</span>, intent,     </span><br><span class="line">                            PendingIntent.FLAG_CANCEL_CURRENT);</span><br><span class="line">builder.setContentIntent(pendingIntent);</span><br><span class="line">Notification notification = builder.build();</span><br></pre></td></tr></table></figure>
-<p>如果我们要移除这个前台Service，只需要调用stopService()即可</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1683,7 +1696,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

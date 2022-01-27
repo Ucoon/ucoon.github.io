@@ -242,6 +242,156 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——第一个测试用例（Python篇）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/05/Appium入坑指南——第一个测试用例（Python篇）/" itemprop="url">Appium入坑指南——第一个测试用例（Python篇）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T22:34:43+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="安装Appium-Python-Client"><a href="#安装Appium-Python-Client" class="headerlink" title="安装Appium Python Client"></a>安装Appium Python Client</h1><p>三种安装方式：</p>
+<ol>
+<li><p>pip在线安装（推荐方式）：<code>pip install Appium-Python-Client</code></p>
+</li>
+<li><p>在Pypi上<a href="https://pypi.org/project/Appium-Python-Client/#files" target="_blank" rel="noopener">下载源码安装</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf Appium-Python-Client-X.X.tar.gz</span><br><span class="line">cd Appium-Python-Client-X.X</span><br><span class="line">sudo python3.6 setup.py install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过git安装</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone git<span class="meta">@github</span>.com:appium/python-client.git</span><br><span class="line">cd python-client</span><br><span class="line">sudo python3.6 setup.py install</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="编写测试用例："><a href="#编写测试用例：" class="headerlink" title="编写测试用例："></a>编写测试用例：</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> appium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">desired_caps = &#123;&#125;</span><br><span class="line">desired_caps[<span class="string">'platformName'</span>] = <span class="string">'Android'</span></span><br><span class="line">desired_caps[<span class="string">'platformVersion'</span>] = <span class="string">'5.0'</span></span><br><span class="line">desired_caps[<span class="string">'deviceName'</span>] = <span class="string">'SA17607795'</span></span><br><span class="line">desired_caps[<span class="string">'appPackage'</span>] = <span class="string">'com.android.calculator2'</span></span><br><span class="line">desired_caps[<span class="string">'appActivity'</span>] = <span class="string">'.Calculator'</span></span><br><span class="line">driver = webdriver.Remote(<span class="string">'http://localhost:4723/wd/hub'</span>, desired_caps)</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("1")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("2")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("3")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("+")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("3")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("2")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("1")'</span>).click()</span><br><span class="line">driver.find_element_by_android_uiautomator(<span class="string">'new UiSelector().text("=")'</span>).click()</span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+<h1 id="执行命令："><a href="#执行命令：" class="headerlink" title="执行命令："></a>执行命令：</h1><p><code>python3.6 android_calculator.py</code></p>
+<h1 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h1><ol>
+<li>问题：<code>driver.find_element_by_name(&quot;=&quot;).click()</code></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selenium.common.exceptions.InvalidSelectorException: Message: Locator Strategy <span class="string">'name'</span> is not supported <span class="keyword">for</span> <span class="keyword">this</span> session</span><br></pre></td></tr></table></figure>
+<p>谷歌后得知：通过name获取控件的方式在Appium 1.5就被移除了。</p>
+<ol start="2">
+<li>问题：<code>driver.find_element_by_accessibility_id(&#39;com.android.calculator2:id/digit_1&#39;).click()</code></li>
+</ol>
+<p>报错：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selenium.common.exceptions.NoSuchElementException: Message: An element could <span class="keyword">not</span> be located on the page using the given search parameters.</span><br></pre></td></tr></table></figure>
+<p>经请教后得知在最新版本Appium中不再支持通过id的方式来定位元素。</p>
+<p>改用：<code>driver.find_element_by_android_uiautomator(&#39;new UiSelector().text(&quot;1&quot;)&#39;).click()</code>，可运行</p>
+<ol start="3">
+<li>问题： 执行appium程序时遇到如下报错，ImportError: cannot import name ‘InvalidArgumentException’，</li>
+</ol>
+<p>报错原因 selenium.common.exceptions.py中未定义InvalidArgumentException类，导致出现该报错，我的解决办法是 </p>
+<p>在selenium.common.exceptions.py中直接定义了InvalidArgumentException，代码如下（C:\Users\Python35\Lib\site-packages\selenium\common）找到exceptions.py，添加下面的代码，再次执行脚本，ok.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">InvalidArgumentException</span><span class="params">(WebDriverException)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/05/Appium入坑指南——Appium中文版介绍/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1668,158 +1818,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/25/Annotation注解类/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/25/Annotation注解类/" itemprop="url">Annotation注解类</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-25T00:13:22+08:00">
-                2018-01-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Annotation注解类"><a href="#Annotation注解类" class="headerlink" title="Annotation注解类"></a>Annotation注解类</h1><p>本文结构：<br><img src="http://pcmve13p6.bkt.clouddn.com/static/images/Annotation.png"></p>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/Annotation.png" alt="Annotation.png"></p>
-<h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h2><p> Java Annotation是JDK5.0引入的一种注释机制。</p>
-<p> 关于Annotation注解的概念，我们可以先看下官方的解释：</p>
-<blockquote>
-<p>Annotations, a form of metadata;<br>provide data about a program that is not part of the program itself.<br>Annotations have no direct effect on the operation of the code they annotate</p>
-</blockquote>
-<p>Annotation注解是Java中的一种元数据，它可以往程序中添加额外的数据，并且对注解的代码无直接的影响。注解是一种接口，可以作用于包名、类、方法、属性、参数等。它可以通过反射机制来访问annotation信息，获得所加的注解信息。</p>
-<h2 id="2-Java-lang中的注解"><a href="#2-Java-lang中的注解" class="headerlink" title="2. Java.lang中的注解"></a>2. Java.lang中的注解</h2><p> Java.lang中的注解又称为标准Annotation，即常用到的Deprecated、Override和SuppressWarnings。<br> （1）@Deprecated 过时：表示该方法已过时，建议使用新的一些方法代替。<br> （2）@Override 复写：表示复写父类的方法，如果方法上有这条注解但没有重写父类方法，则会生成一条错误信息。这个注解保证了方法一定会被复写。比如在开发过程中，手动在子类中复写父类的方法，只正确写出了方法名称，未写出正确的方法参数，则相当于方法的重载，并不是复写。所以使用@Override注解，有效地表明，此方法是复写父类的方法，不会产生手动的错误问题。<br> （3）@SuppressWarnings 阻止警告，阻止弹出的警告，比如加上此注解可屏蔽上述过时的警告。</p>
-<h2 id="3-元注解"><a href="#3-元注解" class="headerlink" title="3. 元注解"></a>3. 元注解</h2><p>元注解是指注解Annotation的注解。以Override的源代码为例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.METHOD)  </span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.SOURCE)  </span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Override &#123;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>注解类的定义方法以及注解类上所加的注解。元注解有四个，位于java.lang.annotation包中：Target，Retention，Documented、Inherited。</p>
-<p>3.1  @Target 表示注解作用的目标。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target&#123;</span><br><span class="line">	ElementType[] value();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p> 注解作用的目标由枚举类ElementType决定。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ElementType&#123;</span><br><span class="line">	TYPE,<span class="comment">//类、接口、注解类型或枚举</span></span><br><span class="line">	FIELD,<span class="comment">//属性</span></span><br><span class="line">	METHOD,<span class="comment">//方法</span></span><br><span class="line">	PARAMETER,<span class="comment">//用于描述参数</span></span><br><span class="line">	CONSTRUCTOR,<span class="comment">//构造方法</span></span><br><span class="line">	LOCAL_VARIABLE,<span class="comment">//局部变量</span></span><br><span class="line">	ANNOTATION_TYPE,<span class="comment">//注解类</span></span><br><span class="line">	PACKAGE,<span class="comment">//包</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>注</strong>：Class，interface等都实现了java中的Type接口，因此ElementType.TYPE表示注解作用于这些“类”（并不是单纯的Class类）</p>
-<p>3.2 @Retention 表示注解的作用时段</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.ANNOTATION_TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Target&#123;</span><br><span class="line">	<span class="function">RetentionPolicy <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>由源码可见，Retention定义的是RetentionPolicy类型的数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> RetentionPolicy&#123;</span><br><span class="line">	SOURCE,<span class="comment">//表示注解只在源文件中保留</span></span><br><span class="line">	CLASS,<span class="comment">//表示注解保留到.class文件中</span></span><br><span class="line">	RUNTIME,<span class="comment">//表示注解一直保留到内存中，类加载器把.class文件加载到内存中产生的字节码中要保留注解信息</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>3.3 @Documented 表示javadoc所生成的文档会带上注解信息。<br>3.4 @Inherited 表示子类可以集成加载父类上的注解，但要注意：（1）注解定义在类上面，子类可以继承该注解；（2）注解定义在方法上，子类也可继承该注解；但是如果子类复写了父类中定义了注解的方法，子类将无法继承该方法上的注解；（3）Interface的实现类无法继承接口中所定义的被@Inherited标注的注解</p>
-<h2 id="4-注解的参数"><a href="#4-注解的参数" class="headerlink" title="4. 注解的参数"></a>4. 注解的参数</h2><p>参数类型支持基本数据类型、Class类型、enum类型、Annotation类型以及上述所有类型的数组。</p>
-<h2 id="5-自定义注解"><a href="#5-自定义注解" class="headerlink" title="5. 自定义注解"></a>5. 自定义注解</h2><p>步骤：</p>
-<ol>
-<li>使用@interface定义一个注解类（其内部自行继承了Annotation类）</li>
-<li>在该类中定义注解的参数（类似定义方法）</li>
-<li>注解元素必须由确定的值，可在定义注解的默认值中指定，也可在使用注解时指定（非基本类型的注解元素的值不可为null）<br>example：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Car&#123;</span><br><span class="line">	<span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">number</span><span class="params">()</span> <span class="keyword">default</span> -1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Car</span>(name = <span class="string">"宝马"</span>, number = <span class="number">666</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CarBWM</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		<span class="comment">//判断CarBMW是否有注解类Car</span></span><br><span class="line">		<span class="keyword">if</span>(CarBMW.class.isAnnotationPresent(Car.class))&#123;</span><br><span class="line">			Car carAnnotation = (Car)CarBMW.class.getAnnotation(Car.class);</span><br><span class="line">			System.out.println(<span class="string">"car name "</span> + carAnnotation.name());</span><br><span class="line">			System.out.println(<span class="string">"car number "</span> + carAnnotation.number());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1865,7 +1868,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
