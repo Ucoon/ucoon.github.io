@@ -242,6 +242,154 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/04/Flutter Platform Channel原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/04/04/Flutter Platform Channel原理/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-04T22:59:44+08:00">
+                2022-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h2 id="Flutter-Platform-Channel原理"><a href="#Flutter-Platform-Channel原理" class="headerlink" title="Flutter Platform Channel原理"></a>Flutter Platform Channel原理</h2><p>概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考<a href="http://ucoon.tech/2022/01/27/Flutter-Plugin%E5%BC%80%E5%8F%91%E4%B8%8E%E5%8F%91%E5%B8%83/" target="_blank" rel="noopener">Flutter-Plugin开发与发布</a></p>
+<blockquote>
+<p>Flutter平台特定的API支持不依赖于代码生成，而是依赖于灵活的消息传递的方式：</p>
+<p>应用的Flutter部分通过平台通道（Platform Channel）将传递的数据编码成消息的形式，跨线程发送到其应用程序的所在的宿主（iOS或Android）</p>
+<p>宿主监听的平台通道，并接收该消息，然后它会调用特定于该平台的API（使用原生编程语言），并将结果数据用过同样方式原路发送回客户端，即应用程序的Flutter部分</p>
+<p>整个过程的消息和响应是异步传递的，所以不会直接阻塞用户界面</p>
+</blockquote>
+<h1 id="官方架构图："><a href="#官方架构图：" class="headerlink" title="官方架构图："></a>官方架构图：</h1><p><img src="https://flutterchina.club/images/PlatformChannels.png" alt="Flutter Platform Channel"></p>
+<h1 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h1><h2 id="MethodChannel调用流程"><a href="#MethodChannel调用流程" class="headerlink" title="MethodChannel调用流程"></a>MethodChannel调用流程</h2><p><img src="https://ucoon.gitee.io/myblogimg/MethodChannel%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.jpg" alt="MethodChannel调用流程"></p>
+<p>小结：</p>
+<ol>
+<li>Dart层使用codec对根据方法名(<code>channel method name</code>)和参数(<code>channel method param</code>)构建得到的对象进行编码，然后通过dart的类似JNI的本地接口，调用<code>SendPlatformMessage</code>，传递给c++层</li>
+<li>c++层通过持有java对象<code>flutterJNI</code>的方法调用将消息传递到java层</li>
+<li>java层解码接收到的消息，并根据<code>channel name</code>获取到对应的<code>handlerInfo</code>，调用相应的逻辑处理</li>
+</ol>
+<h2 id="MethodChannel返回流程"><a href="#MethodChannel返回流程" class="headerlink" title="MethodChannel返回流程"></a>MethodChannel返回流程</h2><p><img src="https://ucoon.gitee.io/myblogimg/MethodChannel%E8%BF%94%E5%9B%9E%E6%B5%81%E7%A8%8B.jpg" alt="MethodChannel返回流程"></p>
+<p>小结：</p>
+<ol>
+<li>java层得到结果后进行编码，通过JNI将响应结果返回给c++层</li>
+<li>c++层将结果通过发送时保存的dart响应方法对象回调给dart层</li>
+<li>dart层通过回调方法对结果数据进行处理，然后通过codec解码数据做后续操作</li>
+</ol>
+<blockquote>
+<p>总结：MethodChannel的执行流程涉及到主线程和UI线程的交互，代码从Dart层到C++层再到Java层，执行完相应逻辑后原路返回，从Java层到C++层再到Dart层</p>
+</blockquote>
+<p>参考：</p>
+<p><a href="http://gityuan.com/2019/08/10/flutter_channel/" target="_blank" rel="noopener">深入理解Flutter的Platform Channel机制</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/139600343" target="_blank" rel="noopener">全面解析Flutter Platform Channel原理</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/27/Flutter-Plugin开发与发布/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -318,7 +466,7 @@
 <h1 id="1-创建-package"><a href="#1-创建-package" class="headerlink" title="1. 创建 package"></a>1. 创建 package</h1><ul>
 <li><p>方式一：通过<code>Android Studio</code>直接创建<code>Flutter Project</code>（选择Plugin类型）</p>
 <p>可选择使用的语言和插件支持的平台</p>
-<p><img src="/2022/01/27/Flutter-Plugin开发与发布/MyProject\MyBlogImg\Flutter_Plugin_1.png" style="zoom:60%;"></p>
+<p><img src="http://ucoon.gitee.io/myblogimg/Flutter_Plugin_1.png" alt="选择语言"></p>
 </li>
 <li><p>方式二：通过命令行创建Flutter Plugin Project（使用<code>--template=plugin</code>）</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter create --org tech.ucoon --template=plugin wb_cloud_face</span><br></pre></td></tr></table></figure>
@@ -1818,168 +1966,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/单例模式的七种写法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/14/单例模式的七种写法/" itemprop="url">单例模式的七种写法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T21:01:16+08:00">
-                2019-03-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><em>原文链接：<a href="https://blog.csdn.net/itachi85/article/details/50510124" target="_blank" rel="noopener">https://blog.csdn.net/itachi85/article/details/50510124</a></em></p>
-<p>在《Head First设计模式》的定义：</p>
-<blockquote>
-<p>单例模式确保一个类只有一个实例，并提供一个全局访问点。</p>
-</blockquote>
-<p>单例模式UML类图如下：</p>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/单例模式结构图.png" alt="单例模式结构图"></p>
-<ol>
-<li><p>饿汉模式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>优点：获取对象的速度快</p>
-<p>缺点：在类加载时就完成了初始化，所以类加载较慢</p>
-</li>
-<li><p>懒汉模式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>优点：在用户第一次调用时初始化，节约资源</p>
-<p>缺点：第一次加载需要实例化，反应较慢，且在多线程不能正常工作</p>
-</li>
-<li><p>懒汉模式（线程安全）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>优点：能在多线程中很好的工作</p>
-<p>缺点：每次调用getInstance函数时都需要进行同步，造成不必要的同步开销</p>
-</li>
-<li><p>双重检查模式（DCL）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton instance;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">synchronized</span>(Singleton.class)&#123;</span><br><span class="line">                <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> Singlerton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>下面这段分析来自原文：</p>
-<blockquote>
-<p>这种写法在getSingleton方法中对singleton进行了两次判空，第一次是为了不必要的同步，第二次是在singleton等于null的情况下才创建实例。 在这里使用volatile会或多或少的影响性能，但考虑到程序的正确性，牺牲这点性能还是值得的。 DCL优点是资源利用率高，第一次执行getInstance时单例对象才被实例化，效率高。缺点是第一次加载时反应稍慢一些，在高并发环境下也有一定的缺陷，虽然发生的概率很小。DCL虽然在一定程度解决了资源的消耗和多余的同步，线程安全等问题，但是他还是在某些情况会出现失效的问题，也就是DCL失效，在《java并发编程实践》一书建议用静态内部类单例模式来替代DCL。</p>
-</blockquote>
-</li>
-<li><p>静态内部类单例模式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonHolder.instance;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第一次加载Singleton类时不会初始化instance，只有第一次调用getInstance函数时虚拟机加载SingletonHolder并初始化instance，这样不仅能确保线程安全也能保证Singleton类的唯一性。</p>
-</li>
-<li><p>使用枚举单例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Singleton&#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomeThing</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>默认枚举实例的创建是线程安全的，并且在任何情况下都是单例</p>
-</li>
-<li><p>使用容器实现单例模式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonManager</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingletonManager</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">registerService</span><span class="params">(String key, Object instance)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!map.containsKey(key))&#123;</span><br><span class="line">            map.put(key, instance);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getService</span><span class="params">(String key)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> map.get(key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>用SingletonManager 将多种的单例类统一管理，在使用时根据key获取对象对应类型的对象。这种方式使得我们可以管理多种类型的单例，并且在使用时可以通过统一的接口进行获取操作，降低了用户的使用成本，也对用户隐藏了具体实现，降低了耦合度。</p>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2030,7 +2016,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
