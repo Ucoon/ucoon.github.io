@@ -242,6 +242,297 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/02/Ionic2入门教程——初识Ionic2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/02/Ionic2入门教程——初识Ionic2/" itemprop="url">Ionic2入门教程——初识Ionic2</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-02T21:06:56+08:00">
+                2017-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>##项目结构<br>  ionic2是基于Angular2的，所以它的项目结构和Angular2类似，具体目录结构如下：<br>  |——ionic.config.json #ionic的配置文件<br>  |——package.json<br>  |——resources #打包app使用的icon图标和加载页图片<br>  …….|——android #生成的android平台的各个尺寸的图标和加载页图图片<br>  …….|——icon.png #应用程序图标<br>  …….|——ios # 生成的ios平台的各个尺寸的图标和加载页图片<br> …….|——splash.png # 加载页图片<br>  |——src #页面源文件<br>  …….|——app<br>  …….|——assets<br>  …….|——declarations.d.ts<br>  …….|——index.html<br>​    …….|——manifest.json<br>  …….|——pages<br>  …….|——service-worker.js<br>  …….|——theme<br>  |——tsconfig.json<br>  |——tslint.json<br>  |——www #编译后的文件夹，Cordova默认用www路径并打开里面的index.html<br>  |——plugins<br>  |——platforms<br>  |——hooks</p>
+<p>###项目环境相关文件说明</p>
+<ol>
+<li><p><strong>package.json</strong>：每个基于node平台的项目都有这样一个文件，里面定义了项目的基本信息，还有开发和运行需要用到的库。</p>
+</li>
+<li><p><strong>ionic.config.json</strong>：ionic项目的基本配置文件，里面的内容部分如下：</p>
+</li>
+</ol>
+<p><img src="http://sdssdccddd.gitee.io/myblogimg/1493718125065.png" alt="1493718125065"></p>
+<p>  设置了proxies以后，我们的服务端就不需要考虑跨域访问的问题。当然，如果你的服务器端不允许跨域访问，在你部署你的应用的时候，也需要相应的配置，例如在nginx中设置反向代理。</p>
+<ol start="3">
+<li><strong>config.xml</strong>：当项目启用了cordova并且打算封装成Hybird App就会有这个文件，里面的内容部分如下：</li>
+</ol>
+<p><img src="http://sdssdccddd.gitee.io/myblogimg/1493718625450.png" alt="1493718625450"></p>
+<p>  其中，<code>name</code>就是app的显示名，<code>plugin</code>就是使用的cordovas插件，更多内容可参考cordova的文档。</p>
+<ol start="4">
+<li><p><strong>tslint.json、tsconfig.json</strong>：这是用tslint做代码检查的配置。</p>
+</li>
+<li><p><strong>plugins</strong>：存放所添加的cordova插件。</p>
+</li>
+<li><p><strong>platforms</strong>：存放平台相关的文件，每次编译app的时候，就会根据添加的平台，在这里面生成编译文件和打包的文件。</p>
+</li>
+<li><p><strong>hooks</strong>：我们可以编写脚本，来定义在每次执行某些任务的时候被调用的任务。也可以定义某个插件相关的脚本。例如，如果你加了某一个微信的插件，这个插件可能有一个钩子，帮助你在每次添加完这个插件的时候，运行一些任务，来进行一些项目的配置，例如微信的appId等。</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/13/Android IPC知识点记录(一、基础概念介绍)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/02/13/Android IPC知识点记录(一、基础概念介绍)/" itemprop="url">Android IPC知识点记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-13T22:27:24+08:00">
+                2017-02-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Android-IPC知识点记录-一、基础概念介绍"><a href="#Android-IPC知识点记录-一、基础概念介绍" class="headerlink" title="Android IPC知识点记录(一、基础概念介绍)"></a>Android IPC知识点记录(一、基础概念介绍)</h1><p><em>此篇文章是在看完《Android开发艺术探索》后的个人笔记小结，摘录书中大量的语句以及例子，特此声明</em></p>
+<p>先谈谈IPC的使用场景：<strong>多进程</strong>，多进程的情况分为两种：第一种情况是一个应用因为某些原因需要采用多进程模式实现，第二种情况是当前应用需要向其他应用获取数据。接下来我们就从<code>IPC</code>是什么开始说起……</p>
+<h2 id="IPC-Ienter-Process-Communication"><a href="#IPC-Ienter-Process-Communication" class="headerlink" title="IPC(Ienter-Process Communication)"></a>IPC(Ienter-Process Communication)</h2><p>含义为进程间通信或者跨进程通信，是指两个进程间进行数据交换的过程（区分进程和线程的关系：包含与被包含）。当然，IPC不是Android中独有的，任何一个操作系统都需要有相应的IPC机制，对于Android来说，它是一种基于Linux内核的移动操作系统，它有自己的进程间通信方式。下面我们来学习多进程的相关知识。</p>
+<h3 id="多进程模式"><a href="#多进程模式" class="headerlink" title="多进程模式"></a>多进程模式</h3><p>正常情况下，在Android中多进程是指一个应用中存在多个进程的情况。开启方法：给四大组件（Activity、Service、Receiver、ContentProvider）在AndroidMenifest中指定android:process属性，非常规方法：通过JNI在native层去fork一个新的进程。（JNI是什么鬼，待google资料）。多进程命名方式分为两种：一种是进程名以“：”开头的进程，它的完整进程名是当前的进程名前面附加上当前的包名，第二种是完整的命名方式；两者的区别：进程名以“：”开头的进程名属于当前应用的私有进程，其他应用的组件不可以和它跑在同一个进程中，而另一种命名方式属于全局进程，其他应用通过SharedUID方式可以和它跑在同一个进程中。###Android会为每个应用分配一个唯一的UID，具有相同UID的应用才能共享数据，两个应用通过SharedUID跑在同一个进程中是有要求的，需要两个应用具有相同的SharedUID并且签名相同才可以。在这种情况下，它们可以互相访问对方的私有数据。（SharedUID番外篇：<a href="http://www.cnblogs.com/mythou/p/3258715.html）" target="_blank" rel="noopener">http://www.cnblogs.com/mythou/p/3258715.html）</a></p>
+<h3 id="多进程模式的运行机制"><a href="#多进程模式的运行机制" class="headerlink" title="多进程模式的运行机制"></a>多进程模式的运行机制</h3><p>我们知道Android为每一个应用分配了一个独立的虚拟机，或者说为每个进程都分配了一个独立的虚拟机。而不同虚拟机在内存分配上有不同的地址空间，这就导致了在不同的虚拟机访问同一个类的对象会产生多份副本：所有运行在不同进程中的四大组件，只要它们之间需要通过内存来共享数据，都会共享失败，这也就是多进程带来的主要影响。一般来说，使用多进程会造成如下几方面的问题：</p>
+<ol>
+<li>静态成员和单例模式会完全失效</li>
+<li>线程同步机制完全失效</li>
+<li>SharedPreferences的可靠性下降</li>
+<li>Application会多次创建<br>总结：在多进程模式中，不同进程的组件会拥有独立的虚拟机，Application以及内存空间。</li>
+</ol>
+<hr>
+<h2 id="IPC的基础知识"><a href="#IPC的基础知识" class="headerlink" title="IPC的基础知识"></a>IPC的基础知识</h2><p>对象的序列化：Android中存在两种序列化方式：第一种是Serializable接口，是Java所提供的一个序列化接口，第二种是Parcelable，是Android中的序列化方式。</p>
+<h3 id="Serializable接口"><a href="#Serializable接口" class="headerlink" title="Serializable接口"></a>Serializable接口</h3><p>实现Serializable只需要这个类实现Serializable接口并声明一个serialVersionUID既可，这个值可以用当前类的hash值，也可以自行指定。<br><code>private static final long serialVersionUID = xxxxxL</code><br>serialVersionUID的作用：用来辅助序列化和反序列化过程的，原则上序列化后的数据中的serialVersionUID只有和当前类的serialVersionUID相同才能够正常地被反序列化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//序列化过程</span></span><br><span class="line">User user = <span class="keyword">new</span> User(<span class="number">0</span>, <span class="string">"Jake"</span>, <span class="keyword">true</span>);</span><br><span class="line">ObjectOutputStream out = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"cache.txt"</span>));</span><br><span class="line">out.writeObject(user);</span><br><span class="line">out.close();</span><br><span class="line"><span class="comment">//反序列化</span></span><br><span class="line">ObjectInputStream in = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"cache.txt"</span>));</span><br><span class="line">User newUser = (User)in.readObject();</span><br><span class="line">in.close();</span><br></pre></td></tr></table></figure>
+<p>注意：恢复后的对象newUser和user的内容完全一样，但是两者并不是同一对象（内存不同）。</p>
+<h4 id="序列化注意事项："><a href="#序列化注意事项：" class="headerlink" title="序列化注意事项："></a>序列化注意事项：</h4><ol>
+<li>静态成员变量属于类不属于对象，所以不会参与序列化过程</li>
+<li>用transient关键字标记的成员变量不参与序列化过程</li>
+</ol>
+<blockquote>
+<p>如果不手动填写serialVersionUID，序列化的时候系统会自动算出一个serialVersionUID写到文件中，然后恢复的时候会再次计算，如果两者的serialVersionUID一致，也就是类没有被修改，那么不会影响反序列化，但是，一旦修改了类，那么计算出来的hash就不同了，反序列化的时候就会报错。程序会crash；如果手动填写，就算修改了类，只要不是毁灭性的修改（例如修改类名），那么反序列化时会尽最大的限度去进行反序列化，最大限度还原对象，而不是直接crash。</p>
+</blockquote>
+<h3 id="Parcelable接口"><a href="#Parcelable接口" class="headerlink" title="Parcelable接口"></a>Parcelable接口</h3><p>什么都不说了，先上代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Book</span> <span class="keyword">implements</span> <span class="title">Parcelable</span></span>&#123;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> bookId;</span><br><span class="line"><span class="keyword">public</span> String bookName;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Book</span><span class="params">(<span class="keyword">int</span> bookId, String bookName)</span></span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.bookId = bookId;</span><br><span class="line">	<span class="keyword">this</span>.bookName = bookName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">describeContents</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeToParcel</span><span class="params">(Parcel dest, <span class="keyword">int</span> flags)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">	dest.writeInt(bookId);</span><br><span class="line">	dest.writeString(bookName);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Parcelable.Creator&lt;Book&gt; CREATOR = <span class="keyword">new</span> Creator&lt;Book&gt;() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> Book[] newArray(<span class="keyword">int</span> size) &#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> Book[size];</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Book <span class="title">createFromParcel</span><span class="params">(Parcel source)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> Book(source);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Book</span><span class="params">(Parcel in)</span></span>&#123;</span><br><span class="line">	bookId = in.readInt();</span><br><span class="line">	bookName = in.readString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>}<br>在序列化过程需要实现的功能有序列化、反序列化和内容描述，序列化功能由writeToParcel()来完成，最终是通过Parcel中的一系列write()方法完成。反序列化由CREATOR来完成；内容描述功能由describeContents()完成，几乎所有情况下这个方法都应该返回0（仅当当前对象中存在文件描述符中他才会返回1）。</p>
+<h3 id="How-to-choose"><a href="#How-to-choose" class="headerlink" title="How to choose?"></a>How to choose?</h3><p>Serializable是Java的序列化接口，其使用起来简单但是开销很大，序列化和反序列化过程需要大量I/O操作；而Parcelable是Android的序列化方式，效率高但是使用起来稍微麻烦点（这是Android推荐的序列化方式，因此我们要首选Parcelable）。</p>
+<p>​    </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/21/MVC与MVP的学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -705,7 +996,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

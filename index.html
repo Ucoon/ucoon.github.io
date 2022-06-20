@@ -242,6 +242,384 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/06/20/WebRTC入门——协议篇/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/06/20/WebRTC入门——协议篇/" itemprop="url">WebRTC入门——协议篇</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-06-20T17:56:08+08:00">
+                2022-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><blockquote>
+<p>WebRTC（Web Real-Time Communication）是一项实时通讯技术，它允许网络应用或者站点，在不借助中间媒介的情况下，建立浏览器之间点对点（Peer-to-Peer）的连接，实现视频流和（或）音频流或者其他任意数据的传输。WebRTC包含的这些标准能使用户在无需安装任何插件或者第三方软件的情况下，实现点对点（Peer-to-Peer）的数据分享和电话会议。</p>
+</blockquote>
+<p>WebRTC包含了若干相互关联的API和协议以达到这个目标，下图即为WebRTC 1对1音视频实时通话过程示意图，本文也将围绕示意图展开学习内容</p>
+<p><img src="https://static001.geekbang.org/resource/image/c5/a0/c536a1dd0ed50008d2ada594e052d6a0.png" alt="WebRTC 1对1音视频实时通话"></p>
+<h1 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h1><h2 id="NAT"><a href="#NAT" class="headerlink" title="NAT"></a>NAT</h2><blockquote>
+<p><strong>Network Address Translation</strong>(网络地址转换)，是一种将IP地址空间映射到另一个空间的方法，方法是在数据包通过流量路由设备传输时修改数据包IP报头中的网络地址信息。在IPv4地址耗尽的情况下，它已成为保护全球地址空间必不可少的工具。</p>
+</blockquote>
+<p>为什么要有NAT：这是因为现实中公网的ip地址过少，很多单位、学校都不能满足为每个主机分配一个公网地址，因此会通过NAT技术将内网的主机地址映射为同一公网地址的不同端口，进行外网访问。</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200610191434292.png" alt="NAT原理"></p>
+<h3 id="NAT的缺点"><a href="#NAT的缺点" class="headerlink" title="NAT的缺点"></a>NAT的缺点</h3><p>NAT解决了内网环境下多主机上网的问题，但是也造成了难以从外网访问内网主机的问题。</p>
+<h3 id="NAT的分类"><a href="#NAT的分类" class="headerlink" title="NAT的分类"></a>NAT的分类</h3><ul>
+<li><p>圆锥形NAT：相当于在NAT服务器上打了个洞，所有外部主机都可以按照这个公网的IP:port发送数据，并且顺利找到内网主机</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200610193649234.png" alt="圆锥形NAT"></p>
+</li>
+<li><p>受限锥形NAT：NAT会记录内网主机访问的外网IP，只有来自同一个IP的请求才能转发到内网主机。</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200610193956642.png" alt="受限锥形NAT"></p>
+</li>
+<li><p>端口受限型NAT：NAT会记录内网主机访问的外网IP和端口，只有来自同一个IP且同一个端口的请求才能转发到内网主机</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200610194411386.png" alt="端口受限型NAT"></p>
+</li>
+<li><p>对称型NAT：每次请求的连接都会使用不同的公网端口；注意，对称型NAT和其他三个最大的不同点在于每次请求的端口都会变化，这就导致了NAT穿越的难度增加</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200611162545987.png" alt="对称型NAT"></p>
+</li>
+</ul>
+<h3 id="NAT穿透"><a href="#NAT穿透" class="headerlink" title="NAT穿透"></a>NAT穿透</h3><p>我们如何实现NAT穿透：方式就是在NAT后面的主机向公网指定端口发送一个包，这样就会在NAT服务器上留下一个端口。其他主机只要知道了这个端口，就可以向内网主机发送数据了，这个行为形象的称之为“打洞”。</p>
+<ul>
+<li><p>一方是圆锥形NAT：</p>
+<p>当一方是圆锥形NAT，它只要向某个公网服务器（例如<strong>STUN服务器</strong>）发送一个包，这样它在公网的IP和端口就确定了。无论对端是哪种类型的NAT，只要向这个IP和端口发送数据即可连通</p>
+</li>
+<li><p>双方是受限锥型NAT或者端口受限型NAT</p>
+<p>双方都向公网服务器发送一个包，确定自己的IP和端口，并通过公网服务器发送给对方，接着双方再向对方地址发送一个包，就可以实现通信</p>
+</li>
+<li><p>一方是对称型NAT</p>
+<ol>
+<li><p>当对方是圆锥型NAT：只要让对方先发送请求即可</p>
+</li>
+<li><p>当对方是受限锥型NAT：需要在双方交换完地址后，对方先发送一个包，确保指定IP的数据可接收，本机再向对方IP和端口发送数据，完成连接</p>
+</li>
+<li><p>当对方是端口受限型NAT：需要在双方交换完地址后，本机先发送一个包，在NAT服务器上打洞。但是此时对端并不知道本机这次打洞的端口，所以需要向各个端口都进行发包探测。此时本机需要不停的向对端发包，直至某一个包被接收。此时双方都确定了对方的IP和端口，完成通信。</p>
+</li>
+<li>当对方是对称型NAT：没有办法连通，因为其中一个主机在探测时，自身的端口都会变化，这样对方无法确定本机端口。因此只能通过公网服务器进行中转（例如<strong>TURN服务器</strong>）</li>
+</ol>
+</li>
+</ul>
+<h2 id="ICE"><a href="#ICE" class="headerlink" title="ICE"></a>ICE</h2><blockquote>
+<p><strong>Interactive Connectivity Establishment</strong>(交互式连接设施)，是一个允许你的浏览器和对端浏览器建立连接的协议框架。</p>
+</blockquote>
+<p>在实际的网络中，有很多原因导致简单的从A端到B端的直连不能如愿完成，这需要绕过阻止建立连接的防火墙，给你的设备分配一个唯一可见的地址（通常情况下我们的大部分设备没有一个固定的公网地址），如果路由器不允许主机直连，还得通过一台服务器转发数据，ICE通过使用以下几种技术完成上述工作。</p>
+<h2 id="STUN"><a href="#STUN" class="headerlink" title="STUN"></a>STUN</h2><blockquote>
+<p><strong>Session Traversal Utilities for NAT</strong>(NAT会话穿透应用程序)，是一种网络协议，它允许位于NAT(或多重NAT)后的客户端找出自己的公网地址，查出自己位于哪种类型的NAT之后以及NAT为某一个本地端口所绑定的Internet端端口。这些信息被用来在两个同时处于NAT路由器之后的主机之间创建UDP通信</p>
+</blockquote>
+<p>一旦客户端得知了Internet端的UDP端口，通信就可以开始了。如果NAT是完全圆锥形的，那么双方中的任何一方都可以发起通信；如果NAT是受限圆锥型NAT或端口受限型NAT，双方必须一起开始传输，如果是对称型NAT则不能使用</p>
+<p>STUN是一个client-server协议，一个VoIP电话或软件包可能会包括一个STUN客户端，这个客户端会向STUN服务器发送请求，之后服务器会向STUN客户端报告NAT路由器的公网IP地址以及NAT为允许传入流量传回内网而开通的端口</p>
+<p><img src="https://mdn.mozillademos.org/files/6115/webrtc-stun.png" alt="STUN示意图"></p>
+<h2 id="TURN"><a href="#TURN" class="headerlink" title="TURN"></a>TURN</h2><blockquote>
+<p><strong>Traversal Using Relay NAT</strong>(NAT的中继穿透方式)，是一种资料传输协议(data-tranfer protocol)，允许在TCP或UDP的连接在线跨越NAT或防火墙。</p>
+</blockquote>
+<p>TURN是一个client-server协议。TURN的NAT穿透方法与STUN类似，都是通过获取应用层的公有地址达到NAT穿透，但在实现TURN client的终端必须在通信开始前与TURN server进行交互，并要求TURN server产生<code>relay port</code>，也就是relayed-transport-address。这时TURN server会创建peer，即远程端点（remote endpoints），开始进行中继（relay）的动作，TURN client会利用<code>relay port</code>将资料发送至peer，再由peer转传到另一方的TURN client。很显然这种方式是开销很大的，所以只有在没得选择的情况下采用。</p>
+<p><img src="https://mdn.mozillademos.org/files/6117/webrtc-turn.png" alt="TURN示意图"></p>
+<h2 id="SDP"><a href="#SDP" class="headerlink" title="SDP"></a>SDP</h2><blockquote>
+<p><strong>Session Description Protocol</strong>(会话描述协议)，是一个描述多媒体连接内容的协议，例如分辨率，格式，编码，加密算法等。所以在数据传输时两端都能够理解彼此的数据，本质上，这些描述内容的元数据并不是媒体流本身</p>
+</blockquote>
+<p>从技术上讲，SDP并不是一个真正的协议，而是一种数据格式，用来描述在设备之间共享媒体的连接。</p>
+<h1 id="信令与信令服务器"><a href="#信令与信令服务器" class="headerlink" title="信令与信令服务器"></a>信令与信令服务器</h1><h2 id="信令"><a href="#信令" class="headerlink" title="信令"></a>信令</h2><blockquote>
+<p>WebRTC是一个完全对等技术，用于实时交换音频、视频和数据。如其他地方所讨论的，必须进行一种发现和媒体格式协商，以使不同网络上的两个设备相互定位，这个过程被称为<strong>信令</strong>，并涉及两个设备连接到第三方共同商定的服务器，这两台设备可以相互定位，并交换协商消息。</p>
+</blockquote>
+<h2 id="信令服务器"><a href="#信令服务器" class="headerlink" title="信令服务器"></a>信令服务器</h2><blockquote>
+<p>两个设备之间建立WebRTC连接需要一个<strong>信令服务器</strong>来实现双方通过网络进行连接。信令服务器的作用是作为一个中间人帮助双方在尽可能少的暴露隐私的情况下建立连接。</p>
+</blockquote>
+<p>WebRTC并没有提供信令传递机制，可以使用任何方式比如<strong>WebSocket</strong>或者<strong>XMLHttpRequest</strong>等等，来交换彼此的令牌信息。最重要的是信令服务器并不需要理解和解释信令数据内容。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>了解清楚各种协议之后，我们得有个大体的概念，就是需要大体的知道webRTC协议各个模块是如何联系在一起的：</p>
+<p>以A和B进行视频通话为例，现在决定采用webRTC协议，实现p2p的连接，也就是A和B之间能直接进行媒体流的传输，不需要外加的媒体服务器进行转发。</p>
+<ol>
+<li>在访问外网的时候，需要知道对方的IP和port，我们才能访问到指定的设备。而A和B在他们各自的路由局域网内，是不知道这个IP和port，它们各自的IP和端口是由路由分配的，这个分配IP和port的协议就是<strong>NAT(网络地址转换)</strong>。</li>
+<li>A和B之间需要实现p2p连接，就需要知道自己本身的IP和端口，然后告诉对方自己的这些信息，这样才能实现互联，这时<strong>STUN(NAT会话穿透应用程序)</strong>服务器就派上用场了，A和B分别向stun服务器发送请求，stun服务器会返回他们各自的IP和port，但是NAT有四种类型（圆锥型NAT、受限锥型NAT，端口受限型NAT，对称型NAT），如果是对称型NAT，通过stun服务器是不能获取到IP和端口的，这时A和B之间要进行媒体的交流，就得靠<strong>TURN(NAT的中继方式)</strong>了，turn服务器是个中转站，A和B之间通信的所有媒体流，都是经过turn服务器进行转发的。</li>
+<li>是采用stun还是turn服务器，这个会交由<strong>ICE(交互式连接设施)</strong>来帮助我们决策，ICE是一个框架，主要任务就是帮助我们建立双方的连接。</li>
+<li>那么通过stun/turn服务器，A和B都知道自己的IP和port，那这个信息要如何告诉对方呢，这个就需要通过<strong>信令服务器</strong>了。A和B之间建立媒体连接，还需要知道对方各自处理流媒体的能力，这个信息也是通过信令服务器来转发的。信令服务器并不需要关心发送的内容，只需要负责信息的转发即可。</li>
+</ol>
+<p>参考</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API" target="_blank" rel="noopener">WebRTC_API</a></p>
+<p><a href="https://xinyuehtx.github.io/post/%E7%90%86%E8%A7%A3NAT%E7%A9%BF%E8%B6%8A.html" target="_blank" rel="noopener">理解NAT穿越</a></p>
+<p><a href="https://segmentfault.com/a/1190000039849183" target="_blank" rel="noopener">WebRtc学习之旅 —— Android端应用开发</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/06/20/Flutter状态管理：Provider/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/06/20/Flutter状态管理：Provider/" itemprop="url">Flutter状态管理：Provider</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-06-20T17:54:51+08:00">
+                2022-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="InheritedWidget"><a href="#InheritedWidget" class="headerlink" title="InheritedWidget"></a>InheritedWidget</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><code>InheritedWidget</code>提供了一种在widget树中从上到下共享数据的方式，能实现组件跨级传递数据。比如我们在应用的根widget中通过<code>InheritedWidget</code>共享了一个数据，那么我们便可以在任意子widget中来获取该共享的数据！</p>
+<p>应用：如Flutter SDK中正是通过<code>InheritedWidget</code>来共享<code>Theme</code>和<code>Local</code>（当前语言环境）信息</p>
+<h2 id="数据传输"><a href="#数据传输" class="headerlink" title="数据传输"></a>数据传输</h2><p>示例：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShareDataWidget</span> <span class="keyword">extends</span> <span class="title">InheritedWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">int</span> data; <span class="comment">//需要在子树中共享的数据，保存点击次数</span></span><br><span class="line">  <span class="keyword">const</span> ShareDataWidget(&#123;</span><br><span class="line">    Key? key,</span><br><span class="line">    required <span class="keyword">this</span>.data,</span><br><span class="line">    required Widget child,</span><br><span class="line">  &#125;) : <span class="keyword">super</span>(key: key, child: child);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//定义一个便捷方法，方便子树中的widget获取共享数据</span></span><br><span class="line">  <span class="keyword">static</span> ShareDataWidget? of(BuildContext context, &#123;<span class="built_in">bool</span> listen = <span class="keyword">true</span>&#125;) &#123;</span><br><span class="line">    ShareDataWidget? shareDataWidget;</span><br><span class="line">    <span class="keyword">if</span> (listen) &#123;</span><br><span class="line">      shareDataWidget =</span><br><span class="line">          context.dependOnInheritedWidgetOfExactType&lt;ShareDataWidget&gt;();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      shareDataWidget =</span><br><span class="line">          context.getElementForInheritedWidgetOfExactType&lt;ShareDataWidget&gt;()</span><br><span class="line">              <span class="keyword">as</span> ShareDataWidget?;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> shareDataWidget;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">bool</span> updateShouldNotify(covariant ShareDataWidget oldWidget) &#123;</span><br><span class="line">    <span class="keyword">return</span> oldWidget.data != data;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原理：</p>
+<ol>
+<li><p><code>dependOnInheritedWidgetOfExactType</code>方法将在下文解析</p>
+</li>
+<li><p><code>getElementForInheritedWidgetOfExactType</code>方法：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@override</span></span><br><span class="line">InheritedElement getElementForInheritedWidgetOfExactType&lt;T <span class="keyword">extends</span> InheritedWidget&gt;() &#123;</span><br><span class="line">  <span class="keyword">final</span> InheritedElement ancestor = _inheritedWidgets == <span class="keyword">null</span> ? <span class="keyword">null</span> : _inheritedWidgets[T];</span><br><span class="line">  <span class="keyword">return</span> ancestor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过上述两个函数既可以获取到InheritedElement实例，继而拿到了共享的数据</p>
+</li>
+</ol>
+<h2 id="刷新机制"><a href="#刷新机制" class="headerlink" title="刷新机制"></a>刷新机制</h2><blockquote>
+<p>InheritedElement和Element之间有一些交互，实际上自带了一套刷新机制</p>
+</blockquote>
+<p><img src="http://ucoon.tech/MyBlogImg/InheritedWidget%E5%88%B7%E6%96%B0%E6%9C%BA%E5%88%B6.jpg" alt=""></p>
+<ul>
+<li><p>InheritedElement存子节点Element：<code>_dependents</code>，这个变量用来存储需要刷新的子Element</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">InheritedElement</span> <span class="keyword">extends</span> <span class="title">ProxyElement</span> </span>&#123;</span><br><span class="line">  InheritedElement(InheritedWidget widget) : <span class="keyword">super</span>(widget);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">Map</span>&lt;<span class="built_in">Element</span>, <span class="built_in">Object</span>?&gt; _dependents = HashMap&lt;<span class="built_in">Element</span>, <span class="built_in">Object</span>?&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> debugDeactivated() &#123;</span><br><span class="line">    <span class="keyword">assert</span>(() &#123;</span><br><span class="line">      <span class="keyword">assert</span>(_dependents.isEmpty);</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;());</span><br><span class="line">    <span class="keyword">super</span>.debugDeactivated();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@protected</span></span><br><span class="line">  <span class="built_in">Object</span>? getDependencies(<span class="built_in">Element</span> dependent) &#123;</span><br><span class="line">    <span class="keyword">return</span> _dependents[dependent];</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@protected</span></span><br><span class="line">  <span class="keyword">void</span> setDependencies(<span class="built_in">Element</span> dependent, <span class="built_in">Object</span>? value) &#123;</span><br><span class="line">    _dependents[dependent] = value;</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@protected</span></span><br><span class="line">  <span class="keyword">void</span> updateDependencies(<span class="built_in">Element</span> dependent, <span class="built_in">Object</span>? aspect) &#123;</span><br><span class="line">    setDependencies(dependent, <span class="keyword">null</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>InheritedElement刷新子Element</p>
+<ol>
+<li>在<code>notifyClients</code>方法中，循环<code>_dependents</code>存储的Element，传入<code>notifyDependent</code></li>
+<li>在<code>notifyDependent</code>中，传入Element调用自身<code>didChangeDependencies</code>方法</li>
+<li>Element的<code>didChangeDependencies</code>方法会调用<code>markNeedsBuild</code>，来刷新自身</li>
+</ol>
+</li>
+<li><p><strong>InheritedWidget的子节点是如何将自身Element添加到<code>_dependents</code></strong></p>
+<p><code>dependOnInheritedWidgetOfExactType()</code>源码：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@override</span></span><br><span class="line">InheritedWidget dependOnInheritedWidgetOfExactType(&#123; <span class="built_in">Object</span> aspect &#125;) &#123;</span><br><span class="line">  <span class="keyword">assert</span>(_debugCheckStateIsActiveForAncestorLookup());</span><br><span class="line">  <span class="keyword">final</span> InheritedElement ancestor = _inheritedWidgets == <span class="keyword">null</span> ? <span class="keyword">null</span> : _inheritedWidgets[T];</span><br><span class="line">  <span class="keyword">if</span> (ancestor != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> dependOnInheritedElement(ancestor, aspect: aspect) <span class="keyword">as</span> T;</span><br><span class="line">  &#125;</span><br><span class="line">  _hadUnsatisfiedDependencies = <span class="keyword">true</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@override</span></span><br><span class="line">InheritedWidget dependOnInheritedElement(InheritedElement ancestor, &#123; <span class="built_in">Object</span> aspect &#125;) &#123;</span><br><span class="line">  <span class="keyword">assert</span>(ancestor != <span class="keyword">null</span>);</span><br><span class="line">  _dependencies ??= HashSet&lt;InheritedElement&gt;();</span><br><span class="line">  _dependencies.add(ancestor);</span><br><span class="line">  ancestor.updateDependencies(<span class="keyword">this</span>, aspect);</span><br><span class="line">  <span class="keyword">return</span> ancestor.widget;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  可以看到在调用<code>dependOnInheritedWidgetOfExactType</code>时，<code>InheritedWidget</code>和依赖它的子widget注册了依赖关系，之后当<code>InheritedWidget</code>发生变化时，就会更新依赖它的子widget，也就是会调用这些子widget的<code>didChangeDependencies()</code>和<code>build()</code>。</p>
+<ul>
+<li>在<code>dependOnInheritedElement</code>方法中，会传入<code>InheritedElement</code>实例<code>ancestor</code></li>
+<li><p><code>ancestor</code>会调用<code>updateDependencies</code>方法，将自身的Element实例传入，这样就添加到<code>_dependents</code>中了</p>
+<p>可以发现：<strong>调用<code>dependOnInheritedWidgetOfExactType()</code> 和 <code>getElementForInheritedWidgetOfExactType()</code>的区别就是前者会注册依赖关系，而后者不会</strong></p>
+</li>
+</ul>
+<h2 id="didChangeDependencies"><a href="#didChangeDependencies" class="headerlink" title="didChangeDependencies"></a>didChangeDependencies</h2><p><code>State</code>的生命周期之一，它会在<strong>“依赖”</strong>发生变化时被Flutter框架调用，而这个“依赖”指的就是子widget是否使用了父widget中<code>InheritedWidget</code>的数据！如果使用了，则代表子widget有依赖；如果没有使用则代表没有依赖。这种机制可以使子widget在所依赖的<code>InheritedWidget</code>变化时来更新自身！在数据发生变化时只对使用该数据的widget更新是合理并且性能友好的。</p>
+<p><strong>应该在didChangeDependencies中做什么？</strong></p>
+<p>如果需要在依赖改变后执行一些昂贵的操作，比如网络请求，这时最好的方式就是在此方法中执行，这样可以避免每次<code>build()</code>都执行这些昂贵操作。</p>
+<h1 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h1><blockquote>
+<p><code>Provider</code>是对<code>InheritedWidget</code>组件的上层封装，使其更易用，更易复用。</p>
+</blockquote>
+<p><img src="https://book.flutterchina.club/assets/img/7-3.531c5fdf.png" alt="Provider原理"></p>
+<p>原理：基于发布者-订阅者模式，Model变化后会自动通知<code>ChangeNotifierProvider</code>（订阅者），<code>ChangeNotifierProvider</code>内部会重新构建<code>InheritedWidget</code>，而依赖该<code>InheritedWidget</code>的子<code>widget</code>就会更新。</p>
+<p>使用Provider 优点：</p>
+<ol>
+<li>业务代码更关注数据了，只要更新Model，则UI会自动更新，而不用在状态改变后去手动调用<code>setState()</code>来显示更新页面</li>
+<li>数据改变的消息传递被屏蔽了，我们无需手动去处理状态改变事件的发布和订阅，这一切都被封装在Provider中了</li>
+<li>在大型复杂应用中，尤其是需要全局共享的状态非常多时，使用Provider将会大大简化代码逻辑，降低出错的概率，提高开发效率</li>
+</ol>
+<p>参考：</p>
+<p><a href="https://juejin.cn/post/6968272002515894303" target="_blank" rel="noopener">【源码篇】Flutter Provider的另一面（万字图文+插件）</a></p>
+<p><a href="https://book.flutterchina.club/chapter7/inherited_widget.html" target="_blank" rel="noopener">数据共享（InheritedWidget）</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/23/理解Flutter引擎线程模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -273,7 +651,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-23T20:27:23+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-23T20:25:47+08:00">
                 2022-04-23
               </time>
             
@@ -313,7 +691,7 @@
       
         
           
-            <h1 id="Flutter体系结构"><a href="#Flutter体系结构" class="headerlink" title="Flutter体系结构"></a>Flutter体系结构</h1><p><img src="http://ucoon.gitee.io/myblogimg/flutter_system_overview.png" alt="flutter_system_overview"></p>
+            <h1 id="Flutter体系结构"><a href="#Flutter体系结构" class="headerlink" title="Flutter体系结构"></a>Flutter体系结构</h1><p><img src="http://ucoon.tech/MyBlogImg/flutter_system_overview.png" alt="flutter_system_overview"></p>
 <h2 id="Framework"><a href="#Framework" class="headerlink" title="Framework"></a>Framework</h2><p>Framework是我们直接接触到的，它使用dart实现，包括Material Design风格的Widget，CuperTino风格的Widget，文本/图片/按钮等基础的Widgets，<code>Rendering</code>渲染、<code>Animation</code>动画、<code>Painting</code>图形绘制、<code>Gestures</code>手势等。</p>
 <h2 id="Engine"><a href="#Engine" class="headerlink" title="Engine"></a>Engine</h2><p>Engine引擎层使用C++实现，主要包括：Skia，Dart和shell。</p>
 <ul>
@@ -495,7 +873,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2022/04/04/Flutter Platform Channel原理/" itemprop="url">Flutter Platform Channel原理</a></h1>
+                <a class="post-title-link" href="/2022/04/04/Flutter Platform Channel原理/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -507,7 +885,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-04T22:59:44+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-04T22:59:09+08:00">
                 2022-04-04
               </time>
             
@@ -547,7 +925,8 @@
       
         
           
-            <p>概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考<a href="http://ucoon.tech/2022/01/27/Flutter-Plugin%E5%BC%80%E5%8F%91%E4%B8%8E%E5%8F%91%E5%B8%83/" target="_blank" rel="noopener">Flutter-Plugin开发与发布</a></p>
+            <hr>
+<h2 id="Flutter-Platform-Channel原理"><a href="#Flutter-Platform-Channel原理" class="headerlink" title="Flutter Platform Channel原理"></a>Flutter Platform Channel原理</h2><p>概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考<a href="http://ucoon.tech/2022/01/27/Flutter-Plugin%E5%BC%80%E5%8F%91%E4%B8%8E%E5%8F%91%E5%B8%83/" target="_blank" rel="noopener">Flutter-Plugin开发与发布</a></p>
 <blockquote>
 <p>Flutter平台特定的API支持不依赖于代码生成，而是依赖于灵活的消息传递的方式：</p>
 <p>应用的Flutter部分通过平台通道（Platform Channel）将传递的数据编码成消息的形式，跨线程发送到其应用程序的所在的宿主（iOS或Android）</p>
@@ -575,182 +954,6 @@
 <p>参考：</p>
 <p><a href="http://gityuan.com/2019/08/10/flutter_channel/" target="_blank" rel="noopener">深入理解Flutter的Platform Channel机制</a></p>
 <p><a href="https://zhuanlan.zhihu.com/p/139600343" target="_blank" rel="noopener">全面解析Flutter Platform Channel原理</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/27/Flutter-Plugin开发与发布/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/01/27/Flutter-Plugin开发与发布/" itemprop="url">Flutter Plugin开发与发布</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-27T15:29:41+08:00">
-                2022-01-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>以开发腾讯云基础版人脸核身Flutter插件为例，总结Flutter Plugin开发和发布流程。</p>
-<p>项目地址：<a href="https://github.com/Ucoon/wb_cloud_face" target="_blank" rel="noopener">https://github.com/Ucoon/wb_cloud_face</a></p>
-<h1 id="1-创建-package"><a href="#1-创建-package" class="headerlink" title="1. 创建 package"></a>1. 创建 package</h1><ul>
-<li><p>方式一：通过<code>Android Studio</code>直接创建<code>Flutter Project</code>（选择Plugin类型）</p>
-<p>可选择使用的语言和插件支持的平台</p>
-<p><img src="http://ucoon.gitee.io/myblogimg/Flutter_Plugin_1.png" alt="选择语言"></p>
-</li>
-<li><p>方式二：通过命令行创建Flutter Plugin Project（使用<code>--template=plugin</code>）</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter create --org tech.ucoon --template=plugin wb_cloud_face</span><br></pre></td></tr></table></figure>
-<p>可以使用-i为iOS指定开发语言，使用-a为Android指定开发语言，如：</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter create --org tech.ucoon --template=plugin -i swift -a kotlin wb_cloud_face</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h1 id="2-实现包package"><a href="#2-实现包package" class="headerlink" title="2. 实现包package"></a>2. 实现包package</h1><ol>
-<li><p>在lib下的dart文件中定义接口：<code>openCloudFaceService</code></p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> Future&lt;WbCloudFaceVerifyResult&gt; openCloudFaceService(&#123;</span><br><span class="line">  required WbCloudFaceParams params,</span><br><span class="line">&#125;) <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="keyword">final</span> res = <span class="keyword">await</span> _channel.invokeMethod(</span><br><span class="line">      <span class="string">'openCloudFaceService'</span>, params.toJson());</span><br><span class="line">  <span class="keyword">return</span> WbCloudFaceVerifyResult.fromJson(json.decode(res));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>添加Android平台实现的代码(android目录下)</p>
-<p>注意事项：</p>
-<ul>
-<li><p><code>import io.flutter.embedding.engine.plugins.FlutterPlugin;</code>导入plugin相关代码报红</p>
-<p>参考<a href="https://stackoverflow.com/questions/62172420/flutter-not-found-when-developing-plugin-for-android" target="_blank" rel="noopener">stack overflow的回答</a></p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You should open the project <span class="keyword">in</span> android studio from the example/android location.</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>插件中引入第三方本地aar文件时，需在插件<code>/android/build.gradle</code>中添加<code>flatDir</code></p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rootProject.allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        ...</span><br><span class="line">        flatDir &#123;</span><br><span class="line">            dirs project(<span class="string">':wb_cloud_face'</span>).file(<span class="string">'libs'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>添加iOS平台实现的代码(iOS目录下)</p>
-<p>注意事项：</p>
-<ul>
-<li><p>在podspec文件(<code>podspec是一个描述pod库版本文件</code>)添加说明：<code>name</code>，<code>version</code>、<code>summary</code>、<code>homepage</code>、<code>author</code></p>
-</li>
-<li><p>引用第三方静态库Framework：在iOS目录下新建Framework文件夹，把需要的三方库拷贝到Framework文件夹下，并在podspec文件中配置如下三个字段</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s.vendored_frameworks <span class="comment">//第三方静态库的.framework文件路径</span></span><br><span class="line">s.vendored_libraries<span class="comment">//第三方静态库的.a文件路径</span></span><br><span class="line">s.resource <span class="comment">//第三方静态库的.bundle文件路径</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>至此plugin开发完成</p>
-</li>
-</ol>
-<h1 id="3-发布Plugin"><a href="#3-发布Plugin" class="headerlink" title="3. 发布Plugin"></a>3. 发布Plugin</h1><ol>
-<li>在发布之前，检查<code>pubspec.yaml</code>(检查<code>description</code>、<code>version</code>、<code>homepage</code>字段)、<code>README.md</code>（使用教程）以及<code>CHANGELOG.md</code>（版本记录）文件，以确保其内容的完整性和正确性。</li>
-<li>然后, 运行 dry-run 命令以查看是否都准备OK了: <code>flutter packages pub publish --dry-run</code></li>
-<li>最后, 运行发布命令: <code>flutter packages pub publish</code></li>
-</ol>
-<p>注意事项：</p>
-<ul>
-<li><p>发布插件压缩之后的包必须小于100M</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Your package must be smaller than <span class="number">100</span> MB after gzip compression. If it’s too large, consider splitting it into multiple packages, using a .pubignore file to remove unnecessary content, or cutting down on the number of included resources or examples.</span><br></pre></td></tr></table></figure>
-<p>针对这种情况，可考虑搭建Flutter pub私有仓库，或者以github方式引用插件</p>
-</li>
-</ul>
-<p>参考资料：</p>
-<p><a href="https://flutterchina.club/developing-packages/#plugin" target="_blank" rel="noopener">开发Packages和插件</a></p>
-<p><a href="https://www.jianshu.com/p/9077fb85a074" target="_blank" rel="noopener">Flutter Plugin引用iOS三方静态库Framework</a></p>
-<p><a href="https://cloud.tencent.com/document/product/1007/35866" target="_blank" rel="noopener">腾讯云人脸核身SDK文档</a></p>
 
           
         
@@ -830,7 +1033,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-27T15:21:57+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-27T15:20:48+08:00">
                 2022-01-27
               </time>
             
@@ -902,17 +1105,17 @@
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">注意事项：</span><br><span class="line"><span class="number">1.</span> Bundle ID的区别</span><br><span class="line">   - Explicit App ID「明确的 App ID」，一般格式是：com.company.appName；这种 id 只能用在一个app上，每一个新应用都要创建并只有一个。</span><br><span class="line">   - Wildcard App ID「通配符 App ID」， 一般格式是：com.domainname.* ；这种 id 可以用在多个应用上，虽然方便，但是使用这种id的应用不能使用通知功能，所以不常用。</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>在mac上通过钥匙串应用创建两个证书请求文件（CSR文件），分别对应Development环境和Distribution环境</p>
-<p><img src="http://ucoon.gitee.io/myblogimg/csr文件申请_1.png" style="zoom:25%;"></p>
+<p><img src="http://ucoon.tech/MyBlogImg/csr文件申请_1.png" style="zoom:25%;"></p>
 </li>
 </ol>
-<p>   <img src="http://ucoon.gitee.io/myblogimg/csr文件申请_2.png" style="zoom:25%;"></p>
+<p>   <img src="http://ucoon.tech/MyBlogImg/csr文件申请_2.png" style="zoom:25%;"></p>
 <ol start="4">
 <li><p>Create a New Certificate(证书)</p>
 <ol>
 <li><p>分别申请开发证书（iOS Development）和分发证书（iOS Distribution），开发证书用于开发和调试应用程序，可用于真机调试；生产证书用于打包上传App Store或者蒲公英，用于验证开发者身份。如果项目集成了推送功能，还需配置推送证书，推送证书同样也分两种：开发环境和生产环境（Apple Push Notification service SSL ：Sandbox &amp; Production)，同时生成的p12文件需上传到服务端后台（如阿里云移动推送后台）</p>
 </li>
 <li><p>生成后的证书需要下载并通过钥匙串导入到Mac</p>
-<p><img src="http://ucoon.gitee.io/myblogimg/证书导入.png" alt="证书导入" style="zoom: 25%;"></p>
+<p><img src="http://ucoon.tech/MyBlogImg/证书导入.png" alt="证书导入" style="zoom: 25%;"></p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">注意事项：</span><br><span class="line">    打开钥匙串应用，在点击登录--&gt;我的证书页面下，双击证书导入即可</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
@@ -946,6 +1149,182 @@
 <p><a href="https://zhuanlan.zhihu.com/p/69162456" target="_blank" rel="noopener">iOS 证书配置</a></p>
 <p><a href="https://flutter.cn/docs/deployment/ios" target="_blank" rel="noopener">构建和发布为 iOS 应用</a></p>
 <p><a href="https://www.pgyer.com/tools/udid" target="_blank" rel="noopener">一步快速获取 iOS 设备的 UDID</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/27/Flutter-Plugin开发与发布/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/01/27/Flutter-Plugin开发与发布/" itemprop="url">Flutter Plugin开发与发布</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-27T15:20:48+08:00">
+                2022-01-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>以开发腾讯云基础版人脸核身Flutter插件为例，总结Flutter Plugin开发和发布流程。</p>
+<p>项目地址：<a href="https://github.com/Ucoon/wb_cloud_face" target="_blank" rel="noopener">https://github.com/Ucoon/wb_cloud_face</a></p>
+<h1 id="1-创建-package"><a href="#1-创建-package" class="headerlink" title="1. 创建 package"></a>1. 创建 package</h1><ul>
+<li><p>方式一：通过<code>Android Studio</code>直接创建<code>Flutter Project</code>（选择Plugin类型）</p>
+<p>可选择使用的语言和插件支持的平台</p>
+<p><img src="http://ucoon.tech/MyBlogImg/Flutter_Plugin_1.png" alt="选择语言"></p>
+</li>
+<li><p>方式二：通过命令行创建Flutter Plugin Project（使用<code>--template=plugin</code>）</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter create --org tech.ucoon --template=plugin wb_cloud_face</span><br></pre></td></tr></table></figure>
+<p>可以使用-i为iOS指定开发语言，使用-a为Android指定开发语言，如：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flutter create --org tech.ucoon --template=plugin -i swift -a kotlin wb_cloud_face</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="2-实现包package"><a href="#2-实现包package" class="headerlink" title="2. 实现包package"></a>2. 实现包package</h1><ol>
+<li><p>在lib下的dart文件中定义接口：<code>openCloudFaceService</code></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> Future&lt;WbCloudFaceVerifyResult&gt; openCloudFaceService(&#123;</span><br><span class="line">  required WbCloudFaceParams params,</span><br><span class="line">&#125;) <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="keyword">final</span> res = <span class="keyword">await</span> _channel.invokeMethod(</span><br><span class="line">      <span class="string">'openCloudFaceService'</span>, params.toJson());</span><br><span class="line">  <span class="keyword">return</span> WbCloudFaceVerifyResult.fromJson(json.decode(res));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加Android平台实现的代码(android目录下)</p>
+<p>注意事项：</p>
+<ul>
+<li><p><code>import io.flutter.embedding.engine.plugins.FlutterPlugin;</code>导入plugin相关代码报红</p>
+<p>参考<a href="https://stackoverflow.com/questions/62172420/flutter-not-found-when-developing-plugin-for-android" target="_blank" rel="noopener">stack overflow的回答</a></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You should open the project <span class="keyword">in</span> android studio from the example/android location.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>插件中引入第三方本地aar文件时，需在插件<code>/android/build.gradle</code>中添加<code>flatDir</code></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rootProject.allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        ...</span><br><span class="line">        flatDir &#123;</span><br><span class="line">            dirs project(<span class="string">':wb_cloud_face'</span>).file(<span class="string">'libs'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>添加iOS平台实现的代码(iOS目录下)</p>
+<p>注意事项：</p>
+<ul>
+<li><p>在podspec文件(<code>podspec是一个描述pod库版本文件</code>)添加说明：<code>name</code>，<code>version</code>、<code>summary</code>、<code>homepage</code>、<code>author</code></p>
+</li>
+<li><p>引用第三方静态库Framework：在iOS目录下新建Framework文件夹，把需要的三方库拷贝到Framework文件夹下，并在podspec文件中配置如下三个字段</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s.vendored_frameworks <span class="comment">//第三方静态库的.framework文件路径</span></span><br><span class="line">s.vendored_libraries<span class="comment">//第三方静态库的.a文件路径</span></span><br><span class="line">s.resource <span class="comment">//第三方静态库的.bundle文件路径</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>至此plugin开发完成</p>
+</li>
+</ol>
+<h1 id="3-发布Plugin"><a href="#3-发布Plugin" class="headerlink" title="3. 发布Plugin"></a>3. 发布Plugin</h1><ol>
+<li>在发布之前，检查<code>pubspec.yaml</code>(检查<code>description</code>、<code>version</code>、<code>homepage</code>字段)、<code>README.md</code>（使用教程）以及<code>CHANGELOG.md</code>（版本记录）文件，以确保其内容的完整性和正确性。</li>
+<li>然后, 运行 dry-run 命令以查看是否都准备OK了: <code>flutter packages pub publish --dry-run</code></li>
+<li>最后, 运行发布命令: <code>flutter packages pub publish</code></li>
+</ol>
+<p>注意事项：</p>
+<ul>
+<li><p>发布插件压缩之后的包必须小于100M</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Your package must be smaller than <span class="number">100</span> MB after gzip compression. If it’s too large, consider splitting it into multiple packages, using a .pubignore file to remove unnecessary content, or cutting down on the number of included resources or examples.</span><br></pre></td></tr></table></figure>
+<p>针对这种情况，可考虑搭建Flutter pub私有仓库，或者以github方式引用插件</p>
+</li>
+</ul>
+<p>参考资料：</p>
+<p><a href="https://flutterchina.club/developing-packages/#plugin" target="_blank" rel="noopener">开发Packages和插件</a></p>
+<p><a href="https://www.jianshu.com/p/9077fb85a074" target="_blank" rel="noopener">Flutter Plugin引用iOS三方静态库Framework</a></p>
+<p><a href="https://cloud.tencent.com/document/product/1007/35866" target="_blank" rel="noopener">腾讯云人脸核身SDK文档</a></p>
 
           
         
@@ -1601,379 +1980,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/04/Android事件分发机制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/04/Android事件分发机制/" itemprop="url">Android事件分发机制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-04T15:02:51+08:00">
-                2019-05-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本文结构：</p>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/Android事件分发机制.png" alt="Android事件分发机制"></p>
-<h1 id="1-相关概念"><a href="#1-相关概念" class="headerlink" title="1. 相关概念"></a>1. 相关概念</h1><h2 id="1-1-事件"><a href="#1-1-事件" class="headerlink" title="1.1 事件"></a>1.1 事件</h2><p>事件分发的对象为事件（MotionEvent）：当用户触摸屏幕时（View或ViewGroup派生的控件），将产生点击事件（Touch事件）</p>
-<blockquote>
-<p>Touch事件相关细节（发生触摸的位置、时间、历史记录、手势动作等）被封装成MotionEvent对象</p>
-</blockquote>
-<p>典型的事件类型主要有：</p>
-<ol>
-<li>MotionEvent.ACTION_DOWN：手指刚触摸屏幕；</li>
-<li>MotionEvent.ACTION_MOVE：手指在屏幕上滑动；</li>
-<li>MotionEvent.ACTION_UP：手指从屏幕上松开的一瞬间；</li>
-<li>MotionEvent.ACTION_CANCEL：非人为原因结束本次事件；</li>
-</ol>
-<p>事件列：从手指触摸屏幕到手指离开屏幕，这个过程产生的一系列事件。任何事件列都是以DOWN事件开始，UP事件结束，中间有无数的MOVE事件。</p>
-<h2 id="1-2-事件分发的本质"><a href="#1-2-事件分发的本质" class="headerlink" title="1.2 事件分发的本质"></a>1.2 事件分发的本质</h2><p>所谓事件分发机制，其实就是对MotionEvent事件的分发过程，即当一个MotionEvent产生以后，系统需要将这个事件传递给一个具体的View，而这个传递的过程就是分发过程。</p>
-<h2 id="1-3事件的传递"><a href="#1-3事件的传递" class="headerlink" title="1.3事件的传递"></a>1.3事件的传递</h2><p>一个点击事件产生后，传递的顺序是Activity（Window）–&gt; ViewGroup –&gt; View。</p>
-<h1 id="2-事件分发的流程"><a href="#2-事件分发的流程" class="headerlink" title="2. 事件分发的流程"></a>2. 事件分发的流程</h1><p>点击事件的分发过程由三个很重要的方法来共同完成：<code>dispatchTouchEvent()</code>，<code>onInterceptTouchEvent()</code>，<code>onTouchEvent()</code></p>
-<ol>
-<li>方法介绍具体如下表所示：</li>
-</ol>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/Android事件分发方法.png" alt="Android事件分发方法"></p>
-<ol start="2">
-<li>Android事件分发流程如下：</li>
-</ol>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/事件分发业务流程图.jpg" alt="事件分发业务流程图"></p>
-<p><strong>总结</strong>： 当一个点击事件发生时，事件传递的过程如下：</p>
-<ol>
-<li>事件最先传递到Activity的<code>dispatchTouchEvent()</code>进行事件分发</li>
-<li>然后调用Window类实现类<code>PhoneWindow</code>的<code>SuperDispatchTouchEvent()</code></li>
-<li>调用DecorView的<code>SuperDispatchTouchEvent()</code></li>
-<li>调用ViewGroup的<code>dispatchTouchEvent()</code></li>
-<li>如果ViewGroup的<code>onInterceptTouchEvent()</code>返回true，则表示它要拦截当前事件，事件就由ViewGroup自己处理，调用自身的<code>onTouchEvent()</code>；如果返回false，表示它不拦截当前事件，这时事件会传递到子元素，子元素的<code>dispatchTouchEvent()</code>会被调用，如此反复</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/02/Android动画——基础篇/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/02/Android动画——基础篇/" itemprop="url">Android动画——基础篇</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-02T14:24:37+08:00">
-                2019-05-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本文结构：</p>
-<p><img src="http://sdssdccddd.gitee.io/myblogimg/Android动画.png" alt="Android动画"></p>
-<h1 id="1-种类"><a href="#1-种类" class="headerlink" title="1.种类"></a>1.种类</h1><p>Android的动画可以分为三种：View动画、帧动画和属性动画；</p>
-<ol>
-<li>View动画通过对场景里的对象不断做<strong>图像变化</strong>（平移、缩放、旋转、渐变），从而产生动画效果，它是一种渐近式动画，并且View动画支持自定义；</li>
-<li>帧动画通过顺序播放一系列图像从而达到动画效果，可以理解为<strong>图片切换动画</strong>；</li>
-<li>属性动画通过动态地<strong>改变对象的属性</strong>从而达到动画效果，属性动画为API11的新特性。</li>
-</ol>
-<h1 id="2-View动画"><a href="#2-View动画" class="headerlink" title="2.View动画"></a>2.View动画</h1><p>View动画的四种变换如下表所示：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>标签</th>
-<th>子类</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>平移动画</td>
-<td><code>&lt;translate&gt;</code></td>
-<td><code>TranslateAnimation</code></td>
-</tr>
-<tr>
-<td>缩放动画</td>
-<td><code>&lt;scale&gt;</code></td>
-<td><code>ScaleAnimation</code></td>
-</tr>
-<tr>
-<td>旋转动画</td>
-<td><code>&lt;rotate&gt;</code></td>
-<td><code>RotateAnimation</code></td>
-</tr>
-<tr>
-<td>透明度动画</td>
-<td><code>&lt;alpha&gt;</code></td>
-<td><code>AlphaAnimation</code></td>
-</tr>
-</tbody>
-</table>
-<p>上述的四种动画既可以通过XML来定义，也可以通过代码来动态创建。</p>
-<h2 id="2-1-在XML中定义动画"><a href="#2-1-在XML中定义动画" class="headerlink" title="2.1 在XML中定义动画"></a>2.1 在XML中定义动画</h2><p>动画xml文件定义在：res/anim/目录下，一些常用语法及属性解释如下所示：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="comment">&lt;!--set：interpolator：动画采用的插值器</span></span><br><span class="line"><span class="comment">    shareInterpolator：集合中的动画是否和集合共享同一个插值器--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:interpolator</span>=<span class="string">"@android:anim/accelerate_decelerate_interpolator"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:shareInterpolator</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--平移：fromXDelta、toXDelta：水平方向移动的起始值和结束值</span></span><br><span class="line"><span class="comment">    fromYDelta、toYDelta：竖直方向移动的起始值和结束值--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">translate</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"2000"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:fromXDelta</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:toXDelta</span>=<span class="string">"100%"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:fromYDelta</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:toYDelta</span>=<span class="string">"100%"</span>&gt;</span><span class="tag">&lt;/<span class="name">translate</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--缩放：fromXScale、toXScale：水平方向缩放的起始值和结束值</span></span><br><span class="line"><span class="comment">    fromYScale、toYScale：竖直方向缩放的起始值和结束值</span></span><br><span class="line"><span class="comment">    pivotX、pivotY：轴点的位置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scale</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"2000"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:fromXScale</span>=<span class="string">"1"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:toXScale</span>=<span class="string">"0.5"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:fromYScale</span>=<span class="string">"1"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:toYScale</span>=<span class="string">"0.5"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:pivotX</span>=<span class="string">"50%"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:pivotY</span>=<span class="string">"50%"</span>&gt;</span><span class="tag">&lt;/<span class="name">scale</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--旋转 fromDegrees：旋转的起始值；toDegrees：旋转的结束值</span></span><br><span class="line"><span class="comment">    pivotX、pivotY：轴点的位置</span></span><br><span class="line"><span class="comment">     fillAfter：动画结束后View是否停留在结束位置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">rotate</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"2000"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:fromDegrees</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:toDegrees</span>=<span class="string">"360"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:pivotX</span>=<span class="string">"50%"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:pivotY</span>=<span class="string">"50%"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:fillAfter</span>=<span class="string">"true"</span>&gt;</span><span class="tag">&lt;/<span class="name">rotate</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--渐变 fromAlpha：渐变的起始值，toAlpha：渐变的结束值--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">alpha</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"2000"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:fromAlpha</span>=<span class="string">"1.0"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:toAlpha</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">        &gt;</span><span class="tag">&lt;/<span class="name">alpha</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><code>&lt;set&gt;</code>标签表示动画集合，对应<code>AnimationSet</code>类，它可以包含若干个动画，并且它的内部也是可以嵌套其他动画集合。</p>
-<p>动画定义如上所示，如何应用上面的动画呢，如下所示：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Button button = (Button)findViewById(R.id.button);</span><br><span class="line">Animation animation = AnimationUtils.loadAnimation(<span class="keyword">this</span>, R.anim.view_anim);</span><br><span class="line">button.startAnimation(animation)</span><br></pre></td></tr></table></figure>
-<h2 id="2-2-在Java中定义动画"><a href="#2-2-在Java中定义动画" class="headerlink" title="2.2 在Java中定义动画"></a>2.2 在Java中定义动画</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AnimationTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//平移动画</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clickToTranslate</span><span class="params">(View targetView)</span></span>&#123;</span><br><span class="line">        TranslateAnimation translateAnimation = <span class="keyword">new</span> TranslateAnimation(</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">1</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">1</span>);</span><br><span class="line">        translateAnimation.setDuration(<span class="number">2000</span>);</span><br><span class="line">        targetView.startAnimation(translateAnimation);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//缩放动画</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clickToScale</span><span class="params">(View targetView)</span></span>&#123;</span><br><span class="line">        ScaleAnimation scaleAnimation = <span class="keyword">new</span> ScaleAnimation(</span><br><span class="line">                <span class="number">1</span>, <span class="number">0.5f</span>,</span><br><span class="line">                <span class="number">1</span>, <span class="number">0.5f</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0.5f</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0.5f</span>);</span><br><span class="line">        scaleAnimation.setDuration(<span class="number">2000</span>);</span><br><span class="line">        targetView.startAnimation(scaleAnimation);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//旋转动画</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clickToRotate</span><span class="params">(View targetView)</span></span>&#123;</span><br><span class="line">        RotateAnimation rotateAnimation = <span class="keyword">new</span> RotateAnimation(</span><br><span class="line">                <span class="number">0</span>, <span class="number">360</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0.5f</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0.5F</span></span><br><span class="line">        );</span><br><span class="line">        rotateAnimation.setDuration(<span class="number">2000</span>);</span><br><span class="line">        targetView.startAnimation(rotateAnimation);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//渐变动画</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clickToAlpha</span><span class="params">(View targetView)</span></span>&#123;</span><br><span class="line">        AlphaAnimation alphaAnimation = <span class="keyword">new</span> AlphaAnimation(</span><br><span class="line">                <span class="number">1</span>, <span class="number">0.5f</span></span><br><span class="line">        );</span><br><span class="line">        alphaAnimation.setDuration(<span class="number">2000</span>);</span><br><span class="line">        targetView.startAnimation(alphaAnimation);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//组合动画</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clickToSet</span><span class="params">(View targetView)</span></span>&#123;</span><br><span class="line">        AlphaAnimation alphaAnimation = <span class="keyword">new</span> AlphaAnimation(</span><br><span class="line">                <span class="number">1</span>, <span class="number">0.5f</span></span><br><span class="line">        );</span><br><span class="line">        alphaAnimation.setDuration(<span class="number">2000</span>);</span><br><span class="line"></span><br><span class="line">        RotateAnimation rotateAnimation = <span class="keyword">new</span> RotateAnimation(</span><br><span class="line">                <span class="number">0</span>, <span class="number">360</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0.5f</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0.5F</span></span><br><span class="line">        );</span><br><span class="line">        rotateAnimation.setDuration(<span class="number">2000</span>);</span><br><span class="line"></span><br><span class="line">        ScaleAnimation scaleAnimation = <span class="keyword">new</span> ScaleAnimation(</span><br><span class="line">                <span class="number">1</span>, <span class="number">0.5f</span>,</span><br><span class="line">                <span class="number">1</span>, <span class="number">0.5f</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0.5f</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0.5f</span>);</span><br><span class="line">        scaleAnimation.setDuration(<span class="number">2000</span>);</span><br><span class="line"></span><br><span class="line">        TranslateAnimation translateAnimation = <span class="keyword">new</span> TranslateAnimation(</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">1</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">0</span>,</span><br><span class="line">                Animation.RELATIVE_TO_SELF, <span class="number">1</span>);</span><br><span class="line">        translateAnimation.setDuration(<span class="number">2000</span>);</span><br><span class="line"></span><br><span class="line">        AnimationSet animationSet = <span class="keyword">new</span> AnimationSet(<span class="keyword">true</span>);</span><br><span class="line">        animationSet.addAnimation(alphaAnimation);</span><br><span class="line">        animationSet.addAnimation(translateAnimation);</span><br><span class="line">        animationSet.addAnimation(rotateAnimation);</span><br><span class="line">        animationSet.addAnimation(scaleAnimation);</span><br><span class="line">        <span class="comment">//设置动画过程监听</span></span><br><span class="line">        animationSet.setAnimationListener(<span class="keyword">new</span> Animation.AnimationListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationStart</span><span class="params">(Animation animation)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationEnd</span><span class="params">(Animation animation)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationRepeat</span><span class="params">(Animation animation)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        targetView.startAnimation(animationSet);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//帧动画</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clickToAnimationList</span><span class="params">(View targetView)</span></span>&#123;</span><br><span class="line">        targetView.setBackgroundResource(R.drawable.fram_animation_list);</span><br><span class="line">        AnimationDrawable drawable = (AnimationDrawable) targetView.getBackground();</span><br><span class="line">        drawable.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>View的基础使用就如上所述，当然除了系统提供的这四种View动画之外，我们还可以自定义View动画。这里简单说下它的用法：派生一个新动画需要继承Animation抽象类，然后重写它的initialize和applyTransformation方法，在initialize方法中做一些初始化工作，在applyTransformation中进行相应的矩形变换。</p>
-<h1 id="3-帧动画"><a href="#3-帧动画" class="headerlink" title="3. 帧动画"></a>3. 帧动画</h1><p>帧动画就是顺序播放一组预先设定好的图片，系统提供了<code>AnimationDrawable</code>类来使用帧动画，系统提供的标签有：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">animation-list</span>&gt;</span>、<span class="tag">&lt;<span class="name">animation-rotate</span>&gt;</span>、<span class="tag">&lt;<span class="name">animation-selector</span>&gt;</span>、<span class="tag">&lt;<span class="name">animation-vector</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>帧动画的使用比较简单，以<code>&lt;animation-list&gt;</code>标签为例使用如下：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">animation-list</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/ic_launcher_background"</span> <span class="attr">android:duration</span>=<span class="string">"200"</span>&gt;</span><span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/ic_launcher_background"</span> <span class="attr">android:duration</span>=<span class="string">"200"</span>&gt;</span><span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/ic_launcher_background"</span> <span class="attr">android:duration</span>=<span class="string">"200"</span>&gt;</span><span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/ic_launcher_background"</span> <span class="attr">android:duration</span>=<span class="string">"200"</span>&gt;</span><span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">animation-list</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>然后将上述Drawable作为view的背景并通过Drawable来播放即可：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//帧动画</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clickToAnimationList</span><span class="params">(View targetView)</span></span>&#123;</span><br><span class="line">        targetView.setBackgroundResource(R.drawable.fram_animation_list);</span><br><span class="line">        AnimationDrawable drawable = (AnimationDrawable) targetView.getBackground();</span><br><span class="line">        drawable.start();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>需要注意的是帧动画比较容易引起内存溢出OOM，所以在使用帧动画时应尽量避免使用过多尺寸较大的图片</p>
-<h1 id="4-属性动画"><a href="#4-属性动画" class="headerlink" title="4. 属性动画"></a>4. 属性动画</h1><p>属性动画是对任意对象的属性进行动画而不仅仅是View，因此所有补间动画的内容都可以通过属性动画实现。</p>
-<h2 id="4-1-用法"><a href="#4-1-用法" class="headerlink" title="4.1 用法"></a>4.1 用法</h2><p>先来看一下属性动画中常用的几个类和对应标签：</p>
-<table>
-<thead>
-<tr>
-<th>标签</th>
-<th>子类</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>&lt;set&gt;</code></td>
-<td><code>AnimatorSet</code></td>
-</tr>
-<tr>
-<td><code>&lt;animator&gt;`</code></td>
-<td><code>ValueAnimator</code></td>
-</tr>
-<tr>
-<td><code>&lt;objectAnimator&gt;</code></td>
-<td><code>ObjectAnimator</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="4-1-1-在XML中定义动画"><a href="#4-1-1-在XML中定义动画" class="headerlink" title="4.1.1 在XML中定义动画"></a>4.1.1 在XML中定义动画</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:ordering</span>=<span class="string">"together"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:propertyName</span>=<span class="string">"x"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"3000"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:valueTo</span>=<span class="string">"200"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:valueType</span>=<span class="string">"intType"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">objectAnimator</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:propertyName</span>=<span class="string">"y"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:duration</span>=<span class="string">"3000"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:valueTo</span>=<span class="string">"300"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:valueType</span>=<span class="string">"intType"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">set</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>如何使用上面的属性动画呢，如下所示：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">animatorFroResourse</span><span class="params">(Context context, View view)</span></span>&#123;</span><br><span class="line">    AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.property_anim);</span><br><span class="line">    animatorSet.setTarget(view);</span><br><span class="line">    animatorSet.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="4-1-2-在Java中定义动画"><a href="#4-1-2-在Java中定义动画" class="headerlink" title="4.1.2 在Java中定义动画"></a>4.1.2 在Java中定义动画</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 属性动画</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PropertyAnimation</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//旋转</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">rtateAnimation</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, <span class="string">"rotation"</span>,</span><br><span class="line">                <span class="number">0f</span>, <span class="number">360f</span>);</span><br><span class="line">        objectAnimator.setDuration(<span class="number">2000</span>);</span><br><span class="line">        objectAnimator.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//渐变</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">alphaAnimation</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, <span class="string">"alpha"</span>,</span><br><span class="line">                <span class="number">1.0f</span>, <span class="number">0.8f</span>, <span class="number">0.6f</span>, <span class="number">0.4f</span>, <span class="number">0.2f</span>, <span class="number">0f</span>);</span><br><span class="line">        <span class="comment">//setRepeatCount：设置动画的重复次数（-1表示无限重复）</span></span><br><span class="line">        objectAnimator.setRepeatCount(-<span class="number">1</span>);</span><br><span class="line">        <span class="comment">//setRepeatMode：设置动画的重复模式（reverse:逆向重复，restart：连续重复）</span></span><br><span class="line">        objectAnimator.setRepeatMode(ObjectAnimator.REVERSE);</span><br><span class="line">        objectAnimator.setDuration(<span class="number">2000</span>);</span><br><span class="line">        objectAnimator.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//组合</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setAnimation</span><span class="params">(View view)</span></span>&#123;</span><br><span class="line">        ObjectAnimator alpha = ObjectAnimator.ofFloat(view, <span class="string">"alpha"</span>,</span><br><span class="line">                <span class="number">1.0f</span>, <span class="number">0.8f</span>, <span class="number">0.6f</span>, <span class="number">0.4f</span>, <span class="number">0.2f</span>, <span class="number">0f</span>);</span><br><span class="line">        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, <span class="string">"scaleX"</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>);</span><br><span class="line">        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, <span class="string">"scaleY"</span>, <span class="number">0.0f</span>, <span class="number">1.0f</span>);</span><br><span class="line">        ObjectAnimator rotation = ObjectAnimator.ofFloat(view, <span class="string">"rotation"</span>, <span class="number">0f</span>, <span class="number">360f</span>);</span><br><span class="line">        ObjectAnimator translateX = ObjectAnimator.ofFloat(view, <span class="string">"translationX"</span>, <span class="number">100</span>, <span class="number">400</span>);</span><br><span class="line">        ObjectAnimator translateY = ObjectAnimator.ofFloat(view, <span class="string">"translationY"</span>, <span class="number">100</span>, <span class="number">750</span>);</span><br><span class="line">        AnimatorSet animatorSet = <span class="keyword">new</span> AnimatorSet();</span><br><span class="line">        animatorSet.playTogether(scaleX, scaleY, rotation, translateX, translateY);</span><br><span class="line">        animatorSet.setDuration(<span class="number">2000</span>);</span><br><span class="line">        animatorSet.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="4-2-工作原理"><a href="#4-2-工作原理" class="headerlink" title="4.2 工作原理"></a>4.2 工作原理</h2><p>属性动画要求动画作用的对象提供该属性的get和set方法，属性动画根据外界传递的该属性的初始值和最终值，以动画的效果多次去调用set方法，每次传递给set方法的值都不一样，确切来说是随着时间的推移，所传递的值越来越接近最终值。</p>
-<blockquote>
-<p>属性动画的运行机制是通过不断地对值进行操作来实现的。而初始值和结束值之间的动画过渡则由ValueAnimator这个类来负责计算的。它的内部使用一种时间循环的机制来计算值与值之间的动画过渡，我们只需要将初始值和结束值提供给ValueAnimator，并且告诉它动画所需运行的时长，那么ValueAnimator就会自动帮我们完成从初始值平滑的过渡到结束值这样的效果。</p>
-</blockquote>
-<p><code>ValueAnimator</code>是怎么样实现从初始值平滑过渡到结束值的呢，这个就是由类型估值器<code>TypeEvaluator</code>和时间插值器<code>TimeInterpolator</code>共同决定的。</p>
-<h3 id="4-2-1-插值器和估值器"><a href="#4-2-1-插值器和估值器" class="headerlink" title="4.2.1 插值器和估值器"></a>4.2.1 插值器和估值器</h3><ol>
-<li><code>TimeInterpolator</code>（时间插值器），它的作用是根据时间流逝的百分比来计算出当前属性值改变的百分比，它决定了动画从初始值过渡到结束值的节奏，系统预置的有<code>LinearInterpolator</code>（线性插值器：匀速动画）、<code>AccelerateDecelerateInterpolator</code>（加速减速插值器：动画两头慢中间快）和<code>DecelerateInterpolator</code>（减速插值器：动画越来越慢）</li>
-<li><code>TypeInterpolator</code>（类型估值器），它的作用是根据当前属性改变的百分比来计算改变后的属性值，它决定了动画如何从初始值过渡到结束值，系统预置的有<code>IntEvaluator</code>（针对整型属性）、<code>FloatEvaluator</code>（针对浮点型属性）和<code>ArgbEvaluator</code>（针对Color属性）</li>
-</ol>
-<p>对于属性动画也可以自定义方式实现所需效果。</p>
-<h1 id="5-使用动画的注意实现"><a href="#5-使用动画的注意实现" class="headerlink" title="5. 使用动画的注意实现"></a>5. 使用动画的注意实现</h1><ol>
-<li><strong>OOM问题</strong>：这个问题主要出现在帧动画中，当图片数量较多且图片较大时就极易出现OOM。</li>
-<li><strong>内存泄漏</strong>：在属性动画中有一类无限循环的动画，这类动画需要在Activity退出时及时停止，否则将导致Activity无法释放从而导致内存泄漏；而View动画并不存在此问题</li>
-<li><strong>兼容性问题</strong>：动画在3.0以下的系统上有兼容性问题</li>
-<li><strong>View动画的问题</strong>：View动画是对View的影像做动画，并不是真正的改变View的状态，因此有时候会出现动画完成后View无法隐藏的现象，即setVisibility(View.Gone)失效了，这个时候只要调用view.clearAnimation()清除View动画即可解决问题</li>
-<li><strong>不要使用px</strong>：尽量使用dp</li>
-<li><strong>动画元素的交互</strong>：将view移动后，在Android3.0以前，不管是View动画还是属性动画，新位置均无法触发单击事件，同时老位置仍可触发单击事件；在Android3.0以后，属性动画的单击事件触发位置为移动后的位置，但是View动画仍在老位置。</li>
-<li><strong>硬件加速</strong></li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2024,7 +2030,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

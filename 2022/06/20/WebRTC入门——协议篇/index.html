@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="定义 WebRTC（Web Real-Time Communication）是一项实时通讯技术，它允许网络应用或者站点，在不借助中间媒介的情况下，建立浏览器之间点对点（Peer-to-Peer）的连接，实现视频流和（或）音频流或者其他任意数据的传输。WebRTC包含的这些标准能使用户在无需安装任何插件或者第三方软件的情况下，实现点对点（Peer-to-Peer）的数据分享和电话会议。  WebRT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebRTC入门——协议篇">
+<meta property="og:url" content="http://yoursite.com/2022/06/20/WebRTC入门——协议篇/index.html">
+<meta property="og:site_name" content="Forwards">
+<meta property="og:description" content="定义 WebRTC（Web Real-Time Communication）是一项实时通讯技术，它允许网络应用或者站点，在不借助中间媒介的情况下，建立浏览器之间点对点（Peer-to-Peer）的连接，实现视频流和（或）音频流或者其他任意数据的传输。WebRTC包含的这些标准能使用户在无需安装任何插件或者第三方软件的情况下，实现点对点（Peer-to-Peer）的数据分享和电话会议。  WebRT">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://static001.geekbang.org/resource/image/c5/a0/c536a1dd0ed50008d2ada594e052d6a0.png">
+<meta property="og:image" content="https://xinyuehtx.github.io/media/image-20200610191434292.png">
+<meta property="og:image" content="https://xinyuehtx.github.io/media/image-20200610193649234.png">
+<meta property="og:image" content="https://xinyuehtx.github.io/media/image-20200610193956642.png">
+<meta property="og:image" content="https://xinyuehtx.github.io/media/image-20200610194411386.png">
+<meta property="og:image" content="https://xinyuehtx.github.io/media/image-20200611162545987.png">
+<meta property="og:image" content="https://mdn.mozillademos.org/files/6115/webrtc-stun.png">
+<meta property="og:image" content="https://mdn.mozillademos.org/files/6117/webrtc-turn.png">
+<meta property="og:updated_time" content="2022-06-20T09:52:05.870Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebRTC入门——协议篇">
+<meta name="twitter:description" content="定义 WebRTC（Web Real-Time Communication）是一项实时通讯技术，它允许网络应用或者站点，在不借助中间媒介的情况下，建立浏览器之间点对点（Peer-to-Peer）的连接，实现视频流和（或）音频流或者其他任意数据的传输。WebRTC包含的这些标准能使用户在无需安装任何插件或者第三方软件的情况下，实现点对点（Peer-to-Peer）的数据分享和电话会议。  WebRT">
+<meta name="twitter:image" content="https://static001.geekbang.org/resource/image/c5/a0/c536a1dd0ed50008d2ada594e052d6a0.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/06/20/WebRTC入门——协议篇/"/>
+
+
+
+
+
+  <title>WebRTC入门——协议篇 | Forwards</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/Ucoon" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Forwards</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">有空的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/06/20/WebRTC入门——协议篇/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">WebRTC入门——协议篇</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-06-20T17:56:08+08:00">
+                2022-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><blockquote>
+<p>WebRTC（Web Real-Time Communication）是一项实时通讯技术，它允许网络应用或者站点，在不借助中间媒介的情况下，建立浏览器之间点对点（Peer-to-Peer）的连接，实现视频流和（或）音频流或者其他任意数据的传输。WebRTC包含的这些标准能使用户在无需安装任何插件或者第三方软件的情况下，实现点对点（Peer-to-Peer）的数据分享和电话会议。</p>
+</blockquote>
+<p>WebRTC包含了若干相互关联的API和协议以达到这个目标，下图即为WebRTC 1对1音视频实时通话过程示意图，本文也将围绕示意图展开学习内容</p>
+<p><img src="https://static001.geekbang.org/resource/image/c5/a0/c536a1dd0ed50008d2ada594e052d6a0.png" alt="WebRTC 1对1音视频实时通话"></p>
+<h1 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h1><h2 id="NAT"><a href="#NAT" class="headerlink" title="NAT"></a>NAT</h2><blockquote>
+<p><strong>Network Address Translation</strong>(网络地址转换)，是一种将IP地址空间映射到另一个空间的方法，方法是在数据包通过流量路由设备传输时修改数据包IP报头中的网络地址信息。在IPv4地址耗尽的情况下，它已成为保护全球地址空间必不可少的工具。</p>
+</blockquote>
+<p>为什么要有NAT：这是因为现实中公网的ip地址过少，很多单位、学校都不能满足为每个主机分配一个公网地址，因此会通过NAT技术将内网的主机地址映射为同一公网地址的不同端口，进行外网访问。</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200610191434292.png" alt="NAT原理"></p>
+<h3 id="NAT的缺点"><a href="#NAT的缺点" class="headerlink" title="NAT的缺点"></a>NAT的缺点</h3><p>NAT解决了内网环境下多主机上网的问题，但是也造成了难以从外网访问内网主机的问题。</p>
+<h3 id="NAT的分类"><a href="#NAT的分类" class="headerlink" title="NAT的分类"></a>NAT的分类</h3><ul>
+<li><p>圆锥形NAT：相当于在NAT服务器上打了个洞，所有外部主机都可以按照这个公网的IP:port发送数据，并且顺利找到内网主机</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200610193649234.png" alt="圆锥形NAT"></p>
+</li>
+<li><p>受限锥形NAT：NAT会记录内网主机访问的外网IP，只有来自同一个IP的请求才能转发到内网主机。</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200610193956642.png" alt="受限锥形NAT"></p>
+</li>
+<li><p>端口受限型NAT：NAT会记录内网主机访问的外网IP和端口，只有来自同一个IP且同一个端口的请求才能转发到内网主机</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200610194411386.png" alt="端口受限型NAT"></p>
+</li>
+<li><p>对称型NAT：每次请求的连接都会使用不同的公网端口；注意，对称型NAT和其他三个最大的不同点在于每次请求的端口都会变化，这就导致了NAT穿越的难度增加</p>
+<p><img src="https://xinyuehtx.github.io/media/image-20200611162545987.png" alt="对称型NAT"></p>
+</li>
+</ul>
+<h3 id="NAT穿透"><a href="#NAT穿透" class="headerlink" title="NAT穿透"></a>NAT穿透</h3><p>我们如何实现NAT穿透：方式就是在NAT后面的主机向公网指定端口发送一个包，这样就会在NAT服务器上留下一个端口。其他主机只要知道了这个端口，就可以向内网主机发送数据了，这个行为形象的称之为“打洞”。</p>
+<ul>
+<li><p>一方是圆锥形NAT：</p>
+<p>当一方是圆锥形NAT，它只要向某个公网服务器（例如<strong>STUN服务器</strong>）发送一个包，这样它在公网的IP和端口就确定了。无论对端是哪种类型的NAT，只要向这个IP和端口发送数据即可连通</p>
+</li>
+<li><p>双方是受限锥型NAT或者端口受限型NAT</p>
+<p>双方都向公网服务器发送一个包，确定自己的IP和端口，并通过公网服务器发送给对方，接着双方再向对方地址发送一个包，就可以实现通信</p>
+</li>
+<li><p>一方是对称型NAT</p>
+<ol>
+<li><p>当对方是圆锥型NAT：只要让对方先发送请求即可</p>
+</li>
+<li><p>当对方是受限锥型NAT：需要在双方交换完地址后，对方先发送一个包，确保指定IP的数据可接收，本机再向对方IP和端口发送数据，完成连接</p>
+</li>
+<li><p>当对方是端口受限型NAT：需要在双方交换完地址后，本机先发送一个包，在NAT服务器上打洞。但是此时对端并不知道本机这次打洞的端口，所以需要向各个端口都进行发包探测。此时本机需要不停的向对端发包，直至某一个包被接收。此时双方都确定了对方的IP和端口，完成通信。</p>
+</li>
+<li>当对方是对称型NAT：没有办法连通，因为其中一个主机在探测时，自身的端口都会变化，这样对方无法确定本机端口。因此只能通过公网服务器进行中转（例如<strong>TURN服务器</strong>）</li>
+</ol>
+</li>
+</ul>
+<h2 id="ICE"><a href="#ICE" class="headerlink" title="ICE"></a>ICE</h2><blockquote>
+<p><strong>Interactive Connectivity Establishment</strong>(交互式连接设施)，是一个允许你的浏览器和对端浏览器建立连接的协议框架。</p>
+</blockquote>
+<p>在实际的网络中，有很多原因导致简单的从A端到B端的直连不能如愿完成，这需要绕过阻止建立连接的防火墙，给你的设备分配一个唯一可见的地址（通常情况下我们的大部分设备没有一个固定的公网地址），如果路由器不允许主机直连，还得通过一台服务器转发数据，ICE通过使用以下几种技术完成上述工作。</p>
+<h2 id="STUN"><a href="#STUN" class="headerlink" title="STUN"></a>STUN</h2><blockquote>
+<p><strong>Session Traversal Utilities for NAT</strong>(NAT会话穿透应用程序)，是一种网络协议，它允许位于NAT(或多重NAT)后的客户端找出自己的公网地址，查出自己位于哪种类型的NAT之后以及NAT为某一个本地端口所绑定的Internet端端口。这些信息被用来在两个同时处于NAT路由器之后的主机之间创建UDP通信</p>
+</blockquote>
+<p>一旦客户端得知了Internet端的UDP端口，通信就可以开始了。如果NAT是完全圆锥形的，那么双方中的任何一方都可以发起通信；如果NAT是受限圆锥型NAT或端口受限型NAT，双方必须一起开始传输，如果是对称型NAT则不能使用</p>
+<p>STUN是一个client-server协议，一个VoIP电话或软件包可能会包括一个STUN客户端，这个客户端会向STUN服务器发送请求，之后服务器会向STUN客户端报告NAT路由器的公网IP地址以及NAT为允许传入流量传回内网而开通的端口</p>
+<p><img src="https://mdn.mozillademos.org/files/6115/webrtc-stun.png" alt="STUN示意图"></p>
+<h2 id="TURN"><a href="#TURN" class="headerlink" title="TURN"></a>TURN</h2><blockquote>
+<p><strong>Traversal Using Relay NAT</strong>(NAT的中继穿透方式)，是一种资料传输协议(data-tranfer protocol)，允许在TCP或UDP的连接在线跨越NAT或防火墙。</p>
+</blockquote>
+<p>TURN是一个client-server协议。TURN的NAT穿透方法与STUN类似，都是通过获取应用层的公有地址达到NAT穿透，但在实现TURN client的终端必须在通信开始前与TURN server进行交互，并要求TURN server产生<code>relay port</code>，也就是relayed-transport-address。这时TURN server会创建peer，即远程端点（remote endpoints），开始进行中继（relay）的动作，TURN client会利用<code>relay port</code>将资料发送至peer，再由peer转传到另一方的TURN client。很显然这种方式是开销很大的，所以只有在没得选择的情况下采用。</p>
+<p><img src="https://mdn.mozillademos.org/files/6117/webrtc-turn.png" alt="TURN示意图"></p>
+<h2 id="SDP"><a href="#SDP" class="headerlink" title="SDP"></a>SDP</h2><blockquote>
+<p><strong>Session Description Protocol</strong>(会话描述协议)，是一个描述多媒体连接内容的协议，例如分辨率，格式，编码，加密算法等。所以在数据传输时两端都能够理解彼此的数据，本质上，这些描述内容的元数据并不是媒体流本身</p>
+</blockquote>
+<p>从技术上讲，SDP并不是一个真正的协议，而是一种数据格式，用来描述在设备之间共享媒体的连接。</p>
+<h1 id="信令与信令服务器"><a href="#信令与信令服务器" class="headerlink" title="信令与信令服务器"></a>信令与信令服务器</h1><h2 id="信令"><a href="#信令" class="headerlink" title="信令"></a>信令</h2><blockquote>
+<p>WebRTC是一个完全对等技术，用于实时交换音频、视频和数据。如其他地方所讨论的，必须进行一种发现和媒体格式协商，以使不同网络上的两个设备相互定位，这个过程被称为<strong>信令</strong>，并涉及两个设备连接到第三方共同商定的服务器，这两台设备可以相互定位，并交换协商消息。</p>
+</blockquote>
+<h2 id="信令服务器"><a href="#信令服务器" class="headerlink" title="信令服务器"></a>信令服务器</h2><blockquote>
+<p>两个设备之间建立WebRTC连接需要一个<strong>信令服务器</strong>来实现双方通过网络进行连接。信令服务器的作用是作为一个中间人帮助双方在尽可能少的暴露隐私的情况下建立连接。</p>
+</blockquote>
+<p>WebRTC并没有提供信令传递机制，可以使用任何方式比如<strong>WebSocket</strong>或者<strong>XMLHttpRequest</strong>等等，来交换彼此的令牌信息。最重要的是信令服务器并不需要理解和解释信令数据内容。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>了解清楚各种协议之后，我们得有个大体的概念，就是需要大体的知道webRTC协议各个模块是如何联系在一起的：</p>
+<p>以A和B进行视频通话为例，现在决定采用webRTC协议，实现p2p的连接，也就是A和B之间能直接进行媒体流的传输，不需要外加的媒体服务器进行转发。</p>
+<ol>
+<li>在访问外网的时候，需要知道对方的IP和port，我们才能访问到指定的设备。而A和B在他们各自的路由局域网内，是不知道这个IP和port，它们各自的IP和端口是由路由分配的，这个分配IP和port的协议就是<strong>NAT(网络地址转换)</strong>。</li>
+<li>A和B之间需要实现p2p连接，就需要知道自己本身的IP和端口，然后告诉对方自己的这些信息，这样才能实现互联，这时<strong>STUN(NAT会话穿透应用程序)</strong>服务器就派上用场了，A和B分别向stun服务器发送请求，stun服务器会返回他们各自的IP和port，但是NAT有四种类型（圆锥型NAT、受限锥型NAT，端口受限型NAT，对称型NAT），如果是对称型NAT，通过stun服务器是不能获取到IP和端口的，这时A和B之间要进行媒体的交流，就得靠<strong>TURN(NAT的中继方式)</strong>了，turn服务器是个中转站，A和B之间通信的所有媒体流，都是经过turn服务器进行转发的。</li>
+<li>是采用stun还是turn服务器，这个会交由<strong>ICE(交互式连接设施)</strong>来帮助我们决策，ICE是一个框架，主要任务就是帮助我们建立双方的连接。</li>
+<li>那么通过stun/turn服务器，A和B都知道自己的IP和port，那这个信息要如何告诉对方呢，这个就需要通过<strong>信令服务器</strong>了。A和B之间建立媒体连接，还需要知道对方各自处理流媒体的能力，这个信息也是通过信令服务器来转发的。信令服务器并不需要关心发送的内容，只需要负责信息的转发即可。</li>
+</ol>
+<p>参考</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API" target="_blank" rel="noopener">WebRTC_API</a></p>
+<p><a href="https://xinyuehtx.github.io/post/%E7%90%86%E8%A7%A3NAT%E7%A9%BF%E8%B6%8A.html" target="_blank" rel="noopener">理解NAT穿越</a></p>
+<p><a href="https://segmentfault.com/a/1190000039849183" target="_blank" rel="noopener">WebRtc学习之旅 —— Android端应用开发</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/06/20/Flutter状态管理：Provider/" rel="next" title="Flutter状态管理：Provider">
+                <i class="fa fa-chevron-left"></i> Flutter状态管理：Provider
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Forwards</p>
+              <p class="site-description motion-element" itemprop="description">Keep coding</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Ucoon" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/0b3edec737da" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#协议"><span class="nav-number">2.</span> <span class="nav-text">协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NAT"><span class="nav-number">2.1.</span> <span class="nav-text">NAT</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NAT的缺点"><span class="nav-number">2.1.1.</span> <span class="nav-text">NAT的缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NAT的分类"><span class="nav-number">2.1.2.</span> <span class="nav-text">NAT的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NAT穿透"><span class="nav-number">2.1.3.</span> <span class="nav-text">NAT穿透</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ICE"><span class="nav-number">2.2.</span> <span class="nav-text">ICE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#STUN"><span class="nav-number">2.3.</span> <span class="nav-text">STUN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TURN"><span class="nav-number">2.4.</span> <span class="nav-text">TURN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDP"><span class="nav-number">2.5.</span> <span class="nav-text">SDP</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#信令与信令服务器"><span class="nav-number">3.</span> <span class="nav-text">信令与信令服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信令"><span class="nav-number">3.1.</span> <span class="nav-text">信令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信令服务器"><span class="nav-number">3.2.</span> <span class="nav-text">信令服务器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forwards</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
