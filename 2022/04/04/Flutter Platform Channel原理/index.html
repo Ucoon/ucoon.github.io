@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="Flutter Platform Channel原理概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考Flutter-Plugin开发与发布  Flutter平台特定的API支持不依赖于代码生成，而是依赖于灵活的消息传递的方式： 应用的Flutter部分通过平台通道（Platform Channel）将传递的数据编码成消息的形式，跨线程发送到其应用程序的所在的宿主（iOS或Android">
+<meta name="description" content="概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考Flutter-Plugin开发与发布  Flutter平台特定的API支持不依赖于代码生成，而是依赖于灵活的消息传递的方式： 应用的Flutter部分通过平台通道（Platform Channel）将传递的数据编码成消息的形式，跨线程发送到其应用程序的所在的宿主（iOS或Android） 宿主监听的平台通道，并接收该消息，然后它会调用特定">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Forwards">
+<meta property="og:title" content="Flutter Platform Channel原理">
 <meta property="og:url" content="http://yoursite.com/2022/04/04/Flutter Platform Channel原理/index.html">
 <meta property="og:site_name" content="Forwards">
-<meta property="og:description" content="Flutter Platform Channel原理概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考Flutter-Plugin开发与发布  Flutter平台特定的API支持不依赖于代码生成，而是依赖于灵活的消息传递的方式： 应用的Flutter部分通过平台通道（Platform Channel）将传递的数据编码成消息的形式，跨线程发送到其应用程序的所在的宿主（iOS或Android">
+<meta property="og:description" content="概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考Flutter-Plugin开发与发布  Flutter平台特定的API支持不依赖于代码生成，而是依赖于灵活的消息传递的方式： 应用的Flutter部分通过平台通道（Platform Channel）将传递的数据编码成消息的形式，跨线程发送到其应用程序的所在的宿主（iOS或Android） 宿主监听的平台通道，并接收该消息，然后它会调用特定">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://flutterchina.club/images/PlatformChannels.png">
-<meta property="og:image" content="https://ucoon.gitee.io/myblogimg/MethodChannel%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.jpg">
-<meta property="og:image" content="https://ucoon.gitee.io/myblogimg/MethodChannel%E8%BF%94%E5%9B%9E%E6%B5%81%E7%A8%8B.jpg">
-<meta property="og:updated_time" content="2022-04-04T14:59:09.933Z">
+<meta property="og:image" content="https://github.com/Ucoon/MyBlogImg/blob/master/MethodChannel%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.jpg">
+<meta property="og:image" content="https://github.com/Ucoon/MyBlogImg/blob/master/MethodChannel%E8%BF%94%E5%9B%9E%E6%B5%81%E7%A8%8B.jpg">
+<meta property="og:updated_time" content="2022-06-20T10:07:39.506Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Forwards">
-<meta name="twitter:description" content="Flutter Platform Channel原理概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考Flutter-Plugin开发与发布  Flutter平台特定的API支持不依赖于代码生成，而是依赖于灵活的消息传递的方式： 应用的Flutter部分通过平台通道（Platform Channel）将传递的数据编码成消息的形式，跨线程发送到其应用程序的所在的宿主（iOS或Android">
+<meta name="twitter:title" content="Flutter Platform Channel原理">
+<meta name="twitter:description" content="概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考Flutter-Plugin开发与发布  Flutter平台特定的API支持不依赖于代码生成，而是依赖于灵活的消息传递的方式： 应用的Flutter部分通过平台通道（Platform Channel）将传递的数据编码成消息的形式，跨线程发送到其应用程序的所在的宿主（iOS或Android） 宿主监听的平台通道，并接收该消息，然后它会调用特定">
 <meta name="twitter:image" content="https://flutterchina.club/images/PlatformChannels.png">
 
 
@@ -129,7 +129,7 @@
 
 
 
-  <title> | Forwards</title>
+  <title>Flutter Platform Channel原理 | Forwards</title>
   
 
 
@@ -263,7 +263,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Flutter Platform Channel原理</h1>
         
 
         <div class="post-meta">
@@ -313,8 +313,7 @@
       
 
       
-        <hr>
-<h2 id="Flutter-Platform-Channel原理"><a href="#Flutter-Platform-Channel原理" class="headerlink" title="Flutter Platform Channel原理"></a>Flutter Platform Channel原理</h2><p>概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考<a href="http://ucoon.tech/2022/01/27/Flutter-Plugin%E5%BC%80%E5%8F%91%E4%B8%8E%E5%8F%91%E5%B8%83/" target="_blank" rel="noopener">Flutter-Plugin开发与发布</a></p>
+        <p>概述：本文不讲述如何编写代码，只学习其原理，如何编写可参考<a href="http://ucoon.tech/2022/01/27/Flutter-Plugin%E5%BC%80%E5%8F%91%E4%B8%8E%E5%8F%91%E5%B8%83/" target="_blank" rel="noopener">Flutter-Plugin开发与发布</a></p>
 <blockquote>
 <p>Flutter平台特定的API支持不依赖于代码生成，而是依赖于灵活的消息传递的方式：</p>
 <p>应用的Flutter部分通过平台通道（Platform Channel）将传递的数据编码成消息的形式，跨线程发送到其应用程序的所在的宿主（iOS或Android）</p>
@@ -322,14 +321,14 @@
 <p>整个过程的消息和响应是异步传递的，所以不会直接阻塞用户界面</p>
 </blockquote>
 <h1 id="官方架构图："><a href="#官方架构图：" class="headerlink" title="官方架构图："></a>官方架构图：</h1><p><img src="https://flutterchina.club/images/PlatformChannels.png" alt="Flutter Platform Channel"></p>
-<h1 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h1><h2 id="MethodChannel调用流程"><a href="#MethodChannel调用流程" class="headerlink" title="MethodChannel调用流程"></a>MethodChannel调用流程</h2><p><img src="https://ucoon.gitee.io/myblogimg/MethodChannel%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.jpg" alt="MethodChannel调用流程"></p>
+<h1 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h1><h2 id="MethodChannel调用流程"><a href="#MethodChannel调用流程" class="headerlink" title="MethodChannel调用流程"></a>MethodChannel调用流程</h2><p><img src="https://github.com/Ucoon/MyBlogImg/blob/master/MethodChannel%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.jpg" alt="MethodChannel调用流程"></p>
 <p>小结：</p>
 <ol>
 <li>Dart层使用codec对根据方法名(<code>channel method name</code>)和参数(<code>channel method param</code>)构建得到的对象进行编码，然后通过dart的类似JNI的本地接口，调用<code>SendPlatformMessage</code>，传递给c++层</li>
 <li>c++层通过持有java对象<code>flutterJNI</code>的方法调用将消息传递到java层</li>
 <li>java层解码接收到的消息，并根据<code>channel name</code>获取到对应的<code>handlerInfo</code>，调用相应的逻辑处理</li>
 </ol>
-<h2 id="MethodChannel返回流程"><a href="#MethodChannel返回流程" class="headerlink" title="MethodChannel返回流程"></a>MethodChannel返回流程</h2><p><img src="https://ucoon.gitee.io/myblogimg/MethodChannel%E8%BF%94%E5%9B%9E%E6%B5%81%E7%A8%8B.jpg" alt="MethodChannel返回流程"></p>
+<h2 id="MethodChannel返回流程"><a href="#MethodChannel返回流程" class="headerlink" title="MethodChannel返回流程"></a>MethodChannel返回流程</h2><p><img src="https://github.com/Ucoon/MyBlogImg/blob/master/MethodChannel%E8%BF%94%E5%9B%9E%E6%B5%81%E7%A8%8B.jpg" alt="MethodChannel返回流程"></p>
 <p>小结：</p>
 <ol>
 <li>java层得到结果后进行编码，通过JNI将响应结果返回给c++层</li>
@@ -508,7 +507,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Flutter-Platform-Channel原理"><span class="nav-number">1.</span> <span class="nav-text">Flutter Platform Channel原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#官方架构图："><span class="nav-number"></span> <span class="nav-text">官方架构图：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流程图"><span class="nav-number"></span> <span class="nav-text">流程图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MethodChannel调用流程"><span class="nav-number">1.</span> <span class="nav-text">MethodChannel调用流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MethodChannel返回流程"><span class="nav-number">2.</span> <span class="nav-text">MethodChannel返回流程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#官方架构图："><span class="nav-number">1.</span> <span class="nav-text">官方架构图：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流程图"><span class="nav-number">2.</span> <span class="nav-text">流程图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MethodChannel调用流程"><span class="nav-number">2.1.</span> <span class="nav-text">MethodChannel调用流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MethodChannel返回流程"><span class="nav-number">2.2.</span> <span class="nav-text">MethodChannel返回流程</span></a></li></ol></li></ol></div>
             
 
           </div>
