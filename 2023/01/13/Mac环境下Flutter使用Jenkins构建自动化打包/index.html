@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前提：在产品迭代过程中，开发人员需要频繁的提供安装包给测试人员，这不仅占用了大量的开发时间，还影响了工作效率和积极性，所以我们急需解放双手，这时候Jenkins自动化打包的优越性就体现了出来。 准备工作搭建Flutter开发环境在Mac上需要搭建Flutter开发环境，这部分不再赘述，可参考Flutter iOS真机调试、打包及上架 安装Jenkins 使用brew进行安装：brew instal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mac环境下Flutter使用Jenkins构建自动化打包">
+<meta property="og:url" content="http://yoursite.com/2023/01/13/Mac环境下Flutter使用Jenkins构建自动化打包/index.html">
+<meta property="og:site_name" content="Forwards">
+<meta property="og:description" content="前提：在产品迭代过程中，开发人员需要频繁的提供安装包给测试人员，这不仅占用了大量的开发时间，还影响了工作效率和积极性，所以我们急需解放双手，这时候Jenkins自动化打包的优越性就体现了出来。 准备工作搭建Flutter开发环境在Mac上需要搭建Flutter开发环境，这部分不再赘述，可参考Flutter iOS真机调试、打包及上架 安装Jenkins 使用brew进行安装：brew instal">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/jenkins_dashboard.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/workspaceDir.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/JDK.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/Environment_variables.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/create_jenkins_project.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/add_ssh_credentials.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/build_parameter.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/build_step_shell.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/archive_artifacts.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/android_project.png">
+<meta property="og:image" content="http://ucoon.tech/MyBlogImg/jenkins_upload_pgy.png">
+<meta property="og:updated_time" content="2023-01-13T05:53:49.447Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mac环境下Flutter使用Jenkins构建自动化打包">
+<meta name="twitter:description" content="前提：在产品迭代过程中，开发人员需要频繁的提供安装包给测试人员，这不仅占用了大量的开发时间，还影响了工作效率和积极性，所以我们急需解放双手，这时候Jenkins自动化打包的优越性就体现了出来。 准备工作搭建Flutter开发环境在Mac上需要搭建Flutter开发环境，这部分不再赘述，可参考Flutter iOS真机调试、打包及上架 安装Jenkins 使用brew进行安装：brew instal">
+<meta name="twitter:image" content="http://ucoon.tech/MyBlogImg/jenkins_dashboard.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2023/01/13/Mac环境下Flutter使用Jenkins构建自动化打包/"/>
+
+
+
+
+
+  <title>Mac环境下Flutter使用Jenkins构建自动化打包 | Forwards</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+<a href="https://github.com/Ucoon" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Forwards</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">有空的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/01/13/Mac环境下Flutter使用Jenkins构建自动化打包/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mac环境下Flutter使用Jenkins构建自动化打包</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-01-13T13:55:08+08:00">
+                2023-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前提：在产品迭代过程中，开发人员需要频繁的提供安装包给测试人员，这不仅占用了大量的开发时间，还影响了工作效率和积极性，所以我们急需解放双手，这时候Jenkins自动化打包的优越性就体现了出来。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="搭建Flutter开发环境"><a href="#搭建Flutter开发环境" class="headerlink" title="搭建Flutter开发环境"></a>搭建Flutter开发环境</h2><p>在Mac上需要搭建Flutter开发环境，这部分不再赘述，可参考<a href="http://ucoon.tech/2022/01/27/Flutter-iOS%E7%9C%9F%E6%9C%BA%E8%B0%83%E8%AF%95%E3%80%81%E6%89%93%E5%8C%85%E5%8F%8A%E4%B8%8A%E6%9E%B6/" target="_blank" rel="noopener">Flutter iOS真机调试、打包及上架</a></p>
+<h2 id="安装Jenkins"><a href="#安装Jenkins" class="headerlink" title="安装Jenkins"></a>安装Jenkins</h2><ol>
+<li>使用<code>brew</code>进行安装：<code>brew install jenkins</code>，</li>
+<li>启动jenkins：<code>brew services start jenkins</code></li>
+<li>在浏览器中输入地址 <a href="http://0.0.0.0:8080" target="_blank" rel="noopener">http://0.0.0.0:8080</a> ，即可看到 Jenkins 页面</li>
+<li>首次启动需要解锁Jenkins，安装推荐的插件，自定义设置用户名及密码</li>
+</ol>
+<p>安装完成Jenkins面板界面如下：</p>
+<p><img src="http://ucoon.tech/MyBlogImg/jenkins_dashboard.png" alt="jenkins_dashboard"></p>
+<h1 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h1><h2 id="workspaceDir修改"><a href="#workspaceDir修改" class="headerlink" title="workspaceDir修改"></a>workspaceDir修改</h2><p>自定义工作目录<code>workspaceDir</code>路径，打开安装目录下的<code>config.xml</code>：<code>open $HOME/.jenkins/config.xml</code>，修改<code>workspaceDir</code>的值</p>
+<p><img src="http://ucoon.tech/MyBlogImg/workspaceDir.png" alt="workspaceDir.png"></p>
+<h2 id="配置JDK"><a href="#配置JDK" class="headerlink" title="配置JDK"></a>配置JDK</h2><p>在Manage Jenkins-&gt;Global Tool Configuration下的JDK设置<code>JAVA_HOME</code></p>
+<p><img src="http://ucoon.tech/MyBlogImg/JDK.png" alt="JDK配置"></p>
+<h2 id="全局环境变量配置"><a href="#全局环境变量配置" class="headerlink" title="全局环境变量配置"></a>全局环境变量配置</h2><p>在Manage Jenkins-&gt;Configure System下的全局属性设置<code>ANDROID_HOME</code>、<code>PUB_HOSTED_URL</code>、<code>FLUTTER_STORAGE_BASE_URL</code>、<code>FLUTTER_HOME</code>、<code>PATH</code></p>
+<p><img src="http://ucoon.tech/MyBlogImg/Environment_variables.png" alt="Environment_variables"></p>
+<p>属性对应值分别如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">globalNodeProperties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">hudson.slaves.EnvironmentVariablesNodeProperty</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">envVars</span> <span class="attr">serialization</span>=<span class="string">"custom"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">unserializable-parents</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">tree-map</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">default</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">comparator</span> <span class="attr">class</span>=<span class="string">"java.lang.String$CaseInsensitiveComparator"</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">default</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">int</span>&gt;</span>5<span class="tag">&lt;/<span class="name">int</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>ANDROID_HOME<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>/Users/yardi_wuhan/Library/Android/sdk<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>FLUTTER_HOME<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>/Users/yardi_wuhan/fvm/default<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>FLUTTER_STORAGE_BASE_URL<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>https://storage.flutter-io.cn<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>PATH<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>$PATH:$FLUTTER_HOME/bin:$HOME/.pub-cache/bin<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>PUB_HOSTED_URL<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>https://pub.flutter-io.cn<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">tree-map</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">envVars</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">hudson.slaves.EnvironmentVariablesNodeProperty</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">globalNodeProperties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="自动化打包"><a href="#自动化打包" class="headerlink" title="自动化打包"></a>自动化打包</h1><h2 id="Android"><a href="#Android" class="headerlink" title="Android"></a>Android</h2><ol>
+<li><p>新建一个Project，并选择<code>Freestyle project</code></p>
+<p><img src="http://ucoon.tech/MyBlogImg/create_jenkins_project.png" alt="create_jenkins_project"></p>
+</li>
+<li><p>填写描述</p>
+</li>
+<li><p>源码管理——配置git，填写仓库地址<code>Repository URL</code>，并添加凭据<code>Credentials</code></p>
+<p>如果你使用的是 https，那么需要配置认证，我这里使用的是 ssh，所以不需要配置认证，认证的方式需要添加凭据，参考如下所示，</p>
+<p>在<code>Private Key</code>下填写私钥值(<code>.ssh</code>目录下的<code>id_ed25519</code>)，对应git账号应上传公钥值(<code>.ssh</code>目录下的<code>id_ed25519.pub</code>)</p>
+<p><img src="http://ucoon.tech/MyBlogImg/add_ssh_credentials.png" alt="add_ssh_credentials"></p>
+</li>
+<li><p>配置参数化构建过程</p>
+<p>可增加构建环境ENV参数等，示例如下</p>
+<p><img src="http://ucoon.tech/MyBlogImg/build_parameter.png" alt="build_parameter"></p>
+</li>
+<li><p>构建打包脚本</p>
+<p>在构建脚本中可获取上述传入的构建参数值(<code>${BUILD_ENV}</code>)</p>
+<p><img src="http://ucoon.tech/MyBlogImg/build_step_shell.png" alt="build_step_shell"></p>
+</li>
+<li><p>归档成品(<strong>artifacts</strong>)</p>
+<p><img src="http://ucoon.tech/MyBlogImg/archive_artifacts.png" alt="archive_artifacts"></p>
+</li>
+<li><p>配置完成后，可在构建页面开始构建，如下所示</p>
+<p><img src="http://ucoon.tech/MyBlogImg/android_project.png" alt="android_project"></p>
+</li>
+<li><p>构建完成后可在首页下载构建完成后的安装包</p>
+</li>
+</ol>
+<h2 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a>iOS</h2><p><strong>[通过在打包机器上配置证书和mobile provision等文件的方式来完成打包认证]</strong></p>
+<ol>
+<li><p>手动配置证书</p>
+</li>
+<li><p>配置描述文件</p>
+</li>
+<li><p>开始打包</p>
+<p>新建Project—&gt;填写描述—&gt;配置git—&gt;配置参数化构建过程这几个步骤和Android项目类似，不同的是iOS的构建脚本，如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cd app_common</span><br><span class="line">flutter clean</span><br><span class="line">flutter pub get</span><br><span class="line">cd ../patient</span><br><span class="line">flutter clean</span><br><span class="line">flutter pub get</span><br><span class="line">mv sample.env .env</span><br><span class="line">security unlock-keychain -p Yardi5550586</span><br><span class="line">flutter build ipa --release --dart-define=ENV=$&#123;BUILD_ENV&#125;</span><br><span class="line">ExportOptionsPath=$JENKINS_HOME/jobs/$JOB_NAME/ExportOptions.plist</span><br><span class="line">ArchivePath=$WORKSPACE/patient/build/ios/archive/Runner.xcarchive</span><br><span class="line">PackagePath=$WORKSPACE/patient/build/ios/archive/build</span><br><span class="line">xcodebuild -exportArchive -exportOptionsPlist $ExportOptionsPath -archivePath $ArchivePath -exportPath $PackagePath -allowProvisioningUpdates</span><br></pre></td></tr></table></figure>
+<p>关键命令解释：</p>
+<ol>
+<li><code>security unlock-keychain -p xxxxxx</code>：在开始打包之前，需要先解锁下<code>keychain</code>，这里的xxxx就是对应Mac上的密码</li>
+<li><code>flutter build ipa --release --dart-define=ENV=${BUILD_ENV}</code>：指定release模式，开始编译iOS代码，并在 <code>build/ios/archive</code> 文件夹下生成一个 Xcode 构建归档（<code>.xcarchive</code> 文档）</li>
+<li>执行完<code>Archive</code>之后，就可以进入<code>export</code>阶段，<code>exportArchive</code>之前需要先准备一个<code>ExportOptions.plist</code>文件到指定目录，这个文件可以先在打包机上用Xcode执行一次完整的Export流程，在对应的archive文件夹下存在对应的<code>ExportOptions.plist</code></li>
+<li>接着通过指定命令<code>exportArchive</code>，指定<code>ExportOptions.plist</code>，最终输出到<code>PackagePath</code>，得到一个ipa文件</li>
+</ol>
+<p>上述命令均为<code>ad-hoc</code>模式，如果是指定<code>app-store</code>模式，则需准备<code>app-store</code>对应的<code>ExportOptions.plist</code>文件，最终才能得到一个<code>app-store</code>模式的ipa文件</p>
+</li>
+</ol>
+<h1 id="插件推荐"><a href="#插件推荐" class="headerlink" title="插件推荐"></a>插件推荐</h1><h2 id="切换为中文"><a href="#切换为中文" class="headerlink" title="切换为中文"></a>切换为中文</h2><p>插件：<code>Locale plugin</code>，<code>Localization: Chinese (Simplified)版本</code></p>
+<p>使用：在Manage Jenkins-&gt;Configure System下的Local设置默认语言(Default Language)：<code>zh_CN</code></p>
+<h2 id="蒲公英上传和二维码显示"><a href="#蒲公英上传和二维码显示" class="headerlink" title="蒲公英上传和二维码显示"></a>蒲公英上传和二维码显示</h2><p>插件：<code>Upload to pgyer</code>和<code>description setter plugin</code></p>
+<p>使用：在构建完成后可以将apk/ipa文件上传至蒲公英，并以二维码形式展示在构建历史处</p>
+<p>注意：Jenkins默认是plain text模式，所以不会对蒲公英上传成功后返回的html信息进行解析，所以装完<code>description setter plugin</code>后还需在全局安全设置(Config Global Security)中，将标记格式器(Markup Formatter)的设置更改为Safe HTML即可</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"$&#123;appBuildURL&#125;"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"$&#123;appQRCodeURL&#125;"</span> <span class="attr">width</span>=<span class="string">"118"</span> <span class="attr">height</span>=<span class="string">"118"</span>/&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://ucoon.tech/MyBlogImg/jenkins_upload_pgy.png" alt="jenkins_upload_pgy"></p>
+<p>参考文章：</p>
+<p><a href="https://www.agora.io/cn/community/blog/21605" target="_blank" rel="noopener">Flutter 搭建 iOS 命令行服务打包发布全保姆式流程</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/06/20/WebRTC入门——协议篇/" rel="next" title="WebRTC入门——协议篇">
+                <i class="fa fa-chevron-left"></i> WebRTC入门——协议篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2023/01/13/dart单线程模型/" rel="prev" title="dart单线程模型">
+                dart单线程模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Forwards</p>
+              <p class="site-description motion-element" itemprop="description">Keep coding</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Ucoon" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/0b3edec737da" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建Flutter开发环境"><span class="nav-number">1.1.</span> <span class="nav-text">搭建Flutter开发环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Jenkins"><span class="nav-number">1.2.</span> <span class="nav-text">安装Jenkins</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#环境配置"><span class="nav-number">2.</span> <span class="nav-text">环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#workspaceDir修改"><span class="nav-number">2.1.</span> <span class="nav-text">workspaceDir修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置JDK"><span class="nav-number">2.2.</span> <span class="nav-text">配置JDK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全局环境变量配置"><span class="nav-number">2.3.</span> <span class="nav-text">全局环境变量配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动化打包"><span class="nav-number">3.</span> <span class="nav-text">自动化打包</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android"><span class="nav-number">3.1.</span> <span class="nav-text">Android</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS"><span class="nav-number">3.2.</span> <span class="nav-text">iOS</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#插件推荐"><span class="nav-number">4.</span> <span class="nav-text">插件推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#切换为中文"><span class="nav-number">4.1.</span> <span class="nav-text">切换为中文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#蒲公英上传和二维码显示"><span class="nav-number">4.2.</span> <span class="nav-text">蒲公英上传和二维码显示</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Forwards</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

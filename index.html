@@ -242,6 +242,360 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/01/13/dart单线程模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/01/13/dart单线程模型/" itemprop="url">dart单线程模型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-01-13T13:55:08+08:00">
+                2023-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Event-Loop机制"><a href="#Event-Loop机制" class="headerlink" title="Event Loop机制"></a>Event Loop机制</h1><ol>
+<li><p><strong>Dart是单线程的</strong>：即Dart代码是有序的，按照在main函数出现的次序一个接一个地执行，不会被其他代码中断；</p>
+</li>
+<li><p><strong>Dart也支持异步</strong>：单线程和异步并不冲突</p>
+<blockquote>
+<p>这里有个大前提，那就是我们的App绝大多数时间都在等待。比如，等待用户点击，等待网络请求返回、等待文件IO结果等等，而这些等待行为并不是阻塞的；所以，基于这些特点，单线程模型可以在等待的过程中做别的事情，等真正需要响应结果了，再去做对应的处理。</p>
+</blockquote>
+</li>
+<li><p><strong>Event Loop</strong></p>
+<p>等待这个行为是通过Event Loop驱动的，事件队列<code>Event Queue</code>会把其他平行世界（比如Socket）完成的，需要主线程响应的事件放入其中。Dart有一个巨大的事件循环，在不断的轮询事件队列，取出事件，在主线程同步执行其回调函数，如下图所示：</p>
+<p><img src="https://static001.geekbang.org/resource/image/0c/ec/0cb6e6d34295cef460e48d139bc944ec.png" alt="简化版 Event Loop" style="zoom:50%;"></p>
+</li>
+</ol>
+<h1 id="异步任务"><a href="#异步任务" class="headerlink" title="异步任务"></a>异步任务</h1><p>   在Dart中，实际上有两个队列，一个是事件队列<code>Event Queue</code>，另一个是微任务队列<code>MicroTask Queue</code>。Event Loop 完整版的流程图，应该如下所示：</p>
+<p>   <img src="https://static001.geekbang.org/resource/image/70/bc/70dc4e1c222ddfaee8aa06df85c22bbc.png" alt="Microtask Queue 与 Event Queue" style="zoom:50%;"></p>
+<p>   在每次事件循环中，Dart总是先去第一个微任务队列中查询是否有可执行的任务，如果没有，才会处理后续的事件队列的流程。</p>
+<ol>
+<li><p>定义</p>
+<blockquote>
+<p>Future：Dart为Event Queue的任务建议的一层封装，表示一个在未来时间才会完成的任务</p>
+</blockquote>
+</li>
+<li><p>使用</p>
+<p>把一个函数体放入Future，就完成了从同步任务到异步任务的包装。Future还提供了链式调用的能力，可以在异步任务执行完毕后依次执行链路上的其他函数体</p>
+</li>
+<li><p>执行流程</p>
+<p>在声明一个Future时，Dart会将异步任务的函数执行体放入Event Queue，然后立即返回，后续的代码将继续同步执行。而当同步执行的代码执行完毕后，Event Queue会按照加入事件队列的顺序，依次取出事件，最后同步执行Future的函数体及后续的then（<strong>then与Future函数体共用一个事件循环</strong>）</p>
+<p>但是，如果Future执行体已经执行完毕，但是这个Future的引用存在着，并且往里面加了一个then方法体，此时Dart会将后续加入的then方法体放入<code>MicroTask Queue</code>，尽快执行。</p>
+<p><strong>案例</strong>：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Future(() =&gt; <span class="built_in">print</span>(<span class="string">'f1'</span>));<span class="comment">//声明一个匿名Future</span></span><br><span class="line">Future fx = Future(() =&gt;  <span class="keyword">null</span>);<span class="comment">//声明Future fx，其执行体为null</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//声明一个匿名Future，并注册了两个then。在第一个then回调里启动了一个微任务</span></span><br><span class="line">Future(() =&gt; <span class="built_in">print</span>(<span class="string">'f2'</span>)).then((_) &#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">'f3'</span>);</span><br><span class="line">  scheduleMicrotask(() =&gt; <span class="built_in">print</span>(<span class="string">'f4'</span>));</span><br><span class="line">&#125;).then((_) =&gt; <span class="built_in">print</span>(<span class="string">'f5'</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//声明了一个匿名Future，并注册了两个then。第一个then是一个Future</span></span><br><span class="line">Future(() =&gt; <span class="built_in">print</span>(<span class="string">'f6'</span>))</span><br><span class="line">  .then((_) =&gt; Future(() =&gt; <span class="built_in">print</span>(<span class="string">'f7'</span>)))</span><br><span class="line">  .then((_) =&gt; <span class="built_in">print</span>(<span class="string">'f8'</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//声明了一个匿名Future</span></span><br><span class="line">Future(() =&gt; <span class="built_in">print</span>(<span class="string">'f9'</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//往执行体为null的fx注册了了一个then</span></span><br><span class="line">fx.then((_) =&gt; <span class="built_in">print</span>(<span class="string">'f10'</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//启动一个微任务</span></span><br><span class="line">scheduleMicrotask(() =&gt; <span class="built_in">print</span>(<span class="string">'f11'</span>));</span><br><span class="line"><span class="built_in">print</span>(<span class="string">'f12'</span>);</span><br></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f12--&gt;f11--&gt;f1--&gt;f10--&gt;f2--&gt;f3--&gt;f5--&gt;f4--&gt;f6--&gt;f9--&gt;f7--&gt;f8</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="异步函数"><a href="#异步函数" class="headerlink" title="异步函数"></a>异步函数</h1><blockquote>
+<p>对于一个异步函数来说，其返回时内部执行动作并未结束，因此需要返回一个Future对象，供调用者使用。调用者根据Future对象，来决定：是在Future对象上注册一个then，等Future的执行体结束了再进行异步处理；还是一直同步等待Future执行体结束。</p>
+</blockquote>
+<p><strong>同步等待</strong>：需要在调用处使用<strong>await</strong>关键字，并且在调用处的函数体使用<strong>async</strong>关键字：<strong>Dart的await并不是阻塞等待，而是异步等待</strong>，并且<strong>await与async只对调用上下文的函数有效，并不向上传递</strong></p>
+<p><strong>案例：</strong></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//声明了一个延迟2秒返回Hello的Future，并注册了一个then返回拼接后的Hello 2019</span></span><br><span class="line">Future&lt;<span class="built_in">String</span>&gt; fetchContent() =&gt; </span><br><span class="line">  Future&lt;<span class="built_in">String</span>&gt;.delayed(<span class="built_in">Duration</span>(seconds:<span class="number">2</span>), () =&gt; <span class="string">"Hello"</span>)</span><br><span class="line">    .then((x) =&gt; <span class="string">"$x 2019"</span>);</span><br><span class="line"><span class="comment">//异步函数会同步等待Hello 2019的返回，并打印</span></span><br><span class="line">func() <span class="keyword">async</span> =&gt; <span class="built_in">print</span>(<span class="keyword">await</span> fetchContent());</span><br><span class="line"></span><br><span class="line">main() &#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"func before"</span>);</span><br><span class="line">  func();</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"func after"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func before--&gt;func after--&gt;Hello <span class="number">2019</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/01/13/Mac环境下Flutter使用Jenkins构建自动化打包/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Forwards">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Forwards">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/01/13/Mac环境下Flutter使用Jenkins构建自动化打包/" itemprop="url">Mac环境下Flutter使用Jenkins构建自动化打包</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-01-13T13:55:08+08:00">
+                2023-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前提：在产品迭代过程中，开发人员需要频繁的提供安装包给测试人员，这不仅占用了大量的开发时间，还影响了工作效率和积极性，所以我们急需解放双手，这时候Jenkins自动化打包的优越性就体现了出来。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="搭建Flutter开发环境"><a href="#搭建Flutter开发环境" class="headerlink" title="搭建Flutter开发环境"></a>搭建Flutter开发环境</h2><p>在Mac上需要搭建Flutter开发环境，这部分不再赘述，可参考<a href="http://ucoon.tech/2022/01/27/Flutter-iOS%E7%9C%9F%E6%9C%BA%E8%B0%83%E8%AF%95%E3%80%81%E6%89%93%E5%8C%85%E5%8F%8A%E4%B8%8A%E6%9E%B6/" target="_blank" rel="noopener">Flutter iOS真机调试、打包及上架</a></p>
+<h2 id="安装Jenkins"><a href="#安装Jenkins" class="headerlink" title="安装Jenkins"></a>安装Jenkins</h2><ol>
+<li>使用<code>brew</code>进行安装：<code>brew install jenkins</code>，</li>
+<li>启动jenkins：<code>brew services start jenkins</code></li>
+<li>在浏览器中输入地址 <a href="http://0.0.0.0:8080" target="_blank" rel="noopener">http://0.0.0.0:8080</a> ，即可看到 Jenkins 页面</li>
+<li>首次启动需要解锁Jenkins，安装推荐的插件，自定义设置用户名及密码</li>
+</ol>
+<p>安装完成Jenkins面板界面如下：</p>
+<p><img src="http://ucoon.tech/MyBlogImg/jenkins_dashboard.png" alt="jenkins_dashboard"></p>
+<h1 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h1><h2 id="workspaceDir修改"><a href="#workspaceDir修改" class="headerlink" title="workspaceDir修改"></a>workspaceDir修改</h2><p>自定义工作目录<code>workspaceDir</code>路径，打开安装目录下的<code>config.xml</code>：<code>open $HOME/.jenkins/config.xml</code>，修改<code>workspaceDir</code>的值</p>
+<p><img src="http://ucoon.tech/MyBlogImg/workspaceDir.png" alt="workspaceDir.png"></p>
+<h2 id="配置JDK"><a href="#配置JDK" class="headerlink" title="配置JDK"></a>配置JDK</h2><p>在Manage Jenkins-&gt;Global Tool Configuration下的JDK设置<code>JAVA_HOME</code></p>
+<p><img src="http://ucoon.tech/MyBlogImg/JDK.png" alt="JDK配置"></p>
+<h2 id="全局环境变量配置"><a href="#全局环境变量配置" class="headerlink" title="全局环境变量配置"></a>全局环境变量配置</h2><p>在Manage Jenkins-&gt;Configure System下的全局属性设置<code>ANDROID_HOME</code>、<code>PUB_HOSTED_URL</code>、<code>FLUTTER_STORAGE_BASE_URL</code>、<code>FLUTTER_HOME</code>、<code>PATH</code></p>
+<p><img src="http://ucoon.tech/MyBlogImg/Environment_variables.png" alt="Environment_variables"></p>
+<p>属性对应值分别如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">globalNodeProperties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">hudson.slaves.EnvironmentVariablesNodeProperty</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">envVars</span> <span class="attr">serialization</span>=<span class="string">"custom"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">unserializable-parents</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">tree-map</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">default</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">comparator</span> <span class="attr">class</span>=<span class="string">"java.lang.String$CaseInsensitiveComparator"</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">default</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">int</span>&gt;</span>5<span class="tag">&lt;/<span class="name">int</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>ANDROID_HOME<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>/Users/yardi_wuhan/Library/Android/sdk<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>FLUTTER_HOME<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>/Users/yardi_wuhan/fvm/default<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>FLUTTER_STORAGE_BASE_URL<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>https://storage.flutter-io.cn<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>PATH<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>$PATH:$FLUTTER_HOME/bin:$HOME/.pub-cache/bin<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>PUB_HOSTED_URL<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">string</span>&gt;</span>https://pub.flutter-io.cn<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">tree-map</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">envVars</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">hudson.slaves.EnvironmentVariablesNodeProperty</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">globalNodeProperties</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="自动化打包"><a href="#自动化打包" class="headerlink" title="自动化打包"></a>自动化打包</h1><h2 id="Android"><a href="#Android" class="headerlink" title="Android"></a>Android</h2><ol>
+<li><p>新建一个Project，并选择<code>Freestyle project</code></p>
+<p><img src="http://ucoon.tech/MyBlogImg/create_jenkins_project.png" alt="create_jenkins_project"></p>
+</li>
+<li><p>填写描述</p>
+</li>
+<li><p>源码管理——配置git，填写仓库地址<code>Repository URL</code>，并添加凭据<code>Credentials</code></p>
+<p>如果你使用的是 https，那么需要配置认证，我这里使用的是 ssh，所以不需要配置认证，认证的方式需要添加凭据，参考如下所示，</p>
+<p>在<code>Private Key</code>下填写私钥值(<code>.ssh</code>目录下的<code>id_ed25519</code>)，对应git账号应上传公钥值(<code>.ssh</code>目录下的<code>id_ed25519.pub</code>)</p>
+<p><img src="http://ucoon.tech/MyBlogImg/add_ssh_credentials.png" alt="add_ssh_credentials"></p>
+</li>
+<li><p>配置参数化构建过程</p>
+<p>可增加构建环境ENV参数等，示例如下</p>
+<p><img src="http://ucoon.tech/MyBlogImg/build_parameter.png" alt="build_parameter"></p>
+</li>
+<li><p>构建打包脚本</p>
+<p>在构建脚本中可获取上述传入的构建参数值(<code>${BUILD_ENV}</code>)</p>
+<p><img src="http://ucoon.tech/MyBlogImg/build_step_shell.png" alt="build_step_shell"></p>
+</li>
+<li><p>归档成品(<strong>artifacts</strong>)</p>
+<p><img src="http://ucoon.tech/MyBlogImg/archive_artifacts.png" alt="archive_artifacts"></p>
+</li>
+<li><p>配置完成后，可在构建页面开始构建，如下所示</p>
+<p><img src="http://ucoon.tech/MyBlogImg/android_project.png" alt="android_project"></p>
+</li>
+<li><p>构建完成后可在首页下载构建完成后的安装包</p>
+</li>
+</ol>
+<h2 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a>iOS</h2><p><strong>[通过在打包机器上配置证书和mobile provision等文件的方式来完成打包认证]</strong></p>
+<ol>
+<li><p>手动配置证书</p>
+</li>
+<li><p>配置描述文件</p>
+</li>
+<li><p>开始打包</p>
+<p>新建Project—&gt;填写描述—&gt;配置git—&gt;配置参数化构建过程这几个步骤和Android项目类似，不同的是iOS的构建脚本，如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cd app_common</span><br><span class="line">flutter clean</span><br><span class="line">flutter pub get</span><br><span class="line">cd ../patient</span><br><span class="line">flutter clean</span><br><span class="line">flutter pub get</span><br><span class="line">mv sample.env .env</span><br><span class="line">security unlock-keychain -p Yardi5550586</span><br><span class="line">flutter build ipa --release --dart-define=ENV=$&#123;BUILD_ENV&#125;</span><br><span class="line">ExportOptionsPath=$JENKINS_HOME/jobs/$JOB_NAME/ExportOptions.plist</span><br><span class="line">ArchivePath=$WORKSPACE/patient/build/ios/archive/Runner.xcarchive</span><br><span class="line">PackagePath=$WORKSPACE/patient/build/ios/archive/build</span><br><span class="line">xcodebuild -exportArchive -exportOptionsPlist $ExportOptionsPath -archivePath $ArchivePath -exportPath $PackagePath -allowProvisioningUpdates</span><br></pre></td></tr></table></figure>
+<p>关键命令解释：</p>
+<ol>
+<li><code>security unlock-keychain -p xxxxxx</code>：在开始打包之前，需要先解锁下<code>keychain</code>，这里的xxxx就是对应Mac上的密码</li>
+<li><code>flutter build ipa --release --dart-define=ENV=${BUILD_ENV}</code>：指定release模式，开始编译iOS代码，并在 <code>build/ios/archive</code> 文件夹下生成一个 Xcode 构建归档（<code>.xcarchive</code> 文档）</li>
+<li>执行完<code>Archive</code>之后，就可以进入<code>export</code>阶段，<code>exportArchive</code>之前需要先准备一个<code>ExportOptions.plist</code>文件到指定目录，这个文件可以先在打包机上用Xcode执行一次完整的Export流程，在对应的archive文件夹下存在对应的<code>ExportOptions.plist</code></li>
+<li>接着通过指定命令<code>exportArchive</code>，指定<code>ExportOptions.plist</code>，最终输出到<code>PackagePath</code>，得到一个ipa文件</li>
+</ol>
+<p>上述命令均为<code>ad-hoc</code>模式，如果是指定<code>app-store</code>模式，则需准备<code>app-store</code>对应的<code>ExportOptions.plist</code>文件，最终才能得到一个<code>app-store</code>模式的ipa文件</p>
+</li>
+</ol>
+<h1 id="插件推荐"><a href="#插件推荐" class="headerlink" title="插件推荐"></a>插件推荐</h1><h2 id="切换为中文"><a href="#切换为中文" class="headerlink" title="切换为中文"></a>切换为中文</h2><p>插件：<code>Locale plugin</code>，<code>Localization: Chinese (Simplified)版本</code></p>
+<p>使用：在Manage Jenkins-&gt;Configure System下的Local设置默认语言(Default Language)：<code>zh_CN</code></p>
+<h2 id="蒲公英上传和二维码显示"><a href="#蒲公英上传和二维码显示" class="headerlink" title="蒲公英上传和二维码显示"></a>蒲公英上传和二维码显示</h2><p>插件：<code>Upload to pgyer</code>和<code>description setter plugin</code></p>
+<p>使用：在构建完成后可以将apk/ipa文件上传至蒲公英，并以二维码形式展示在构建历史处</p>
+<p>注意：Jenkins默认是plain text模式，所以不会对蒲公英上传成功后返回的html信息进行解析，所以装完<code>description setter plugin</code>后还需在全局安全设置(Config Global Security)中，将标记格式器(Markup Formatter)的设置更改为Safe HTML即可</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"$&#123;appBuildURL&#125;"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"$&#123;appQRCodeURL&#125;"</span> <span class="attr">width</span>=<span class="string">"118"</span> <span class="attr">height</span>=<span class="string">"118"</span>/&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://ucoon.tech/MyBlogImg/jenkins_upload_pgy.png" alt="jenkins_upload_pgy"></p>
+<p>参考文章：</p>
+<p><a href="https://www.agora.io/cn/community/blog/21605" target="_blank" rel="noopener">Flutter 搭建 iOS 命令行服务打包发布全保姆式流程</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/06/20/WebRTC入门——协议篇/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -932,15 +1286,15 @@
 <p>宿主监听的平台通道，并接收该消息，然后它会调用特定于该平台的API（使用原生编程语言），并将结果数据用过同样方式原路发送回客户端，即应用程序的Flutter部分</p>
 <p>整个过程的消息和响应是异步传递的，所以不会直接阻塞用户界面</p>
 </blockquote>
-<h1 id="官方架构图："><a href="#官方架构图：" class="headerlink" title="官方架构图："></a>官方架构图：</h1><p><img src="https://flutterchina.club/images/PlatformChannels.png" alt="Flutter Platform Channel"></p>
-<h1 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h1><h2 id="MethodChannel调用流程"><a href="#MethodChannel调用流程" class="headerlink" title="MethodChannel调用流程"></a>MethodChannel调用流程</h2><p><img src="https://github.com/Ucoon/MyBlogImg/blob/master/MethodChannel%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B.jpg" alt="MethodChannel调用流程"></p>
+<h1 id="官方架构图："><a href="#官方架构图：" class="headerlink" title="官方架构图："></a>官方架构图：</h1><p><img src="https://flutter.cn/docs/assets/images/docs/PlatformChannels.png" alt="Flutter Platform Channel"></p>
+<h1 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h1><h2 id="MethodChannel调用流程"><a href="#MethodChannel调用流程" class="headerlink" title="MethodChannel调用流程"></a>MethodChannel调用流程</h2><p><img src="http://ucoon.tech/MyBlogImg/MethodChannel调用流程.jpg" alt="MethodChannel调用流程"></p>
 <p>小结：</p>
 <ol>
 <li>Dart层使用codec对根据方法名(<code>channel method name</code>)和参数(<code>channel method param</code>)构建得到的对象进行编码，然后通过dart的类似JNI的本地接口，调用<code>SendPlatformMessage</code>，传递给c++层</li>
 <li>c++层通过持有java对象<code>flutterJNI</code>的方法调用将消息传递到java层</li>
 <li>java层解码接收到的消息，并根据<code>channel name</code>获取到对应的<code>handlerInfo</code>，调用相应的逻辑处理</li>
 </ol>
-<h2 id="MethodChannel返回流程"><a href="#MethodChannel返回流程" class="headerlink" title="MethodChannel返回流程"></a>MethodChannel返回流程</h2><p><img src="https://github.com/Ucoon/MyBlogImg/blob/master/MethodChannel%E8%BF%94%E5%9B%9E%E6%B5%81%E7%A8%8B.jpg" alt="MethodChannel返回流程"></p>
+<h2 id="MethodChannel返回流程"><a href="#MethodChannel返回流程" class="headerlink" title="MethodChannel返回流程"></a>MethodChannel返回流程</h2><p><img src="http://ucoon.tech/MyBlogImg/MethodChannel返回流程.jpg" alt="MethodChannel返回流程"></p>
 <p>小结：</p>
 <ol>
 <li>java层得到结果后进行编码，通过JNI将响应结果返回给c++层</li>
@@ -1633,352 +1987,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/20/网络请求之“重试设计”—退避/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/20/网络请求之“重试设计”—退避/" itemprop="url">网络请求之“重试设计”：退避</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-20T11:59:43+08:00">
-                2020-02-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="重试的场景"><a href="#重试的场景" class="headerlink" title="重试的场景"></a>重试的场景</h1><p>重试的定义：我们认为这个故障是暂时的，而不是永久的，所以我们会去重试。</p>
-<p>要重试：调用超时，被调用端返回了某种可以重试的错误（如繁忙中，流程中，维护中，资源不足等）</p>
-<p>不要重试：业务级别的错误（如没有权限，或者是非法数据等），技术上的错误（如http的500等），这类型的错误重试下去没有意义。</p>
-<h1 id="重试的策略："><a href="#重试的策略：" class="headerlink" title="重试的策略："></a>重试的策略：</h1><p>总原则：有个重试次数的最大值，经过一段时间不断的重试之后，就没有必要再重试了，应该报故障了，这样可以避免因为重试过多而导致网络上的负担更重</p>
-<ol>
-<li>No BackOff 无退避算法策略，即当重试时是立即重试</li>
-<li><p>Fixed BackOff 固定时间的退避策略，需设置参数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3. UniformRandom BackOff 随机时间退避策略，需设置```sleeper```、```minBackOffPeriod```和```maxBackOffPeriod```。该策略在[```minBackOffPeriod```,```maxBackOffPeriod```]之间取一个随机休眠时间，```minBackOffPeriod```默认为500毫秒，```maxBackOffPeriod```默认为1500毫秒</span><br><span class="line">4. Exponential Backoff 指数级退避策略，每一次重试所需要的休息时间都会翻倍增加。让被调用方能够有更多的时间来从容处理我们的请求，和TCP的拥塞机制有点像。需设置参数```sleeper```、```initialInterval```、```maxInterval```和```multiplier```。```initialInterval```指定初始休眠时间，默认为100毫秒。```maxInterval```指定最大休眠时间，默认为30秒。```multiplier```指定乘数，即下一次休眠时间为当前休眠时间 * ```multiplier</span><br></pre></td></tr></table></figure></p>
-</li>
-<li><p>ExponentialRandom BackOff 随机指数退避策略，引入随机乘数，固定乘数可能会引起很多服务同时重试导致DDos，使用随机休眠时间来避免这种情况。</p>
-</li>
-</ol>
-<h1 id="example："><a href="#example：" class="headerlink" title="example："></a>example：</h1><ol>
-<li><p>指数级退避策略</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//最大延迟时间间隔，单位是毫秒</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> MAX_WAIT_INTERVAL = <span class="number">100</span>*<span class="number">1000</span>;</span><br><span class="line">   <span class="comment">//最大重试次数</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> MAX_RETRIES = <span class="number">3</span>;</span><br><span class="line">   <span class="comment">//指数退避算法</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">doOperationAndWaitForResult</span><span class="params">()</span></span>&#123;</span><br><span class="line">       <span class="keyword">try</span>&#123;</span><br><span class="line">           <span class="keyword">int</span> retries = <span class="number">0</span>;</span><br><span class="line">           <span class="keyword">boolean</span> retry = <span class="keyword">false</span>;</span><br><span class="line">           <span class="keyword">do</span> &#123;</span><br><span class="line">               <span class="keyword">long</span> waitTime = Math.min(getWaitTimeExp(retries), MAX_WAIT_INTERVAL);</span><br><span class="line">               System.out.print(<span class="string">"等待时间："</span> + waitTime + <span class="string">"  ms \n"</span>);</span><br><span class="line">               <span class="comment">//Wait for the result</span></span><br><span class="line">               Thread.sleep(waitTime);</span><br><span class="line">               <span class="comment">//Get the result of the asynchronous operation</span></span><br><span class="line">               Results results = getAsyncOperationResult();</span><br><span class="line">               <span class="keyword">if</span> (Results.SUCCESS == results)&#123;</span><br><span class="line">                   retry = <span class="keyword">false</span>;</span><br><span class="line">               &#125;<span class="keyword">else</span> <span class="keyword">if</span> (Results.NOT_READY == results || Results.THROTTLED == results</span><br><span class="line">                       || Results.SERVER_ERROR == results)&#123;</span><br><span class="line">                   retry = <span class="keyword">true</span>;</span><br><span class="line">               &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                   retry = <span class="keyword">false</span>;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;<span class="keyword">while</span> (retry &amp;&amp; (retries ++ &lt; MAX_RETRIES));</span><br><span class="line">       &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 根据重试的次数，返回2的指数的等待时间</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> retryCount</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">getWaitTimeExp</span><span class="params">(<span class="keyword">int</span> retryCount)</span></span>&#123;</span><br><span class="line">       <span class="keyword">long</span> waitTime = ((<span class="keyword">long</span>) Math.pow(<span class="number">2</span>, retryCount) * <span class="number">100L</span>);</span><br><span class="line">       <span class="keyword">return</span> waitTime;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>随机时间退避策略：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">avoidTime</span><span class="params">(<span class="keyword">int</span> retryTime)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tryTime = RETRY_TIME - retryTime;</span><br><span class="line">        Random random = <span class="keyword">new</span> Random(System.currentTimeMillis());</span><br><span class="line">        <span class="keyword">int</span> time = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">switch</span> (tryTime) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                time = random.nextInt(<span class="number">150</span>) + <span class="number">50</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                time = random.nextInt(<span class="number">300</span>) + <span class="number">200</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                time = random.nextInt(<span class="number">150</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(time);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/10/Android埋点技术分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Forwards">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Forwards">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/07/10/Android埋点技术分析/" itemprop="url">Android埋点技术分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-10T22:05:22+08:00">
-                2019-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h1><h2 id="1-什么是埋点"><a href="#1-什么是埋点" class="headerlink" title="1. 什么是埋点"></a>1. 什么是埋点</h2><blockquote>
-<p>埋点是数据采集的一种方法，将每个需要统计的点击事件、页面上装摄像头，采集相应的信息和行为。</p>
-</blockquote>
-<p>通过埋点、可以收集用户行为数据，进而用于分析和优化产品体验，也可以为产品的运营提供数据支撑，通常可以采集到以下类型数据：</p>
-<ol>
-<li>行为数据：时间、地点、人物、交互的内容等</li>
-<li>质量数据：App运行情况、浏览器加载情况、错误异常等</li>
-<li>环境数据：手机型号、操作系统版本、浏览器UA（User Agent）、地理、运营商、网络环境等</li>
-<li>运营数据：PV（Page View）、UV（Unique Visitor）、点击量、日活、留存、渠道来源等</li>
-</ol>
-<h2 id="2-埋点事件分类"><a href="#2-埋点事件分类" class="headerlink" title="2. 埋点事件分类"></a>2. 埋点事件分类</h2><ol>
-<li><p>点击事件</p>
-<p>点击事件，用户点击按钮即算点击事件，不管点击后有无结果，点击一次记一次</p>
-</li>
-<li><p>曝光事件</p>
-<p>成功打开一次页面记一次，刷新页面一次记一次，加载下一页新页，加载一次记一次</p>
-</li>
-<li><p>页面停留时间事件</p>
-<p>表示一个用户在某个页面的停留时长记为停留时长</p>
-</li>
-</ol>
-<h2 id="3-移动端的埋点需求表"><a href="#3-移动端的埋点需求表" class="headerlink" title="3. 移动端的埋点需求表"></a>3. 移动端的埋点需求表</h2><table>
-<thead>
-<tr>
-<th>字段</th>
-<th>释义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>event_id</td>
-<td>埋点ID</td>
-</tr>
-<tr>
-<td>event_key</td>
-<td>埋点名</td>
-</tr>
-<tr>
-<td>status</td>
-<td>埋点状态</td>
-</tr>
-<tr>
-<td>state</td>
-<td>埋点所在页面</td>
-</tr>
-<tr>
-<td>desc</td>
-<td>埋点描述</td>
-</tr>
-<tr>
-<td>event_value</td>
-<td>事件属性</td>
-</tr>
-<tr>
-<td>value_comments</td>
-<td>事件属性描述</td>
-</tr>
-<tr>
-<td>opportunity</td>
-<td>埋点发送时机</td>
-</tr>
-<tr>
-<td>remark</td>
-<td>备注</td>
-</tr>
-<tr>
-<td>event_table</td>
-<td>埋点发送日志</td>
-</tr>
-<tr>
-<td>req_release</td>
-<td>需求提出版本</td>
-</tr>
-<tr>
-<td>achieve_release</td>
-<td>需求实现版本</td>
-</tr>
-<tr>
-<td>priority</td>
-<td>需求优先级</td>
-</tr>
-<tr>
-<td>update_time</td>
-<td>需求更新事件</td>
-</tr>
-</tbody>
-</table>
-<h1 id="二、埋点的技术方案"><a href="#二、埋点的技术方案" class="headerlink" title="二、埋点的技术方案"></a>二、埋点的技术方案</h1><h2 id="1-代码埋点"><a href="#1-代码埋点" class="headerlink" title="1. 代码埋点"></a>1. 代码埋点</h2><p><strong>代码埋点是指在某个事件发生时调用数据发送接口上报数据。</strong>基于<strong>预先编码</strong>实现的代码埋点，其优点是：控制精准、采集灵活性强，可以自由的选择什么时候发送什么样的数据；缺点：开发、测试成本高，对于客户端而言需要等待发版才能修改线上的埋点。</p>
-<h2 id="2-无痕埋点"><a href="#2-无痕埋点" class="headerlink" title="2. 无痕埋点"></a>2. 无痕埋点</h2><p>无痕埋点也可称为无埋点或者全埋点，它指的是<strong>将App内产生的所有的、满足某个条件的行为，全部上报到后台服务器</strong>，在计算时筛选出可用的数据。其优点是很大程度上减少开发、测试的重复劳动，数据可以回溯并且全面。缺点：采集信息不够灵活，并且数据量大，里面可能很多是没有价值的数据。</p>
-<h2 id="3-可视化埋点"><a href="#3-可视化埋点" class="headerlink" title="3. 可视化埋点"></a>3. 可视化埋点</h2><p>可视化埋点是指通过可视化工具选择需要收集的埋点数据，下发配置给客户端，从而解析配置采集相应的埋点的方式。其优点是在于很大程度上减少开发、测试的重复劳动，数据量可控，可以在线上动态的进行埋点配置，无需等待App发版；缺点：采集信息不够灵活，并且无法解决数据回溯的问题。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2029,7 +2037,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2086,7 +2094,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
